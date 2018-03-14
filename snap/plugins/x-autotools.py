@@ -136,8 +136,9 @@ class AutotoolsPlugin(make.MakePlugin):
         env['VALAFLAGS'] = '--vapidir ' + self.project.stage_dir + '/usr/share/vala/vapi --vapidir ' + self.project.stage_dir + '/usr/share/vala-0.40/vapi --vapidir /usr/share/vala-0.30/vapi'
         env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
         env['PKG_CONFIG_PATH'] = self.project.stage_dir + '/usr/lib/pkgconfig:/usr/lib/' + self.project.arch_triplet + '/pkgconfig:/usr/lib/pkgconfig'
+        env['LD_LIBRARY_PATH'] = self.project.stage_dir + '/usr/lib/vala-0.40'
         self.run(configure_command + self.options.configflags, env=env)
-        self.make()
+        self.make(env=env)
 
     def snap_fileset(self):
         fileset = super().snap_fileset()
