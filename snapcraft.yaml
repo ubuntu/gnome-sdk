@@ -1,0 +1,159 @@
+name: gnome-3-28-1804-sdk
+version: 3.28.0
+summary: Shared GNOME 3.28 Ubuntu stack
+summary: Library bundle for developers of GNOME applications
+description: |
+ This snap contains only the necessary libraries required by
+ GNOME applications.
+
+confinement: strict
+grade: stable
+
+# the recommended mountpoint for that content is /gnome-platform
+slots:
+    gnome-3.28-1804:
+      interface: content
+      read:
+        - /
+
+parts:
+  #libtool: 
+  #  plugin: autotools
+  #  source: https://git.savannah.gnu.org/git/libtool.git
+  #  configflags: [ --prefix=/usr ]
+  #  build-packages:
+  #    - file
+  #    - automake
+  #    - autoconf
+  #    - autotools-dev
+  #    - help2man
+  #    - texinfo
+  #    - zlib1g-dev
+  #    - gnulib
+  vala:
+    plugin: autotools
+    source: https://github.com/GNOME/vala.git
+    source-tag: '0.40.0'
+    # Once the 0.40 branch exists, we should track the branch rather than the tag
+    #source-branch: 0.40
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - bison
+      - flex
+      - help2man
+      - xsltproc
+      - libdbus-1-dev
+      - dbus
+      - libgirepository1.0-dev
+      - valac
+  gtk:
+    after: [glib, json-glib]
+    source: https://gitlab.gnome.org/GNOME/gtk.git
+    source-branch: gtk-3-22
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - automake
+      - autoconf
+      - autotools-dev
+      - libtool
+      - gtk-doc-tools
+      - gettext
+      - pkg-config
+      - dbus-x11
+      - gsettings-desktop-schemas
+      - adwaita-icon-theme
+      - at-spi2-core
+      - libglib2.0-dev
+      - libgdk-pixbuf2.0-dev
+      - libpango1.0-dev
+      - libatk1.0-dev
+      - libatk-bridge2.0-dev
+      - libegl1-mesa-dev
+      - libepoxy-dev
+      - libwayland-dev
+      - libxkbcommon-dev
+      - libx11-dev
+      - libxext-dev
+      - libxi-dev
+      - libxrandr-dev
+      - libxt-dev
+      - libxrender-dev
+      - libxft-dev
+      - libxcursor-dev
+      - libxcomposite-dev
+      - libxdamage-dev
+      - libxkbfile-dev
+      - libxinerama-dev
+      - libxfixes-dev
+      - libcairo2-dev
+      - x11proto-xext-dev
+      - libcups2-dev
+      - libcolord-dev
+      - librest-dev
+      - libjson-glib-dev
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - xvfb
+  gee: 
+    after: [vala]
+    source: git://git.gnome.org/libgee
+    source-tag: '0.20.1'
+    # Once the 0.40 branch exists, we should track the branch rather than the tag
+    #source-branch: 0.20
+    configflags: [ --prefix=/usr ]
+    plugin: autotools
+    build-packages:
+      - gobject-introspection
+      - libgirepository1.0-dev
+      - autoconf-archive
+  glib: 
+    source: https://gitlab.gnome.org/GNOME/glib.git
+    source-branch: glib-2-56
+    configflags: [ --prefix=/usr ]
+    plugin: autotools
+    build-packages:
+      - automake
+      - autoconf
+      - autotools-dev
+      - libtool
+      - libmount-dev
+  #pango: 
+    #after: [glib]
+    #source: git://git.gnome.org/pango
+    #source-tag: '1.42.0'
+    #configflags: [ --prefix=/usr ]
+    #plugin: autotools
+    #build-packages:
+    # - libcairo2-dev
+    # - libharfbuzz-dev
+    # - libfreetype6-dev
+    # - libfontconfig1-dev
+    # - libx11-dev
+    # - libxft-dev
+    # - libxrender-dev
+    # - libxt-dev
+    # - fonts-cantarell
+    # - gtk-doc-tools
+    # - gnome-pkg-tools
+    # - libthai-dev
+    # - perl
+  libcanberra: 
+    after: [glib, gtk]
+    source: git://git.0pointer.net/libcanberra.git
+    configflags: [ --prefix=/usr ]
+    plugin: autotools
+    build-packages:
+      - libasound2-dev
+      - libvorbis-dev
+      - libx11-dev
+      - libtdb-dev
+      - libpulse-dev
+      - libgstreamer1.0-dev
+      - gtk-doc-tools
+  json-glib: 
+    after: [glib]
+    source: https://gitlab.gnome.org/GNOME/json-glib.git
+    source-branch: json-glib-1-4
+    configflags: [ --prefix=/usr ]
+    plugin: autotools
