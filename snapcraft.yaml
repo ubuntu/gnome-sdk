@@ -30,6 +30,12 @@ parts:
   #    - texinfo
   #    - zlib1g-dev
   #    - gnulib
+  meson:
+    plugin: python
+    source: https://github.com/mesonbuild/meson.git
+    source-tag: 0.45.0
+    build-packages:
+      - ninja-build
   vala:
     plugin: autotools
     source: https://github.com/GNOME/vala.git
@@ -46,6 +52,7 @@ parts:
       - dbus
       - libgirepository1.0-dev
       - valac
+      - libgraphviz-dev
   gtk:
     after: [glib, json-glib]
     source: https://gitlab.gnome.org/GNOME/gtk.git
@@ -152,8 +159,7 @@ parts:
       - libgstreamer1.0-dev
       - gtk-doc-tools
   json-glib: 
-    after: [glib]
+    after: [glib, meson]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
     source-branch: json-glib-1-4
-    configflags: [ --prefix=/usr ]
-    plugin: autotools
+    plugin: meson
