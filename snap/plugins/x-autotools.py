@@ -102,6 +102,18 @@ class AutotoolsPlugin(make.MakePlugin):
         pass
 
     def build(self):
+        env = os.environ.copy()
+        env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
+        env['PKG_CONFIG_PATH'] = os.path.join(self.project.stage_dir, 'pkgconfig-build')
+        env['ACLOCAL_PATH'] = os.path.join(self.project.stage_dir, 'usr', 'share', 'aclocal')
+        if self.name != 'vala':
+            # The vala part is a special case, it boostraps itself using the
+            # vala compiler on the host system and vapi files in the source tree
+            env['GI_TYPELIB_PATH'] = self.project.stage_dir + '/usr/lib/' + self.project.arch_triplet + '/girepository-1.0:/usr/lib/' + self.project.arch_triplet + '/girepository-1.0'
+            env['VAPIDIR'] = self.project.stage_dir + '/usr/share/vala/vapi:' + self.project.stage_dir + '/usr/share/vala-0.40/vapi:/usr/share/vala-0.30/vapi/'
+            env['VALAFLAGS'] = '--vapidir ' + self.project.stage_dir + '/usr/share/vala/vapi --vapidir ' + self.project.stage_dir + '/usr/share/vala-0.40/vapi --vapidir /usr/share/vala-0.30/vapi'
+            env['LD_LIBRARY_PATH'] = self.project.stage_dir + '/usr/lib/vala-0.40'
+
         if not os.path.exists(os.path.join(self.builddir, 'configure')):
             generated = False
             scripts = ['autogen.sh', 'bootstrap']
@@ -115,11 +127,11 @@ class AutotoolsPlugin(make.MakePlugin):
                              stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |
                              stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |
                              stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH)
-                self.run(['env', 'NOCONFIGURE=1', './{}'.format(script)])
+                self.run(['env', 'NOCONFIGURE=1', './{}'.format(script)], env=env)
                 generated = True
                 break
             if not generated:
-                self.run(['autoreconf', '-i'])
+                self.run(['autoreconf', '-i'], env=env)
 
         configure_command = ['./configure']
 
@@ -130,16 +142,6 @@ class AutotoolsPlugin(make.MakePlugin):
             configure_command.append('--prefix=' + self.installdir)
         if self.project.is_cross_compiling:
             configure_command.append('--host={}'.format(self.project.deb_arch))
-        env = os.environ.copy()
-        env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
-        env['PKG_CONFIG_PATH'] = os.path.join(self.project.stage_dir, 'pkgconfig-build')
-        if self.name != 'vala':
-            # The vala part is a special case, it boostraps itself using the
-            # vala compiler on the host system and vapi files in the source tree
-            env['GI_TYPELIB_PATH'] = self.project.stage_dir + '/usr/lib/' + self.project.arch_triplet + '/girepository-1.0:/usr/lib/' + self.project.arch_triplet + '/girepository-1.0'
-            env['VAPIDIR'] = self.project.stage_dir + '/usr/share/vala/vapi:' + self.project.stage_dir + '/usr/share/vala-0.40/vapi:/usr/share/vala-0.30/vapi/'
-            env['VALAFLAGS'] = '--vapidir ' + self.project.stage_dir + '/usr/share/vala/vapi --vapidir ' + self.project.stage_dir + '/usr/share/vala-0.40/vapi --vapidir /usr/share/vala-0.30/vapi'
-            env['LD_LIBRARY_PATH'] = self.project.stage_dir + '/usr/lib/vala-0.40'
         self.run(configure_command + self.options.configflags, env=env)
         self.make(env=env)
 

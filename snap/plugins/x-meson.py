@@ -21,14 +21,23 @@ from snapcraft.plugins import meson
 
 class XMesonPlugin(meson.MesonPlugin):
 
+    def _get_custom_env(self):
+        env = os.environ.copy()
+        # Override pkg-config search path to use modified .pc files
+        env['PKG_CONFIG_PATH'] = \
+            os.path.join(self.project.stage_dir, 'pkgconfig-build')
+        env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
+        return env
+
     def _run_meson(self):
         os.makedirs(self.mesonbuilddir, exist_ok=True)
         meson_command = ['meson']
         if self.options.meson_parameters:
             meson_command.extend(self.options.meson_parameters)
         meson_command.append(self.snapbuildname)
-        env = os.environ.copy()
-        # Override pkg-config search path to use modified .pc files
-        env['PKG_CONFIG_PATH'] = \
-            os.path.join(self.project.stage_dir, 'pkgconfig-build')
-        self.run(meson_command, env=env)
+        self.run(meson_command, env=self._get_custom_env())
+
+    def _run_ninja_build_default(self):
+        ninja_command = ['ninja']
+        self.run(ninja_command, cwd=self.mesonbuilddir,
+                 env=self._get_custom_env())
