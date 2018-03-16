@@ -103,23 +103,40 @@ parts:
       - libdbus-glib-1-dev
       - libxml2-dev
       - libx11-dev
+  gdk-pixbuf:
+    after: [glib]
+    source: https://git.gnome.org/browse/gdk-pixbuf.git
+    source-tag: 2.36.11 # there is no gdk-pixbuf-2-36 branch yet
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    install: |
+      set -eux
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=gdk-pixbuf-2.0.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+    build-packages:
+      - libx11-dev
+      - libpng-dev
+      - libjpeg-dev
+      - libtiff-dev
+      - gobject-introspection
+      - libgirepository1.0-dev
   gtk:
-    after: [glib, json-glib, atk, at-spi2-atk]
+    after: [glib, gdk-pixbuf, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-22
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-packages:
-      - automake
-      - autoconf
-      - autotools-dev
       - libtool
       - gtk-doc-tools
       - gettext
-      - pkg-config
       - dbus-x11
-      - adwaita-icon-theme
-      - libgdk-pixbuf2.0-dev
       - libpango1.0-dev
       - libegl1-mesa-dev
       - libepoxy-dev
@@ -201,7 +218,6 @@ parts:
       - libtdb-dev
       - libpulse-dev
       - libgstreamer1.0-dev
-      - gtk-doc-tools
   json-glib: 
     after: [glib, meson]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
