@@ -53,8 +53,58 @@ parts:
       - libgirepository1.0-dev
       - valac
       - libgraphviz-dev
+  atk:
+    after: [glib]
+    source: https://git.gnome.org/browse/atk.git
+    source-branch: gnome-3-28
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+  at-spi2-core:
+    after: [glib, meson]
+    source: https://git.gnome.org/browse/at-spi2-core.git
+    source-tag: AT_SPI2_CORE_2_28_0
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    install: |
+      set -eux
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=atspi-2.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+    build-packages:
+      - libdbus-1-dev
+      - libxkbcommon-x11-dev
+      - libxkbcommon-dev
+      - libxtst-dev
+      - gobject-introspection
+      - libgirepository1.0-dev
+  at-spi2-atk:
+    after: [glib, at-spi2-core, atk, meson]
+    source: https://git.gnome.org/browse/at-spi2-atk.git
+    source-branch: gnome-3-26 # there is no gnome-3-28 branch yet
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    install: |
+      set -eux
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=atk-bridge-2.0.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+    build-packages:
+      - libdbus-1-dev
+      - libdbus-glib-1-dev
+      - libxml2-dev
+      - libx11-dev
   gtk:
-    after: [glib, json-glib]
+    after: [glib, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-22
     plugin: autotools
@@ -68,14 +118,9 @@ parts:
       - gettext
       - pkg-config
       - dbus-x11
-      - gsettings-desktop-schemas
       - adwaita-icon-theme
-      - at-spi2-core
-      - libglib2.0-dev
       - libgdk-pixbuf2.0-dev
       - libpango1.0-dev
-      - libatk1.0-dev
-      - libatk-bridge2.0-dev
       - libegl1-mesa-dev
       - libepoxy-dev
       - libwayland-dev
@@ -98,7 +143,6 @@ parts:
       - libcups2-dev
       - libcolord-dev
       - librest-dev
-      - libjson-glib-dev
       - gobject-introspection
       - libgirepository1.0-dev
       - xvfb
@@ -163,3 +207,4 @@ parts:
     source: https://gitlab.gnome.org/GNOME/json-glib.git
     source-branch: json-glib-1-4
     plugin: meson
+    meson-parameters: [ --prefix=/usr ]

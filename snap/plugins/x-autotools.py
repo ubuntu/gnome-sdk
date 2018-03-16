@@ -132,7 +132,7 @@ class AutotoolsPlugin(make.MakePlugin):
             configure_command.append('--host={}'.format(self.project.deb_arch))
         env = os.environ.copy()
         env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
-        env['PKG_CONFIG_PATH'] = self.project.stage_dir + '/usr/lib/pkgconfig:/usr/lib/' + self.project.arch_triplet + '/pkgconfig:/usr/lib/pkgconfig'
+        env['PKG_CONFIG_PATH'] = os.path.join(self.project.stage_dir, 'pkgconfig-build')
         if self.name != 'vala':
             # The vala part is a special case, it boostraps itself using the
             # vala compiler on the host system and vapi files in the source tree
