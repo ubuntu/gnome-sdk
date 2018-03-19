@@ -40,7 +40,12 @@ parts:
       set -eux
       SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
       mv $SCANNER.orig $SCANNER
-  #libtool: 
+      cd $SNAPCRAFT_STAGE/usr/lib
+      for PC in $(find . -name *.pc)
+      do
+        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=#' $PC
+      done
+  #libtool:
   #  plugin: autotools
   #  source: https://git.savannah.gnu.org/git/libtool.git
   #  configflags: [ --prefix=/usr ]
