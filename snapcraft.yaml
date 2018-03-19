@@ -35,6 +35,8 @@ parts:
       - glib
       - libcanberra
       - json-glib
+      - gsettings-desktop-schemas
+      - gnome-desktop
     plugin: nil
     install: |
       set -eux
@@ -127,6 +129,13 @@ parts:
       cp $SCANNER $SNAPCRAFT_STAGE/usr/bin/g-ir-scanner.orig
       sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#' $SCANNER
       sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=gobject-introspection-1.0.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - python3-dev
       - libffi-dev
@@ -299,12 +308,15 @@ parts:
       set -eux
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
-      PC=pango.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+      PCS="pango.pc pangocairo.pc pangoxft.pc pangoft2.pc"
+      for PC in $PCS
+      do
+        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+        DST=$PKGCONFIG_BUILD/$PC
+        cp $SRC $DST
+        sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+        sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+      done
   libcanberra: 
     after: [glib, gtk]
     source: git://git.0pointer.net/libcanberra.git
@@ -323,3 +335,26 @@ parts:
     source-branch: json-glib-1-4
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+  gsettings-desktop-schemas:
+    after: [glib, gobject-introspection]
+    source: git://git.gnome.org/gsettings-desktop-schemas
+    source-tag: '3.28.0' # there is no gnome-3-28 branch yet
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - intltool
+  gnome-desktop:
+    after: [glib, gobject-introspection, gdk-pixbuf, gtk, gsettings-desktop-schemas]
+    source: git://git.gnome.org/gnome-desktop
+    source-tag: '3.28.0' # there is no gnome-3-28 branch yet
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - iso-codes
+      - libgl1-mesa-dev
+      - libseccomp-dev
+      - libudev-dev
+      - libx11-dev
+      - libxml2-dev
+      - xkb-data
+      - yelp-tools
