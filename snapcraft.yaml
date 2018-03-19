@@ -23,6 +23,9 @@ parts:
       - meson
       - vala
       - gobject-introspection
+      - cairo
+      - harfbuzz
+      - pango
       - atk
       - at-spi2-core
       - at-spi2-atk
@@ -73,8 +76,41 @@ parts:
       - dbus
       - valac
       - libgraphviz-dev
-  gobject-introspection:
+  cairo:
     after: [glib]
+    source: git://anongit.freedesktop.org/git/cairo
+    source-branch: '1.14'
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --enable-pdf
+      - --enable-ps
+      - --enable-xlib
+      - --enable-png
+      - --enable-tee
+      - --enable-svg
+      - --enable-xcb
+      - --enable-perf-utils
+      - --disable-silent-rules
+      - --disable-maintainer-mode
+    build-packages:
+      - libfontconfig1-dev
+      - libfreetype6-dev
+      - libxrender-dev
+      - libx11-dev
+      - libxext-dev
+      - libpng-dev
+      - libsm-dev
+      - xutils-dev
+      - libxt-dev
+      - libpixman-1-dev
+      - libxcb1-dev
+      - libxcb-render0-dev
+      - libxcb-shm0-dev
+      - zlib1g-dev
+      - liblzo2-dev
+  gobject-introspection:
+    after: [glib, cairo]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
     source-branch: gnome-3-28
     plugin: autotools
@@ -88,20 +124,19 @@ parts:
       sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
     build-packages:
       - python3-dev
-      - libcairo2-dev
       - libffi-dev
       - python3-mako
       - bison
       - flex
   atk:
     after: [glib]
-    source: https://git.gnome.org/browse/atk.git
+    source: git://git.gnome.org/atk
     source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr ]
   at-spi2-core:
     after: [glib, gobject-introspection, meson]
-    source: https://git.gnome.org/browse/at-spi2-core.git
+    source: git://git.gnome.org/at-spi2-core
     source-tag: AT_SPI2_CORE_2_28_0
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -122,7 +157,7 @@ parts:
       - libxtst-dev
   at-spi2-atk:
     after: [glib, at-spi2-core, atk, meson]
-    source: https://git.gnome.org/browse/at-spi2-atk.git
+    source: git://git.gnome.org/at-spi2-atk
     source-branch: gnome-3-26 # there is no gnome-3-28 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -143,7 +178,7 @@ parts:
       - libx11-dev
   gdk-pixbuf:
     after: [glib, gobject-introspection]
-    source: https://git.gnome.org/browse/gdk-pixbuf.git
+    source: git://git.gnome.org/gdk-pixbuf
     source-tag: 2.36.11 # there is no gdk-pixbuf-2-36 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -163,7 +198,7 @@ parts:
       - libjpeg-dev
       - libtiff-dev
   gtk:
-    after: [glib, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
+    after: [glib, cairo, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-22
     plugin: autotools
@@ -173,7 +208,6 @@ parts:
       - gtk-doc-tools
       - gettext
       - dbus-x11
-      - libpango1.0-dev
       - libegl1-mesa-dev
       - libepoxy-dev
       - libwayland-dev
@@ -191,7 +225,6 @@ parts:
       - libxkbfile-dev
       - libxinerama-dev
       - libxfixes-dev
-      - libcairo2-dev
       - x11proto-xext-dev
       - libcups2-dev
       - libcolord-dev
@@ -218,26 +251,55 @@ parts:
       - autotools-dev
       - libtool
       - libmount-dev
-  #pango: 
-    #after: [glib]
-    #source: git://git.gnome.org/pango
-    #source-tag: '1.42.0'
-    #configflags: [ --prefix=/usr ]
-    #plugin: autotools
-    #build-packages:
-    # - libcairo2-dev
-    # - libharfbuzz-dev
-    # - libfreetype6-dev
-    # - libfontconfig1-dev
-    # - libx11-dev
-    # - libxft-dev
-    # - libxrender-dev
-    # - libxt-dev
-    # - fonts-cantarell
-    # - gtk-doc-tools
-    # - gnome-pkg-tools
-    # - libthai-dev
-    # - perl
+  harfbuzz:
+    after: [glib, cairo, gobject-introspection]
+    source: git://anongit.freedesktop.org/git/harfbuzz
+    source-tag: '1.7.6'
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --with-graphite2=yes
+      - --enable-introspection
+      - --with-gobject
+    build-packages:
+      - libfreetype6-dev
+      - libicu-dev
+      - libgraphite2-dev
+    install: |
+      set -eux
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=harfbuzz.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+  pango:
+    after: [glib, cairo, harfbuzz]
+    source: git://git.gnome.org/pango
+    source-tag: '1.42.0'
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-packages:
+      - libfreetype6-dev
+      - libfontconfig1-dev
+      - libx11-dev
+      - libxft-dev
+      - libxrender-dev
+      - libxt-dev
+      - libfribidi-dev
+      - libthai-dev
+    install: |
+      set -eux
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=pango.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
   libcanberra: 
     after: [glib, gtk]
     source: git://git.0pointer.net/libcanberra.git
