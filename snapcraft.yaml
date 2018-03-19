@@ -17,6 +17,26 @@ slots:
         - /
 
 parts:
+  last:
+    # Ensure that this part is always staged last
+    after:
+      - meson
+      - vala
+      - gobject-introspection
+      - atk
+      - at-spi2-core
+      - at-spi2-atk
+      - gdk-pixbuf
+      - gtk
+      - gee
+      - glib
+      - libcanberra
+      - json-glib
+    plugin: nil
+    install: |
+      set -eux
+      SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
+      mv $SCANNER.orig $SCANNER
   #libtool: 
   #  plugin: autotools
   #  source: https://git.savannah.gnu.org/git/libtool.git
@@ -62,6 +82,8 @@ parts:
     install: |
       set -eux
       SCANNER=$SNAPCRAFT_PART_INSTALL/usr/bin/g-ir-scanner
+      mkdir -p $SNAPCRAFT_STAGE/usr/bin
+      cp $SCANNER $SNAPCRAFT_STAGE/usr/bin/g-ir-scanner.orig
       sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#' $SCANNER
       sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
     build-packages:
