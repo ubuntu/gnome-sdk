@@ -1,0 +1,17 @@
+image: snapcore/snapcraft:stable
+
+stages:
+  - build
+
+before_script:
+  - export LC_ALL=C.UTF-8
+  - export LANG=C.UTF-8
+  - export SNAP_ARCH=amd64
+
+build-gnome-software-snap:
+  stage: build
+  script:
+    - echo $LOGIN | snapcraft login --with -
+    - SNAPCRAFT_SETUP_CORE=1 snapcraft
+    - snapcraft push *.snap --release edge
+    - snapcraft logout
