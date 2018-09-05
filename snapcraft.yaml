@@ -279,6 +279,7 @@ parts:
       - libfreetype6-dev
       - libicu-dev
       - libgraphite2-dev
+      - ragel
     install: |
       set -eux
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
