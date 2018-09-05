@@ -10,6 +10,7 @@ before_script:
   - apt-get -y update
   - apt-get install -y software-properties-common
   - add-apt-repository -y ppa:ubuntu-desktop/gnome-3-26
+  - add-apt-repository -y ppa:ken-vandine/gnome-3-26
   - apt-get -y update
   - apt-get -y dist-upgrade
 
