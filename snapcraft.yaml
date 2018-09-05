@@ -38,8 +38,9 @@ parts:
       - gsettings-desktop-schemas
       - gnome-desktop
     plugin: nil
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
       mv $SCANNER.orig $SCANNER
       cd $SNAPCRAFT_STAGE/usr/lib
@@ -122,8 +123,9 @@ parts:
     source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr, --with-python=python3 ]
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       SCANNER=$SNAPCRAFT_PART_INSTALL/usr/bin/g-ir-scanner
       mkdir -p $SNAPCRAFT_STAGE/usr/bin
       cp $SCANNER $SNAPCRAFT_STAGE/usr/bin/g-ir-scanner.orig
@@ -154,8 +156,9 @@ parts:
     source-tag: AT_SPI2_CORE_2_28_0
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
       PC=atspi-2.pc
@@ -175,8 +178,9 @@ parts:
     source-branch: gnome-3-26 # there is no gnome-3-28 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
       PC=atk-bridge-2.0.pc
@@ -196,8 +200,9 @@ parts:
     source-tag: 2.36.11 # there is no gdk-pixbuf-2-36 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
       PC=gdk-pixbuf-2.0.pc
@@ -280,8 +285,9 @@ parts:
       - libicu-dev
       - libgraphite2-dev
       - ragel
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
       PC=harfbuzz.pc
@@ -305,8 +311,9 @@ parts:
       - libxt-dev
       - libfribidi-dev
       - libthai-dev
-    install: |
+    override-build: |
       set -eux
+      snapcraftctl build
       PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
       mkdir -p $PKGCONFIG_BUILD
       PCS="pango.pc pangocairo.pc pangoxft.pc pangoft2.pc"
