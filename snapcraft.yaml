@@ -10,6 +10,7 @@ description: |
 
 confinement: strict
 grade: stable
+base: core18
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
@@ -31,6 +32,7 @@ parts:
       - atk
       - at-spi2-core
       - at-spi2-atk
+      - epoxy
       - gdk-pixbuf
       - gtk
       - gee
@@ -66,7 +68,7 @@ parts:
   meson:
     plugin: python
     source: https://github.com/mesonbuild/meson.git
-    source-tag: 0.45.0
+    #source-tag: 0.45.0
     build-packages:
       - ninja-build
   vala:
@@ -218,6 +220,16 @@ parts:
       - libpng-dev
       - libjpeg-dev
       - libtiff-dev
+  epoxy:
+    after: [glib]
+    source: https://github.com/anholt/libepoxy.git
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-packages:
+      - xutils-dev
+      - libx11-dev
+      - libgl1-mesa-dev
+      - libegl1-mesa-dev
   gtk:
     after: [glib, cairo, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
@@ -353,6 +365,7 @@ parts:
     configflags: [ --prefix=/usr ]
     build-packages:
       - intltool
+      - gnome-common
   gnome-desktop:
     after: [glib, gobject-introspection, gdk-pixbuf, gtk, gsettings-desktop-schemas]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
