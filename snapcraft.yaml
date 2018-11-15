@@ -312,7 +312,7 @@ parts:
   pango:
     after: [glib, cairo, harfbuzz]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.42.0'
+    #source-tag: '1.42.0'
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-packages:
