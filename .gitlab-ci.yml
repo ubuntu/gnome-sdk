@@ -28,6 +28,6 @@ build-gnome-3-28-1804-sdk-snap:
   stage: build
   script:
     - echo $LOGIN | snapcraft login --with -
-    - SNAPCRAFT_SETUP_CORE=1 snapcraft
+    - SNAPCRAFT_SETUP_CORE=1 snapcraft --destructive-mode
     - snapcraft push *.snap --release edge
     - snapcraft logout
