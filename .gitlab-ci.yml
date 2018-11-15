@@ -23,7 +23,7 @@ before_script:
       mkdir -p /snap/snapcraft && \
       unsquashfs -d /snap/snapcraft/current snapcraft.snap && \
       rm snapcraft.snap && \
-      sed -i.back -e 's|installed_snaps =|#installed_snaps =|g' /snap/snapcraft/current/lib/python*/site-packages/snapcraft/internal/lifecycle/_runner.py && \
+      sed -i.back -e 's|installed_snaps =|installed_snaps = [] #|g' /snap/snapcraft/current/lib/python*/site-packages/snapcraft/internal/lifecycle/_runner.py && \
       curl -L https://raw.githubusercontent.com/snapcore/snapcraft/master/docker/bin/snapcraft-wrapper --output snapcraft-wrapper && \
       mkdir -p /snap/bin && \
       mv snapcraft-wrapper /snap/bin/snapcraft && \
