@@ -1,7 +1,6 @@
 image: ubuntu:bionic
 
 stages:
-  - snapcraft
   - build
 
 before_script:
@@ -9,10 +8,7 @@ before_script:
   - export LANG=C.UTF-8
   - export SNAP_ARCH=amd64
   - export PATH=/snap/bin:$PATH
-
-prepare-snapcraft:
-  stage: snapcraft
-  script: |
+  - |
       apt-get update && \
       apt-get install --yes curl sudo jq squashfs-tools && \
       curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/core' | jq '.download_url' -r) --output core.snap && \
