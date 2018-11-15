@@ -24,6 +24,7 @@ prepare-snapcraft:
       unsquashfs -d /snap/snapcraft/current snapcraft.snap && \
       rm snapcraft.snap && \
       curl -L https://raw.githubusercontent.com/snapcore/snapcraft/master/docker/bin/snapcraft-wrapper --output snapcraft-wrapper && \
+      mkdir -p /snap/bin && \
       mv snapcraft-wrapper /snap/bin/snapcraft && \
       chmod a+x /snap/bin/snapcraft
 
