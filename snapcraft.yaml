@@ -3,7 +3,6 @@ version: git
 version-script: |
   echo $(git describe --tags).$(git describe --always)
 summary: Shared GNOME 3.28 Ubuntu stack
-summary: Library bundle for developers of GNOME applications
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
