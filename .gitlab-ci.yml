@@ -12,16 +12,18 @@ before_script:
 
 prepare-snapcraft:
   stage: snapcraft
-  script:
-    - apt-get update
-    - apt-get dist-upgrade --yes
-    - apt-get install --yes
-    - curl sudo jq squashfs-tools
-    - curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/core' | jq '.download_url' -r) --output core.snap
-    - mkdir -p /snap/core && unsquashfs -d /snap/core/current core.snap && rm core.snap
-    - curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/snapcraft?channel=candidate' | jq '.download_url' -r) --output snapcraft.snap
-    - mkdir -p /snap/snapcraft && unsquashfs -d /snap/snapcraft/current snapcraft.snap && rm snapcraft.snap
-    - bin/snapcraft-wrapper /snap/bin/snapcraft
+  script: |
+      apt-get update && \
+      apt-get install --yes curl sudo jq squashfs-tools && \
+      curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/core' | jq '.download_url' -r) --output core.snap && \
+      mkdir -p /snap/core && \
+      unsquashfs -d /snap/core/current core.snap && \
+      rm core.snap && \
+      curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/snapcraft?channel=candidate' | jq '.download_url' -r) --output snapcraft.snap && \
+      mkdir -p /snap/snapcraft && \
+      unsquashfs -d /snap/snapcraft/current snapcraft.snap && \
+      rm snapcraft.snap && \
+      cp bin/snapcraft-wrapper /snap/bin/snapcraft
 
 build-gnome-3-28-1804-sdk-snap:
   stage: build
