@@ -51,6 +51,7 @@ class XAutotoolsPlugin(autotools.AutotoolsPlugin):
             vapidirs = [
                 os.path.join(stage_dir, 'usr/share/vala/vapi'),
                 os.path.join(stage_dir, 'usr/share/vala-0.40/vapi'),
+                os.path.join(stage_dir, 'usr/share/vala-0.36/vapi'),
                 '/usr/share/vala-0.30/vapi']
             env['VAPIDIR'] = ':'.join(vapidirs)
             env['VALAFLAGS'] = ' '.join(['--vapidir ' + v for v in vapidirs])

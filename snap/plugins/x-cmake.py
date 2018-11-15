@@ -40,6 +40,8 @@ class XCMakePlugin(snapcraft.plugins.cmake.CMakePlugin):
             os.path.join(stage_dir, 'usr/lib', arch, 'girepository-1.0'),
             os.path.join('/usr/lib', arch, 'girepository-1.0')])
         env['VAPIDIR'] = ':'.join([
+            os.path.join(stage_dir, 'usr/share/vala/vapi'),
+            os.path.join(stage_dir, 'usr/share/vala-0.40/vapi'),
             os.path.join(stage_dir, 'usr/share/vala-0.36/vapi'),
             '/usr/share/vala-0.30/vapi'])
         env['XDG_DATA_DIRS'] = ':'.join([
