@@ -1,4 +1,4 @@
-image: snapcore/snapcraft:stable
+image: snapcore/snapcraft:candidate
 
 stages:
   - build
@@ -8,13 +8,9 @@ before_script:
   - export LANG=C.UTF-8
   - export SNAP_ARCH=amd64
   - apt-get -y update
-  - apt-get install -y software-properties-common
-  - add-apt-repository -y ppa:ubuntu-desktop/gnome-3-26
-  - add-apt-repository -y ppa:ken-vandine/gnome-3-26
-  - apt-get -y update
   - apt-get -y dist-upgrade
 
-build-gnome-software-snap:
+build-gnome-3-28-1804-sdk-snap:
   stage: build
   script:
     - echo $LOGIN | snapcraft login --with -
