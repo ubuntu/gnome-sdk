@@ -23,7 +23,9 @@ prepare-snapcraft:
       mkdir -p /snap/snapcraft && \
       unsquashfs -d /snap/snapcraft/current snapcraft.snap && \
       rm snapcraft.snap && \
-      cp bin/snapcraft-wrapper /snap/bin/snapcraft
+      curl -L https://raw.githubusercontent.com/snapcore/snapcraft/master/docker/bin/snapcraft-wrapper --output snapcraft-wrapper && \
+      mv snapcraft-wrapper /snap/bin/snapcraft && \
+      chmod a+x /snap/bin/snapcraft
 
 build-gnome-3-28-1804-sdk-snap:
   stage: build
