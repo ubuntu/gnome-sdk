@@ -7,8 +7,6 @@ before_script:
   - export LC_ALL=C.UTF-8
   - export LANG=C.UTF-8
   - export SNAP_ARCH=amd64
-  - apt-get -y update
-  - apt-get -y dist-upgrade
 
 build-gnome-3-28-1804-sdk-snap:
   stage: build
