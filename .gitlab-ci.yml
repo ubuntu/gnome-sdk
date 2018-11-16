@@ -1,4 +1,4 @@
-image: ubuntu:bionic
+image: ubuntudesktop/gnome-3-28-1804
 
 stages:
   - build
@@ -8,26 +8,6 @@ before_script:
   - export LANG=C.UTF-8
   - export SNAP_ARCH=amd64
   - export PATH=/snap/bin:$PATH
-  - |
-      apt-get update && \
-      apt-get install --yes curl sudo jq squashfs-tools && \
-      curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/core' | jq '.download_url' -r) --output core.snap && \
-      mkdir -p /snap/core && \
-      unsquashfs -d /snap/core/current core.snap && \
-      rm core.snap && \
-      curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/core18' | jq '.download_url' -r) --output core18.snap && \
-      mkdir -p /snap/core18 && \
-      unsquashfs -d /snap/core18/current core18.snap && \
-      rm core18.snap && \
-      curl -L $(curl -H 'X-Ubuntu-Series: 16' 'https://api.snapcraft.io/api/v1/snaps/details/snapcraft?channel=candidate' | jq '.download_url' -r) --output snapcraft.snap && \
-      mkdir -p /snap/snapcraft && \
-      unsquashfs -d /snap/snapcraft/current snapcraft.snap && \
-      rm snapcraft.snap && \
-      sed -i.back -e 's|installed_snaps =|installed_snaps = [] #|g' /snap/snapcraft/current/lib/python*/site-packages/snapcraft/internal/lifecycle/_runner.py && \
-      curl -L https://raw.githubusercontent.com/snapcore/snapcraft/master/docker/bin/snapcraft-wrapper --output snapcraft-wrapper && \
-      mkdir -p /snap/bin && \
-      mv snapcraft-wrapper /snap/bin/snapcraft && \
-      chmod a+x /snap/bin/snapcraft
 
 build-gnome-3-28-1804-sdk-snap:
   stage: build
