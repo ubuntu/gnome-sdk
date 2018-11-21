@@ -230,7 +230,7 @@ parts:
       - libgl1-mesa-dev
       - libegl1-mesa-dev
   gtk:
-    after: [glib, cairo, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
+    after: [glib, cairo, epoxy, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-22
     plugin: autotools
@@ -241,7 +241,6 @@ parts:
       - gettext
       - dbus-x11
       - libegl1-mesa-dev
-      - libepoxy-dev
       - libwayland-dev
       - libxkbcommon-dev
       - libx11-dev
