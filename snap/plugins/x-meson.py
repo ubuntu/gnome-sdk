@@ -27,6 +27,8 @@ class XMesonPlugin(meson.MesonPlugin):
         env['PKG_CONFIG_PATH'] = \
             os.path.join(self.project.stage_dir, 'pkgconfig-build')
         env['XDG_DATA_DIRS'] = self.project.stage_dir + '/usr/share:/usr/share'
+        path = env['PATH']
+        env['PATH'] = ':'.join([os.path.join(stage_dir, 'usr/bin'), path])
         return env
 
     def _run_meson(self):

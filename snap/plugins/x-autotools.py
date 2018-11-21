@@ -35,6 +35,9 @@ class XAutotoolsPlugin(autotools.AutotoolsPlugin):
     def build(self):
         env = os.environ.copy()
         stage_dir = self.project.stage_dir
+        path = env['PATH']
+        env['PATH'] = ':'.join([
+            os.path.join(stage_dir, 'usr/bin'), path])
         env['XDG_DATA_DIRS'] = ':'.join([
             os.path.join(stage_dir, 'usr/share'),
             '/usr/share'])
