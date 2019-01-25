@@ -19,6 +19,21 @@ slots:
         - /
 
 parts:
+  magic:
+    plugin: nil
+    build-environment: &buildenv
+      - PATH: $PATH:$SNAPCRAFT_STAGE/usr/bin
+      - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/pkgconfig-build
+      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
+      - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      - VAPIDIR: $SNAPCRAFT_STAGE/usr/share/vala/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.40/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.36/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.30/vapi
+      - VALAFLAGS: " --vapidir $SNAPCRAFT_STAGE/usr/share/vala/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.40/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.36/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.30/vapi"
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.40
+      - CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH:$SNAPCRAFT_STAGE
+      - CMAKE_INCLUDE_PATH: $CMAKE_INCLUDE_PATH:$SNAPCRAFT_STAGE/include:$SNAPCRAFT_STAGE/usr/include
+      - CMAKE_LIBRARY_PATH: $CMAKE_LIBRARY_PATH:$SNAPCRAFT_STAGE/lib:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+
   last:
     # Ensure that this part is always staged last
     after:
@@ -44,6 +59,7 @@ parts:
       - clutter-gtk
       - cogl
     plugin: nil
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -81,6 +97,7 @@ parts:
     # Once the 0.40 branch exists, we should track the branch rather than the tag
     #source-branch: 0.40
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
     build-packages:
       - bison
       - flex
@@ -107,6 +124,7 @@ parts:
       - --enable-perf-utils
       - --disable-silent-rules
       - --disable-maintainer-mode
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -140,9 +158,10 @@ parts:
   gobject-introspection:
     after: [glib, cairo]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: gnome-3-28
+    #source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr, --with-python=python3 ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -170,12 +189,26 @@ parts:
     source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=atk.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+
   at-spi2-core:
     after: [glib, gobject-introspection, meson]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
     source-tag: AT_SPI2_CORE_2_28_0
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -198,6 +231,7 @@ parts:
     source-branch: gnome-3-26 # there is no gnome-3-28 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -220,6 +254,7 @@ parts:
     source-tag: 2.38.0 # there is no gdk-pixbuf-2-38 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -241,17 +276,32 @@ parts:
     source: https://github.com/anholt/libepoxy.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=epoxy.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - xutils-dev
       - libx11-dev
       - libgl1-mesa-dev
       - libegl1-mesa-dev
+
   gtk:
     after: [glib, cairo, epoxy, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-24
     plugin: autotools
     configflags: [ --prefix=/usr, --disable-maintainer-mode, --enable-debug=no ]
+    build-environment: *buildenv
+
     override-build: |
       set -eux
       sed -i 's#demos tests testsuite examples=#tests testsuite#' Makefile.am
@@ -301,13 +351,26 @@ parts:
     #source-branch: 0.20
     configflags: [ --prefix=/usr ]
     plugin: autotools
+    build-environment: *buildenv
     build-packages:
       - autoconf-archive
   glib: 
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: glib-2-56
+    source-branch: glib-2-58
     configflags: [ --prefix=/usr ]
     plugin: autotools
+    build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=glib-2.0.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - automake
       - autoconf
@@ -324,6 +387,7 @@ parts:
       - --with-graphite2=yes
       - --enable-introspection
       - --with-gobject
+    build-environment: *buildenv
     build-packages:
       - libfreetype6-dev
       - libicu-dev
@@ -346,6 +410,7 @@ parts:
     #source-tag: '1.42.0'
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     build-packages:
       - libfreetype6-dev
       - libfontconfig1-dev
@@ -374,6 +439,7 @@ parts:
     source: git://git.0pointer.net/libcanberra.git
     configflags: [ --prefix=/usr ]
     plugin: autotools
+    build-environment: *buildenv
     build-packages:
       - libasound2-dev
       - libvorbis-dev
@@ -387,12 +453,14 @@ parts:
     source-branch: json-glib-1-4
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
   gsettings-desktop-schemas:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
     build-packages:
       - intltool
       - gnome-common
@@ -402,6 +470,7 @@ parts:
     source-branch: gnome-3-28
     plugin: autotools
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
     build-packages:
       - iso-codes
       - libgl1-mesa-dev
@@ -416,6 +485,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/clutter.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -449,6 +519,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
@@ -466,6 +537,7 @@ parts:
     source-branch: cogl-1.22
     plugin: autotools
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
     override-build: |
       set -eux
       snapcraftctl build
