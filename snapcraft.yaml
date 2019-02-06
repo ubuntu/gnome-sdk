@@ -26,13 +26,16 @@ parts:
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/pkgconfig-build
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/girepository-1.0:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
+      #- INTROSPECTION_GIRDIR: $SNAPCRAFT_STAGE/usr/share/gir-1.0
+      #- GI_SCANNER_DISABLE_CACHE: "1"
       - VAPIDIR: $SNAPCRAFT_STAGE/usr/share/vala/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.40/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.36/vapi:$SNAPCRAFT_STAGE/usr/share/vala-0.30/vapi
       - VALAFLAGS: " --vapidir $SNAPCRAFT_STAGE/usr/share/vala/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.40/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.36/vapi $SNAPCRAFT_STAGE/usr/share/vala-0.30/vapi"
-      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.40
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAPCRAFT_STAGE/usr/lib/vala-0.40
       - CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH:$SNAPCRAFT_STAGE
       - CMAKE_INCLUDE_PATH: $CMAKE_INCLUDE_PATH:$SNAPCRAFT_STAGE/include:$SNAPCRAFT_STAGE/usr/include
       - CMAKE_LIBRARY_PATH: $CMAKE_LIBRARY_PATH:$SNAPCRAFT_STAGE/lib:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      #- MAKEFLAGS: "-j2"
 
   last:
     # Ensure that this part is always staged last
@@ -47,7 +50,6 @@ parts:
       - at-spi2-core
       - at-spi2-atk
       - epoxy
-      - gdk-pixbuf
       - gtk
       - gee
       - glib
@@ -70,19 +72,19 @@ parts:
       do
         sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=#' $PC
       done
-  #libtool:
-  #  plugin: autotools
-  #  source: https://git.savannah.gnu.org/git/libtool.git
-  #  configflags: [ --prefix=/usr ]
-  #  build-packages:
-  #    - file
-  #    - automake
-  #    - autoconf
-  #    - autotools-dev
-  #    - help2man
-  #    - texinfo
-  #    - zlib1g-dev
-  #    - gnulib
+  libtool:
+    plugin: autotools
+    source: https://git.savannah.gnu.org/git/libtool.git
+    configflags: [ --prefix=/usr ]
+    build-packages:
+      - file
+      - automake
+      - autoconf
+      - autotools-dev
+      - help2man
+      - texinfo
+      - zlib1g-dev
+      - gnulib
   meson:
     plugin: python
     source: https://github.com/mesonbuild/meson.git
@@ -158,7 +160,7 @@ parts:
   gobject-introspection:
     after: [glib, cairo]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    #source-branch: gnome-3-28
+    #source-branch: gnome-3-30
     plugin: autotools
     configflags: [ --prefix=/usr, --with-python=python3 ]
     build-environment: *buildenv
@@ -251,7 +253,7 @@ parts:
   gdk-pixbuf:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: 2.38.0 # there is no gdk-pixbuf-2-38 branch yet
+    #source-tag: 2.38.0 # there is no gdk-pixbuf-2-38 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -295,7 +297,7 @@ parts:
       - libegl1-mesa-dev
 
   gtk:
-    after: [glib, cairo, epoxy, pango, gobject-introspection, gdk-pixbuf, json-glib, atk, at-spi2-atk]
+    after: [libtool, glib, gdk-pixbuf, cairo, epoxy, pango, gobject-introspection, json-glib, atk, at-spi2-atk]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-24
     plugin: autotools
@@ -318,7 +320,6 @@ parts:
         sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
       done
     build-packages:
-      - libtool
       - gtk-doc-tools
       - gettext
       - dbus-x11
@@ -355,6 +356,7 @@ parts:
     build-packages:
       - autoconf-archive
   glib: 
+    after: [libtool]
     source: https://gitlab.gnome.org/GNOME/glib.git
     source-branch: glib-2-58
     configflags: [ --prefix=/usr ]
@@ -375,7 +377,6 @@ parts:
       - automake
       - autoconf
       - autotools-dev
-      - libtool
       - libmount-dev
   harfbuzz:
     after: [glib, cairo, gobject-introspection]
@@ -465,7 +466,7 @@ parts:
       - intltool
       - gnome-common
   gnome-desktop:
-    after: [glib, gobject-introspection, gdk-pixbuf, gtk, gsettings-desktop-schemas]
+    after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
     source-branch: gnome-3-28
     plugin: autotools
@@ -515,7 +516,7 @@ parts:
       - libgudev-1.0-dev
       - libxkbcommon-dev
   clutter-gtk:
-    after: [clutter, glib, gobject-introspection, gdk-pixbuf, gtk]
+    after: [clutter, glib, gobject-introspection, gtk, gdk-pixbuf]
     source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -564,3 +565,11 @@ parts:
       - xauth
       - xvfb
       - libgstreamer-plugins-base1.0-dev
+  debs:
+    plugin: nil
+    stage-packages:
+      - build-essentials
+      - libwayland-dev
+      - libudev-dev
+      - libx11-dev
+      - libxml2-dev
