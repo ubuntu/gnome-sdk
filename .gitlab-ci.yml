@@ -8,6 +8,7 @@ before_script:
   - export LANG=C.UTF-8
   - export SNAP_ARCH=amd64
   - export PATH=/snap/bin:$PATH
+  - apt-get update
 
 build-gnome-3-28-1804-sdk-snap:
   stage: build
