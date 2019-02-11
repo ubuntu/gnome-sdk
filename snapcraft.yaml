@@ -36,6 +36,7 @@ parts:
       - CMAKE_INCLUDE_PATH: $CMAKE_INCLUDE_PATH:$SNAPCRAFT_STAGE/include:$SNAPCRAFT_STAGE/usr/include
       - CMAKE_LIBRARY_PATH: $CMAKE_LIBRARY_PATH:$SNAPCRAFT_STAGE/lib:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       #- MAKEFLAGS: "-j2"
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   last:
     # Ensure that this part is always staged last
@@ -268,6 +269,11 @@ parts:
       cp $SRC $DST
       sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
       sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      LOADERS_PATH=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
+      ./usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
     build-packages:
       - libx11-dev
       - libpng-dev
