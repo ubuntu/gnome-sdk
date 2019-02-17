@@ -22,7 +22,7 @@ parts:
   magic:
     plugin: nil
     build-environment: &buildenv
-      - PATH: $PATH:$SNAPCRAFT_STAGE/usr/bin
+      - PATH: $SNAPCRAFT_STAGE/usr/bin:$PATH
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/pkgconfig-build
       - LIBTOOLIZE: $SNAPCRAFT_STAGE/usr/bin/libtoolize
