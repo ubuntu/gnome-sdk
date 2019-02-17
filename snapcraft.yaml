@@ -583,7 +583,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/cogl.git
     source-branch: cogl-1.22
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    configflags: [ --prefix=/usr, --enable-wayland-egl-platform=yes ]
     build-environment: *buildenv
     override-build: |
       set -eux
