@@ -86,6 +86,13 @@ parts:
       - texinfo
       - zlib1g-dev
       - gnulib
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      LIBTOOLIZE=usr/bin/libtoolize
+      sed -i 's#pkgauxdir="#pkgauxdir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="#pkgltdldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="#aclocaldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
   meson:
     plugin: python
     source: https://github.com/mesonbuild/meson.git
