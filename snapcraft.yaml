@@ -476,7 +476,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
     source-branch: gnome-3-28
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    configflags: [ --prefix=/usr, --disable-Werror ]
     build-environment: *buildenv
     build-packages:
       - iso-codes
