@@ -370,6 +370,16 @@ parts:
     build-environment: *buildenv
     build-packages:
       - autoconf-archive
+    override-build: |
+      set -eux
+      snapcraftctl build
+      GIREPOSITORY_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/girepository-1.0
+      mkdir -p $GIREPOSITORY_PATH
+      cp gee/Gee-0.8.typelib $GIREPOSITORY_PATH/
+      GIR_PATH=$SNAPCRAFT_PART_INSTALL/usr/share/gir-1.0
+      mkdir -p $GIR_PATH
+      cp gee/Gee-0.8.gir $GIR_PATH/
+      rm -r $SNAPCRAFT_PART_INSTALL/$(echo $SNAPCRAFT_STAGE | cut -d/ -f2)
   glib: 
     after: [libtool]
     source: https://gitlab.gnome.org/GNOME/glib.git
