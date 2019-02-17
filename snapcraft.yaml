@@ -107,7 +107,8 @@ parts:
     # Once the 0.40 branch exists, we should track the branch rather than the tag
     #source-branch: 0.40
     configflags: [ --prefix=/usr ]
-    build-environment: *buildenv
+    build-environment:
+      - VALAFLAGS: ""
     build-packages:
       - bison
       - flex
