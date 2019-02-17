@@ -472,6 +472,16 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=json-glib-1.0.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
   gsettings-desktop-schemas:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
@@ -482,6 +492,16 @@ parts:
     build-packages:
       - intltool
       - gnome-common
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
+      mkdir -p $PKGCONFIG_BUILD
+      PC=gsettings-desktop-schemas.pc
+      SRC=$SNAPCRAFT_PART_INSTALL/usr/share/pkgconfig/$PC
+      DST=$PKGCONFIG_BUILD/$PC
+      cp $SRC $DST
+      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
   gnome-desktop:
     after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
