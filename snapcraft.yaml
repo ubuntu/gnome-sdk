@@ -574,7 +574,7 @@ parts:
   debs:
     plugin: nil
     stage-packages:
-      - build-essentials
+      - build-essential
       - libwayland-dev
       - libudev-dev
       - libx11-dev
