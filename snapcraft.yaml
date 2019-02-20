@@ -188,8 +188,8 @@ parts:
       set -eux
       snapcraftctl stage
       PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atspi-2.pc
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $PC
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $PC
+      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
   at-spi2-atk:
     after: [glib, at-spi2-core, atk, meson]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
@@ -206,8 +206,8 @@ parts:
       set -eux
       snapcraftctl stage
       PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atk-bridge-2.0.pc
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $PC
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $PC
+      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
   gdk-pixbuf:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
