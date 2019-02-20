@@ -444,6 +444,14 @@ parts:
       - libudev-dev
       - libx11-dev
       - libxml2-dev
+      - automake
+      - autoconf
+      - autotools-dev
+      - libmount-dev
+      - libfribidi-dev
+      - libthai-dev
+      - libffi-dev
+      - python2.7-minimal # Needed by glib scripts
     stage:
       - -usr/include/harfbuzz
       - -usr/share/gir-1.0/HarfBuzz-0.0.gir
