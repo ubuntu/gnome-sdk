@@ -66,6 +66,13 @@ parts:
       snapcraftctl stage
       SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
       mv $SCANNER.orig $SCANNER
+    override-prime: |
+      set -eux
+      snapcraftctl prime
+      for PC in $(find . -path "*/pkgconfig/*.pc")
+      do
+        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
+      done
   libtool:
     plugin: autotools
     source: https://git.savannah.gnu.org/git/libtool.git
