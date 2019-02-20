@@ -24,7 +24,6 @@ parts:
     build-environment: &buildenv
       - PATH: $SNAPCRAFT_STAGE/usr/bin:$PATH
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
-      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/pkgconfig-build
       - LIBTOOLIZE: $SNAPCRAFT_STAGE/usr/bin/libtoolize
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/girepository-1.0:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
@@ -69,11 +68,6 @@ parts:
       snapcraftctl stage
       SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
       mv $SCANNER.orig $SCANNER
-      cd $SNAPCRAFT_STAGE/usr/lib
-      for PC in $(find . -name *.pc)
-      do
-        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=#' $PC
-      done
   libtool:
     plugin: autotools
     source: https://git.savannah.gnu.org/git/libtool.git
@@ -137,20 +131,6 @@ parts:
       - --disable-silent-rules
       - --disable-maintainer-mode
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="cairo-fc.pc cairo-ft.pc cairo-gobject.pc cairo-pdf.pc cairo-png.pc cairo-ps.pc cairo-script.pc cairo-svg.pc cairo-tee.pc cairo-xcb-shm.pc cairo-xcb.pc cairo-xlib-xrender.pc cairo-xlib.pc cairo.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-        sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
-      done
     build-packages:
       - libfontconfig1-dev
       - libfreetype6-dev
@@ -182,13 +162,6 @@ parts:
       cp $SCANNER $SNAPCRAFT_STAGE/usr/bin/g-ir-scanner.orig
       sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#' $SCANNER
       sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=gobject-introspection-1.0.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - python3-dev
       - libffi-dev
@@ -202,18 +175,6 @@ parts:
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=atk.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
-
   at-spi2-core:
     after: [glib, gobject-introspection, meson]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
@@ -221,22 +182,17 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=atspi-2.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - libdbus-1-dev
       - libxkbcommon-x11-dev
       - libxkbcommon-dev
       - libxtst-dev
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atspi-2.pc
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $PC
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $PC
   at-spi2-atk:
     after: [glib, at-spi2-core, atk, meson]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
@@ -244,22 +200,17 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=atk-bridge-2.0.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - libdbus-1-dev
       - libdbus-glib-1-dev
       - libxml2-dev
       - libx11-dev
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atk-bridge-2.0.pc
+      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $PC
+      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $PC
   gdk-pixbuf:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
@@ -267,17 +218,6 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=gdk-pixbuf-2.0.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     override-stage: |
       set -eux
       snapcraftctl stage
@@ -294,17 +234,6 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=epoxy.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
     build-packages:
       - xutils-dev
       - libx11-dev
@@ -318,24 +247,10 @@ parts:
     plugin: autotools
     configflags: [ --prefix=/usr, --disable-maintainer-mode, --enable-debug=no ]
     build-environment: *buildenv
-
     override-build: |
       set -eux
       sed -i 's#demos tests testsuite examples=#tests testsuite#' Makefile.am
       snapcraftctl build
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="gdk-3.0.pc gdk-x11-3.0.pc gtk+-3.0.pc gtk+-unix-print-3.0.pc gtk+-x11-3.0.pc gail-3.0.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
-      done
     build-packages:
       - gtk-doc-tools
       - gettext
@@ -389,19 +304,6 @@ parts:
     configflags: [ --prefix=/usr ]
     plugin: autotools
     build-environment: *buildenv
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="glib-2.0.pc gio-2.0.pc gio-unix-2.0.pc gobject-2.0.pc gthread-2.0.pc gmodule-2.0.pc gmodule-export-2.0.pc gmodule-no-export-2.0.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
-      done
     build-packages:
       - automake
       - autoconf
@@ -423,17 +325,6 @@ parts:
       - libicu-dev
       - libgraphite2-dev
       - ragel
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=harfbuzz.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
   pango:
     after: [glib, cairo, harfbuzz]
     source: https://gitlab.gnome.org/GNOME/pango.git
@@ -450,20 +341,6 @@ parts:
       - libxt-dev
       - libfribidi-dev
       - libthai-dev
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="pango.pc pangocairo.pc pangoxft.pc pangoft2.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-        sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
-      done
   libcanberra: 
     after: [glib, gtk]
     source: git://git.0pointer.net/libcanberra.git
@@ -484,16 +361,6 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=json-glib-1.0.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
   gsettings-desktop-schemas:
     after: [glib, gobject-introspection]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
@@ -504,16 +371,6 @@ parts:
     build-packages:
       - intltool
       - gnome-common
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=gsettings-desktop-schemas.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/share/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
   gnome-desktop:
     after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
@@ -536,19 +393,6 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="cally-1.0.pc clutter-1.0.pc clutter-cogl-1.0.pc clutter-gdk-1.0.pc clutter-glx-1.0.pc clutter-wayland-1.0.pc clutter-x11-1.0.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#^prefix=#prefix=$SNAPCRAFT_STAGE#' $DST
-      done
     build-packages:
       - libgl1-mesa-dev
       - libdrm-dev
@@ -569,17 +413,6 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PC=clutter-gtk-1.0.pc
-      SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/$(gcc -print-multiarch)/pkgconfig/$PC
-      DST=$PKGCONFIG_BUILD/$PC
-      cp $SRC $DST
-      sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-      sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
   cogl:
     after: [glib, gobject-introspection, cairo, pango]
     source: https://gitlab.gnome.org/GNOME/cogl.git
@@ -587,20 +420,6 @@ parts:
     plugin: autotools
     configflags: [ --prefix=/usr, --enable-wayland-egl-platform=yes ]
     build-environment: *buildenv
-    override-build: |
-      set -eux
-      snapcraftctl build
-      PKGCONFIG_BUILD=$SNAPCRAFT_STAGE/pkgconfig-build
-      mkdir -p $PKGCONFIG_BUILD
-      PCS="cogl-1.0.pc cogl-gl-1.0.pc cogl-pango-2.0-experimental.pc cogl-path-2.0-experimental.pc cogl-2.0-experimental.pc cogl-pango-1.0.pc cogl-path-1.0.pc"
-      for PC in $PCS
-      do
-        SRC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/$PC
-        DST=$PKGCONFIG_BUILD/$PC
-        cp $SRC $DST
-        sed -i 's#libdir=#libdir=$SNAPCRAFT_STAGE#' $DST
-        sed -i 's#includedir=#includedir=$SNAPCRAFT_STAGE#' $DST
-      done
     build-packages:
       - libgbm-dev
       - libgl1-mesa-dev
