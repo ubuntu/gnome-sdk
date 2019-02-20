@@ -73,7 +73,7 @@ parts:
       do
         sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
       done
-      sed -i 's#/usr/bin/python#/usr/bin/python3#' usr/bin/glib-mkenums
+      sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
   libtool:
     plugin: autotools
     source: https://git.savannah.gnu.org/git/libtool.git
