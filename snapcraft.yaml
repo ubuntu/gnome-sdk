@@ -102,12 +102,12 @@ parts:
       - ninja-build
   vala:
     after: [gobject-introspection]
-    plugin: meson
+    plugin: autotools
     source: https://github.com/GNOME/vala.git
     source-tag: '0.40.0'
     # Once the 0.40 branch exists, we should track the branch rather than the tag
     #source-branch: 0.40
-    meson-parameters: [ --prefix=/usr ]
+    configflags: [ --prefix=/usr, --with-python=python3 ]
     build-environment: *buildenv
     build-packages:
       - bison
