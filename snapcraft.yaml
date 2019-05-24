@@ -19,36 +19,22 @@ slots:
         - /
 
 parts:
-  magic:
+  buildenv:
     plugin: nil
     build-environment: &buildenv
-      - PATH: $SNAPCRAFT_STAGE/usr/bin:$PATH
-      - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
-      - LIBTOOLIZE: $SNAPCRAFT_STAGE/usr/bin/libtoolize
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - GI_TYPELIB_PATH: $SNAPCRAFT_STAGE/usr/lib/girepository-1.0:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0:/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/girepository-1.0
-      #- INTROSPECTION_GIRDIR: $SNAPCRAFT_STAGE/usr/share/gir-1.0
-      #- GI_SCANNER_DISABLE_CACHE: "1"
-      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAPCRAFT_STAGE/usr/lib/vala-0.40
-      - CMAKE_PREFIX_PATH: $CMAKE_PREFIX_PATH:$SNAPCRAFT_STAGE
-      - CMAKE_INCLUDE_PATH: $CMAKE_INCLUDE_PATH:$SNAPCRAFT_STAGE/include:$SNAPCRAFT_STAGE/usr/include
-      - CMAKE_LIBRARY_PATH: $CMAKE_LIBRARY_PATH:$SNAPCRAFT_STAGE/lib:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
-      #- MAKEFLAGS: "-j2"
+      - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.46
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   libtool:
-    plugin: autotools
     source: https://git.savannah.gnu.org/git/libtool.git
+    plugin: autotools
     configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
     build-packages:
-      - file
-      - automake
-      - autoconf
-      - autotools-dev
       - help2man
       - texinfo
-      - zlib1g-dev
-      - gnulib
     override-stage: |
       set -eux
       snapcraftctl stage
@@ -57,23 +43,33 @@ parts:
       sed -i 's#pkgltdldir="#pkgltdldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
 
-  glib: 
-    after: [libtool]
+  glib:
+    after: [ libtool ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: glib-2-58
-    configflags: [ --prefix=/usr ]
-    plugin: autotools
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
+      cp $SNAPCRAFT_PART_INSTALL/usr/bin/glib-compile-schemas $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
     build-packages:
-      - automake
-      - autoconf
-      - autotools-dev
+      - pkg-config
       - libmount-dev
 
+  pixman:
+    after: [ glib ]
+    source: https://gitlab.freedesktop.org/pixman/pixman.git
+    plugin: autotools
+    configflags: 
+      - --prefix=/usr
+      - --disable-gtk
+    build-environment: *buildenv
+
   cairo:
-    after: [glib]
+    after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
-    source-branch: '1.14'
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -87,30 +83,25 @@ parts:
       - --enable-perf-utils
       - --disable-silent-rules
       - --disable-maintainer-mode
+      - --disable-gl
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
       - libfreetype6-dev
-      - libxrender-dev
       - libx11-dev
       - libxext-dev
-      - libpng-dev
-      - libsm-dev
-      - xutils-dev
-      - libxt-dev
-      - libpixman-1-dev
       - libxcb1-dev
       - libxcb-render0-dev
       - libxcb-shm0-dev
+      - libsm-dev
       - zlib1g-dev
       - liblzo2-dev
 
   gobject-introspection:
-    after: [glib, cairo]
+    after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: gnome-3-32
-    plugin: autotools
-    configflags: [ --prefix=/usr, --with-python=python3 ]
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -122,41 +113,26 @@ parts:
       sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
     build-packages:
       - python3-dev
-      - libffi-dev
-      - python3-mako
       - bison
       - flex
 
   vala:
-    after: [gobject-introspection]
+    after: [ gobject-introspection ]
+    source: https://gitlab.gnome.org/GNOME/vala.git
     plugin: autotools
-    source: https://github.com/GNOME/vala.git
-    source-tag: '0.40.0'
-    # Once the 0.40 branch exists, we should track the branch rather than the tag
-    #source-branch: 0.40
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
-      - bison
-      - flex
-      - help2man
-      - xsltproc
-      - libdbus-1-dev
-      - dbus
+      - autoconf-archive
       - valac
       - libgraphviz-dev
 
   gee: 
-    after: [vala, gobject-introspection]
+    after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
-    source-tag: '0.20.1'
-    # Once the 0.20 branch exists, we should track the branch rather than the tag
-    #source-branch: 0.20
-    configflags: [ --prefix=/usr ]
     plugin: autotools
+    configflags: [ --prefix=/usr ]
     build-environment: *buildenv
-    build-packages:
-      - autoconf-archive
     override-build: |
       set -eux
       snapcraftctl build
@@ -169,159 +145,223 @@ parts:
       rm -r $SNAPCRAFT_PART_INSTALL/$(echo $SNAPCRAFT_STAGE | cut -d/ -f2)
 
   atk:
-    after: [glib]
+    after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: gnome-3-28
-    plugin: autotools
-    configflags: [ --prefix=/usr ]
+    plugin: meson
+    meson-parameters: 
+      - --prefix=/usr
+      - -Dintrospection=true
+      - -Ddocs=false
     build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      cp -r $SNAPCRAFT_PART_INSTALL/usr/include/atk-1.0/atk /usr/include/
+      cp -r $SNAPCRAFT_PART_INSTALL/usr/include/atk-1.0/atk /usr/include/atk-1.0/
 
   at-spi2-core:
-    after: [glib, gobject-introspection, meson]
+    after: [ atk ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: AT_SPI2_CORE_2_28_0
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+      - --prefix=/usr
+      - -Dintrospection=yes
+      - -Ddocs=false
     build-environment: *buildenv
     build-packages:
       - libdbus-1-dev
-      - libxkbcommon-x11-dev
-      - libxkbcommon-dev
       - libxtst-dev
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atspi-2.pc
-      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
 
   at-spi2-atk:
-    after: [glib, at-spi2-core, atk, meson]
+    after: [ at-spi2-core ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
-    source-branch: gnome-3-26 # there is no gnome-3-28 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    build-packages:
-      - libdbus-1-dev
-      - libdbus-glib-1-dev
-      - libxml2-dev
-      - libx11-dev
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      PC=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atk-bridge-2.0.pc
-      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+
+  fribidi:
+    after: [ at-spi2-atk ]
+    source: https://github.com/fribidi/fribidi.git
+    plugin: meson
+    meson-parameters: 
+     - --prefix=/usr
+     - -Ddocs=false
+    build-environment: *buildenv
 
   harfbuzz:
-    after: [glib, cairo, gobject-introspection]
+    after: [ fribidi ]
     source: git://anongit.freedesktop.org/git/harfbuzz
-    source-tag: '1.7.6'
     plugin: autotools
     configflags:
       - --prefix=/usr
       - --with-graphite2=yes
       - --enable-introspection
       - --with-gobject
+      - --enable-static
     build-environment: *buildenv
     build-packages:
-      - libfreetype6-dev
-      - libicu-dev
-      - libgraphite2-dev
       - ragel
 
   pango:
-    after: [glib, cairo, harfbuzz]
+    after: [ harfbuzz ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    #source-tag: '1.42.0'
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
-      - libfreetype6-dev
-      - libfontconfig1-dev
-      - libx11-dev
+      - libthai-dev
       - libxft-dev
       - libxrender-dev
       - libxt-dev
-      - libfribidi-dev
-      - libthai-dev
 
   gdk-pixbuf:
-    after: [glib, gobject-introspection]
+    after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    #source-tag: 2.38.0 # there is no gdk-pixbuf-2-38 branch yet
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    override-stage: |
+    override-build: |
       set -eux
-      snapcraftctl stage
-      LOADERS_PATH=$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
-      ./usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
+      snapcraftctl build
+      LOADERS_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
+      cp /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so $LOADERS_PATH
+      $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
+    organize:
+      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
     build-packages:
-      - libx11-dev
       - libpng-dev
       - libjpeg-dev
       - libtiff-dev
+      - librsvg2-common
 
   epoxy:
-    after: [glib]
+    after: [ gdk-pixbuf ]
     source: https://github.com/anholt/libepoxy.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
-      - xutils-dev
-      - libx11-dev
       - libgl1-mesa-dev
       - libegl1-mesa-dev
+      - xutils-dev
 
   json-glib: 
-    after: [glib, meson]
+    after: [ epoxy ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-branch: json-glib-1-4
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=disabled
+    build-environment: *buildenv
+
+  libpsl:
+    after: [ json-glib ]
+    source: https://github.com/rockdaboot/libpsl.git
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --enable-runtime=libidn2
+    build-environment: *buildenv
+    build-packages:
+      - libidn2-0-dev
+      - libunistring-dev
+
+  libsoup:
+    after: [ libpsl ]
+    source: https://gitlab.gnome.org/GNOME/libsoup.git
+    plugin: meson
+    meson-parameters: 
+     - --prefix=/usr
+     - -Dvapi=true
+    build-environment: *buildenv
+    build-packages:
+     - libsqlite3-dev
+     - libkrb5-dev
+     - libbrotli-dev
+
+  librest:
+    after: [ libsoup ]
+    source: https://gitlab.gnome.org/GNOME/librest.git
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - gtk-doc-tools
+
+  gtk:
+    after: [ librest ]
+    source: https://gitlab.gnome.org/GNOME/gtk.git
+    source-branch: gtk-3-24
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dbroadway_backend=true
+      - -Dx11_backend=true
+      - -Dwayland_backend=true
+      - -Dwin32_backend=false
+      - -Dquartz_backend=false
+      - -Dxinerama=yes
+      - -Dintrospection=true
+      - -Dbuiltin_immodules=yes
+      - -Ddemos=false
+      - -Dexamples=false
+    build-environment: *buildenv
+    organize:
+      usr/lib/gtk-3.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gtk-3.0
+      usr/bin/gtk-query-immodules-3.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libgtk-3-0/gtk-query-immodules-3.0
+    build-packages:
+      - libwayland-dev
+      - wayland-protocols
+      - libxkbcommon-dev
+      - libxinerama-dev
+      - libcups2-dev
+      - libcolord-dev
+      - libxrandr-dev
+      - libxcursor-dev
+      - libisocodes-dev
+      - libxcomposite-dev
+      - libxdamage-dev
+      - libxfixes-dev
+      - libxi-dev
+      - libxkbfile-dev
+      - libxml2-utils
+
+  gtk-locales:
+    after: [ gtk ]
+    plugin: nil
+    override-pull: |
+      set -eux
+      apt download "language-pack-gnome-*-base"
+    override-build: |
+      set -eux
+      for deb in *.deb; do dpkg-deb -x $deb .; done
+      find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm '{}' \;
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share
+      cp -r usr/share/locale-langpack $SNAPCRAFT_PART_INSTALL/usr/share/
+
+  gtksourceview:
+    after: [ gtk-locales ]
+    source: https://gitlab.gnome.org/GNOME/gtksourceview.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
+    build-packages:
+      - gettext
+      - libxml2-dev
 
-  gtk:
-    after: [libtool, glib, gdk-pixbuf, cairo, epoxy, pango, gobject-introspection, json-glib, atk, at-spi2-atk]
-    source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-branch: gtk-3-24
-    plugin: autotools
-    configflags: [ --prefix=/usr, --disable-maintainer-mode, --enable-debug=no ]
-    build-environment: *buildenv
+  desktop-gnome-platform:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: [ "FLAVOR=gtk3" ]
     override-build: |
       set -eux
-      sed -i 's#demos tests testsuite examples=#tests testsuite#' Makefile.am
       snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/
+      cp -r /usr/share/mime $SNAPCRAFT_PART_INSTALL/usr/share/
+      update-mime-database $SNAPCRAFT_PART_INSTALL/usr/share/mime
     build-packages:
-      - gtk-doc-tools
-      - gettext
-      - dbus-x11
-      - libegl1-mesa-dev
-      - libwayland-dev
-      - libxkbcommon-dev
-      - libx11-dev
-      - libxext-dev
-      - libxi-dev
-      - libxrandr-dev
-      - libxt-dev
-      - libxrender-dev
-      - libxft-dev
-      - libxcursor-dev
-      - libxcomposite-dev
-      - libxdamage-dev
-      - libxkbfile-dev
-      - libxinerama-dev
-      - libxfixes-dev
-      - x11proto-xext-dev
-      - libcups2-dev
-      - libcolord-dev
-      - librest-dev
-      - xvfb
+      - shared-mime-info
 
   meson:
     plugin: python
@@ -421,28 +461,7 @@ parts:
       - libgstreamer-plugins-base1.0-dev
 
   last:
-    # Ensure that this part is always staged last
-    after:
-      - meson
-      - vala
-      - gobject-introspection
-      - cairo
-      - harfbuzz
-      - pango
-      - atk
-      - at-spi2-core
-      - at-spi2-atk
-      - epoxy
-      - gtk
-      - gee
-      - glib
-      - libcanberra
-      - json-glib
-      - gsettings-desktop-schemas
-      - gnome-desktop
-      - clutter
-      - clutter-gtk
-      - cogl
+    after: [ gtksourceview, desktop-gnome-platform ]
     plugin: nil
     build-environment: *buildenv
     override-stage: |
@@ -459,46 +478,151 @@ parts:
       done
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
 
-  debs:
+  runtime:
+    after: [ last ]
     plugin: nil
     stage-packages:
-      - build-essential
-      - libwayland-dev
-      - libudev-dev
-      - libx11-dev
-      - libxml2-dev
-      - automake
-      - autoconf
-      - autotools-dev
-      - libmount-dev
-      - libfribidi-dev
-      - libthai-dev
-      - libffi-dev
-      - python2.7-minimal # Needed by glib scripts
+      - fonts-noto-color-emoji
+      - libavahi-client3
+      - libavahi-common3
+      - libbrotli1
+      - libc-bin
+      - libcdt5
+      - libcgraph6
+      - libcups2
+      - libdatrie1
+      - libdb5.3
+      - libfontconfig1
+      - libfreetype6
+      - libgl1
+      - libgl1-mesa-dri
+      - libgraphite2-3
+      - libicu60
+      - libjbig0
+      - libjpeg-turbo8
+      - liblcms2-2
+      - libllvm4.0
+      - libmpc3
+      - libmpfr6
+      - libpathplan4
+      - libpng16-16
+      - libthai0
+      - libtiff5
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1
+      - libx11-6
+      - libxau6
+      - libxcb-render0
+      - libxcb-shm0
+      - libxcb1
+      - libxcomposite1
+      - libxcursor1
+      - libxdamage1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxi6
+      - libxinerama1
+      - libxkbcommon0
+      - libxml2
+      - libxrandr2
+      - libxrender1
+      - libxtst6
+      - libxft2
+      - locales-all
+      - xdg-user-dirs
+      # BRUTE FORCE STAGING:
+      - fcitx-frontend-gtk3
+      - gir1.2-ggit-1.0
+      - gir1.2-glib-2.0
+      - gir1.2-gtk-3.0
+      - gir1.2-gtksource-3.0
+      - gir1.2-gucharmap-2.90
+      - gir1.2-pango-1.0
+      - gir1.2-peas-1.0
+      - gir1.2-vte-2.91
+      - ibus-gtk3
+      - libcanberra-gtk3-0
+      - libcanberra-gtk3-module
+      - libcanberra-pulse
+      - libclutter-1.0-0
+      - libclutter-gst-3.0-0
+      - libclutter-gtk-1.0-0
+      - libcogl20
+      - libcolord2
+      - libgail-3-0
+      - libgck-1-0
+      - libgcr-base-3-1
+      - libgcr-ui-3-1
+      - libgnome-desktop-3-17
+      - libgoa-1.0-0b
+      - libgspell-1-1
+      - libgstreamer-plugins-base1.0-0
+      - libgstreamer-plugins-good1.0-0
+      - libgstreamer1.0-0
+      - libgvc6
+      - libpeas-1.0-0
+      - librsvg2-2
+      - libwebkit2gtk-4.0-37
+      - python3-dbus
+      - python3-gi
+      - python3-gi-cairo
+      - ubuntu-settings
+      - unity-gtk3-module
     stage:
-      - -usr/include/harfbuzz
-      - -usr/share/gir-1.0/HarfBuzz-0.0.gir
-      - -usr/include/glib-2.0
-      - -usr/include/gio-unix-2.0
+      - -etc/xdg/autostart/at-spi-dbus-bus.desktop
       - -usr/bin/gapplication
-      - -usr/bin/gdbus*
-      - -usr/bin/gio*
-      - -usr/bin/glib*
-      - -usr/bin/gobject*
+      - -usr/bin/gdbus
+      - -usr/bin/gio
+      - -usr/bin/gio-querymodules
+      - -usr/bin/glib-compile-schemas
       - -usr/bin/gresource
       - -usr/bin/gsettings
-      - -usr/bin/gtester*
-      - -usr/share/aclocal/glib-2.0.m4
-      - -usr/share/aclocal/gsettings.m4
-      - -usr/share/glib-2.0
-      - -usr/lib/*/pkgconfig/gio-2.0.pc
-      - -usr/lib/*/pkgconfig/gio-unix-2.0.pc
-      - -usr/lib/*/pkgconfig/glib-2.0.pc
-      - -usr/lib/*/pkgconfig/gmodule-2.0.pc
-      - -usr/lib/*/pkgconfig/gmodule-export-2.0.pc
-      - -usr/lib/*/pkgconfig/gmodule-no-export-2.0.pc
-      - -usr/lib/*/pkgconfig/gobject-2.0.pc
-      - -usr/lib/*/pkgconfig/gthread-2.0.pc
-      - -usr/lib/*/pkgconfig/harfbuzz-gobject.pc
-      - -usr/lib/*/pkgconfig/harfbuzz-icu.pc
-      - -usr/lib/*/pkgconfig/harfbuzz.pc
+      - -usr/bin/gtk-update-icon-cache
+      - -usr/lib/*/gdk-pixbuf*/*/loaders/*
+      - -usr/lib/*/gdk-pixbuf*/gdk-pixbuf-query-loaders
+      - -usr/lib/*/girepository*/Atk*.typelib
+      - -usr/lib/*/girepository*/cairo*.typelib
+      - -usr/lib/*/girepository*/Gdk*.typelib
+      - -usr/lib/*/girepository*/GdkPixbuf*.typelib
+      - -usr/lib/*/girepository*/GdkX11*.typelib
+      - -usr/lib/*/girepository*/Gio*.typelib
+      - -usr/lib/*/girepository*/GIRepository*.typelib
+      - -usr/lib/*/girepository*/GLib*.typelib
+      - -usr/lib/*/girepository*/GObject*.typelib
+      - -usr/lib/*/girepository*/Gtk*.typelib
+      - -usr/lib/*/girepository*/libxml*.typelib
+      - -usr/lib/*/girepository*/Pango*.typelib
+      - -usr/lib/*/girepository*/PangoCairo*.typelib
+      - -usr/lib/*/girepository*/PangoFT*.typelib
+      - -usr/lib/*/girepository*/PangoXft*.typelib
+      - -usr/lib/*/girepository*/xft*.typelib
+      - -usr/lib/*/glib*/glib-compile-schemas
+      - -usr/lib/*/gtk*/*/printbackends/libprintbackend-cloudprint.so
+      - -usr/lib/*/gtk*/*/printbackends/libprintbackend-cups.so
+      - -usr/lib/*/gtk*/*/printbackends/libprintbackend-file.so
+      - -usr/lib/*/gtk*/*/printbackends/libprintbackend-lpr.so
+      - -usr/lib/*/libatk*.so*
+      - -usr/lib/*/libatspi*.so*
+      - -usr/lib/*/libepoxy*.so*
+      - -usr/lib/*/libgailutil*.so*
+      - -usr/lib/*/libgdk_pixbuf*.so*
+      - -usr/lib/*/libgdk*.so*
+      - -usr/lib/*/libgio*.so*
+      - -usr/lib/*/libgirepository*.so*
+      - -usr/lib/*/libglib*.so*
+      - -usr/lib/*/libgmodule*.so*
+      - -usr/lib/*/libgobject*.so*
+      - -usr/lib/*/libgthread*.so*
+      - -usr/lib/*/libgtk*.so*
+      - -usr/lib/*/libgtk*/gtk-query-immodules*
+      - -usr/lib/*/libjson-glib*.so*
+      - -usr/lib/*/libpango*.so*
+      - -usr/lib/*/libpangocairo*.so*
+      - -usr/lib/*/libpangoft*.so*
+      - -usr/lib/*/libsoup-gnome*.so*
+      - -usr/lib/*/libsoup*.so*
+      - -usr/lib/systemd/user/at-spi-dbus-bus.service
+      - -usr/share/dbus-1/accessibility-services/org.a11y.atspi.Registry.service
+      - -usr/share/dbus-1/services/org.a11y.Bus.service
