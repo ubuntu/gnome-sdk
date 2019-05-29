@@ -13,7 +13,7 @@ base: core18
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-3-28-1804:
+    gnome-3-28-1804-sdk:
       interface: content
       read:
         - /
@@ -43,9 +43,18 @@ parts:
       sed -i 's#pkgltdldir="#pkgltdldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
 
-  glib:
+  libffi:
     after: [ libtool ]
+    source: https://github.com/centricular/libffi.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+
+  glib:
+    after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -61,6 +70,7 @@ parts:
   pixman:
     after: [ glib ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
+    source-depth: 1
     plugin: autotools
     configflags: 
       - --prefix=/usr
@@ -70,6 +80,7 @@ parts:
   cairo:
     after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
+    source-depth: 1
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -100,6 +111,7 @@ parts:
   gobject-introspection:
     after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -130,6 +142,7 @@ parts:
   gee: 
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
+    source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -147,6 +160,7 @@ parts:
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
+    source-depth: 1
     plugin: meson
     meson-parameters: 
       - --prefix=/usr
@@ -156,12 +170,15 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      cp -r $SNAPCRAFT_PART_INSTALL/usr/include/atk-1.0/atk /usr/include/
-      cp -r $SNAPCRAFT_PART_INSTALL/usr/include/atk-1.0/atk /usr/include/atk-1.0/
+      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/pkgconfig/atk.pc
+      sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+      sed -i 's#libdir=/usr/lib/x86_64-linux-gnu#libdir=${prefix}/lib/x86_64-linux-gnu#' $PC
+      sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
 
   at-spi2-core:
     after: [ atk ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
+    source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -175,6 +192,7 @@ parts:
   at-spi2-atk:
     after: [ at-spi2-core ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -182,6 +200,7 @@ parts:
   fribidi:
     after: [ at-spi2-atk ]
     source: https://github.com/fribidi/fribidi.git
+    source-depth: 1
     plugin: meson
     meson-parameters: 
      - --prefix=/usr
@@ -191,6 +210,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: git://anongit.freedesktop.org/git/harfbuzz
+    source-depth: 1
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -205,6 +225,7 @@ parts:
   pango:
     after: [ harfbuzz ]
     source: https://gitlab.gnome.org/GNOME/pango.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -217,6 +238,7 @@ parts:
   gdk-pixbuf:
     after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -237,6 +259,7 @@ parts:
   epoxy:
     after: [ gdk-pixbuf ]
     source: https://github.com/anholt/libepoxy.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -248,6 +271,7 @@ parts:
   json-glib: 
     after: [ epoxy ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
+    source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -257,6 +281,7 @@ parts:
   libpsl:
     after: [ json-glib ]
     source: https://github.com/rockdaboot/libpsl.git
+    source-depth: 1
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -269,6 +294,7 @@ parts:
   libsoup:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
+    source-depth: 1
     plugin: meson
     meson-parameters: 
      - --prefix=/usr
@@ -282,6 +308,7 @@ parts:
   librest:
     after: [ libsoup ]
     source: https://gitlab.gnome.org/GNOME/librest.git
+    source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -292,6 +319,7 @@ parts:
     after: [ librest ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-3-24
+    source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -342,6 +370,7 @@ parts:
   gtksourceview:
     after: [ gtk-locales ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -351,6 +380,7 @@ parts:
 
   desktop-gnome-platform:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-depth: 1
     source-subdir: gtk
     plugin: make
     make-parameters: [ "FLAVOR=gtk3" ]
