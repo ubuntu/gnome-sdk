@@ -170,9 +170,9 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/pkgconfig/atk.pc
+      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atk.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-      sed -i 's#libdir=/usr/lib/x86_64-linux-gnu#libdir=${prefix}/lib/x86_64-linux-gnu#' $PC
+      sed -i 's#libdir=/usr/lib/$SNAPCRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$SNAPCRAFT_ARCH_TRIPLET#' $PC
       sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
 
   at-spi2-core:
