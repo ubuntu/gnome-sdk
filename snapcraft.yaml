@@ -378,21 +378,6 @@ parts:
       - gettext
       - libxml2-dev
 
-  desktop-gnome-platform:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-depth: 1
-    source-subdir: gtk
-    plugin: make
-    make-parameters: [ "FLAVOR=gtk3" ]
-    override-build: |
-      set -eux
-      snapcraftctl build
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share/
-      cp -r /usr/share/mime $SNAPCRAFT_PART_INSTALL/usr/share/
-      update-mime-database $SNAPCRAFT_PART_INSTALL/usr/share/mime
-    build-packages:
-      - shared-mime-info
-
   # meson:
   #   plugin: python
   #   source: https://github.com/mesonbuild/meson.git
@@ -490,28 +475,41 @@ parts:
   #     - xvfb
   #     - libgstreamer-plugins-base1.0-dev
 
-  last:
-    after: [ gtksourceview, desktop-gnome-platform ]
-    plugin: nil
-    build-environment: *buildenv
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
-      mv $SCANNER.orig $SCANNER
-    override-prime: |
-      set -eux
-      snapcraftctl prime
-      for PC in $(find . -path "*/pkgconfig/*.pc")
-      do
-        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
-      done
-      sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
-
-  runtime:
-    after: [ last ]
+  debs:
+    after: [ gtksourceview ]
     plugin: nil
     stage-packages:
+      # BUILD DEPS:
+      - pkg-config
+      - libpcre3-dev
+      - zlib1g-dev
+      - libmount-dev
+      - libxml2-dev
+      - libsqlite3-dev
+      - libbrotli-dev
+      - libthai-dev
+      - libfontconfig1-dev
+      - libxrender-dev
+      - libxft-dev
+      - libxcb-shm0-dev
+      - libxcb-render0-dev
+      - libxext-dev
+      - libxi-dev
+      - libxrandr-dev
+      - libxcursor-dev
+      - libxcomposite-dev
+      - libxdamage-dev
+      - libxinerama-dev
+      - libwayland-dev
+      - wayland-protocols
+      - libxkbcommon-dev
+      - libgl1-mesa-dev
+      - libegl1-mesa-dev
+      - libdbus-1-dev
+      - libxtst-dev
+      - gettext
+      - shared-mime-info
+      # RUNTIME DEPS:
       - fonts-noto-color-emoji
       - libavahi-client3
       - libavahi-common3
@@ -562,7 +560,7 @@ parts:
       - libxft2
       - locales-all
       - xdg-user-dirs
-      # BRUTE FORCE STAGING:
+      # RUNTIME DEPS (MIGHT NEED SOURCES):
       - fcitx-frontend-gtk3
       - gir1.2-ggit-1.0
       - gir1.2-glib-2.0
@@ -606,10 +604,21 @@ parts:
       - -usr/bin/gdbus
       - -usr/bin/gio
       - -usr/bin/gio-querymodules
+      - -usr/bin/glib-compile-resources
       - -usr/bin/glib-compile-schemas
+      - -usr/bin/glib-genmarshal
+      - -usr/bin/glib-gettextize
+      - -usr/bin/glib-mkenums
+      - -usr/bin/gobject-query
       - -usr/bin/gresource
       - -usr/bin/gsettings
+      - -usr/bin/gtester
+      - -usr/bin/gtester-report
       - -usr/bin/gtk-update-icon-cache
+      - -usr/include/gio-unix-2.0/gio/gdesktopappinfo.h
+      - -usr/include/gio-unix-2.0/gio/gunixmounts.h
+      - -usr/include/glib-2.0/*
+      - -usr/include/harfbuzz/*
       - -usr/lib/*/gdk-pixbuf*/*/loaders/*
       - -usr/lib/*/gdk-pixbuf*/gdk-pixbuf-query-loaders
       - -usr/lib/*/girepository*/Atk*.typelib
@@ -628,6 +637,7 @@ parts:
       - -usr/lib/*/girepository*/PangoFT*.typelib
       - -usr/lib/*/girepository*/PangoXft*.typelib
       - -usr/lib/*/girepository*/xft*.typelib
+      - -usr/lib/*/glib-2.0/include/glibconfig.h
       - -usr/lib/*/glib*/glib-compile-schemas
       - -usr/lib/*/gtk*/*/printbackends/libprintbackend-cloudprint.so
       - -usr/lib/*/gtk*/*/printbackends/libprintbackend-cups.so
@@ -653,6 +663,36 @@ parts:
       - -usr/lib/*/libpangoft*.so*
       - -usr/lib/*/libsoup-gnome*.so*
       - -usr/lib/*/libsoup*.so*
+      - -usr/lib/*/pkgconfig/gio-2.0.pc
+      - -usr/lib/*/pkgconfig/gio-unix-2.0.pc
+      - -usr/lib/*/pkgconfig/glib-2.0.pc
+      - -usr/lib/*/pkgconfig/gmodule-2.0.pc
+      - -usr/lib/*/pkgconfig/gmodule-export-2.0.pc
+      - -usr/lib/*/pkgconfig/gmodule-no-export-2.0.pc
+      - -usr/lib/*/pkgconfig/gobject-2.0.pc
+      - -usr/lib/*/pkgconfig/gthread-2.0.pc
       - -usr/lib/systemd/user/at-spi-dbus-bus.service
+      - -usr/share/aclocal/glib-2.0.m4
+      - -usr/share/aclocal/gsettings.m4
       - -usr/share/dbus-1/accessibility-services/org.a11y.atspi.Registry.service
       - -usr/share/dbus-1/services/org.a11y.Bus.service
+      - -usr/share/gir-1.0/HarfBuzz-0.0.gir
+      - -usr/share/glib-2.0/*
+
+  last:
+    after: [ debs ]
+    plugin: nil
+    build-environment: *buildenv
+    override-stage: |
+      set -eux
+      snapcraftctl stage
+      SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
+      mv $SCANNER.orig $SCANNER
+    override-prime: |
+      set -eux
+      snapcraftctl prime
+      for PC in $(find . -path "*/pkgconfig/*.pc")
+      do
+        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
+      done
+      sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
