@@ -399,16 +399,12 @@ parts:
   #     - libpulse-dev
   #     - libgstreamer1.0-dev
 
-  # gsettings-desktop-schemas:
-  #   after: [glib, gobject-introspection]
-  #   source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-  #   source-branch: gnome-3-28
-  #   plugin: autotools
-  #   configflags: [ --prefix=/usr ]
-  #   build-environment: *buildenv
-  #   build-packages:
-  #     - intltool
-  #     - gnome-common
+  gsettings-desktop-schemas:
+    after: [ gtksourceview ]
+    source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
 
   # gnome-desktop:
   #   after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
@@ -476,7 +472,7 @@ parts:
   #     - libgstreamer-plugins-base1.0-dev
 
   debs:
-    after: [ gtksourceview ]
+    after: [ gsettings-desktop-schemas ]
     plugin: nil
     stage-packages:
       # BUILD DEPS:
@@ -676,6 +672,7 @@ parts:
       - -usr/share/aclocal/gsettings.m4
       - -usr/share/dbus-1/accessibility-services/org.a11y.atspi.Registry.service
       - -usr/share/dbus-1/services/org.a11y.Bus.service
+      - -usr/share/GConf/gsettings/gsettings-desktop-schemas.convert
       - -usr/share/gir-1.0/HarfBuzz-0.0.gir
       - -usr/share/glib-2.0/*
 
