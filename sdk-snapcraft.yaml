@@ -1,4 +1,4 @@
-name: gnome-3-28-1804-sdk
+name: gnome-3-32-1804-sdk
 version: git
 version-script: |
   echo $(git describe --tags).$(git describe --always)
@@ -13,7 +13,7 @@ base: core18
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-3-28-1804-sdk:
+    gnome-3-32-1804-sdk:
       interface: content
       read:
         - /
