@@ -14,14 +14,18 @@ build-gnome-3-28-1804-sdk-snap:
   stage: build
   script:
     - echo $LOGIN | snapcraft login --with -
+
+    - ln -s sdk-snapcraft.yaml snapcraft.yaml
     - SNAPCRAFT_SETUP_CORE=1 snapcraft --destructive-mode
+    - snapcraft push gnome-3-28-1804-sdk_*.snap --release edge
+
+    - rm snapcraft.yaml
+
+    - ln -s platform-snapcraft.yaml snapcraft.yaml
+    - SNAPCRAFT_SETUP_CORE=1 snapcraft --destructive-mode
+    - snapcraft push gnome-3-28-1804_*.snap --release edge
+
     - snapcraft logout
-    - |
-       if [ "$CI_COMMIT_REF_NAME" = "master" ]; then
-         echo $LOGIN | snapcraft login --with -
-         snapcraft push *.snap --release edge
-         snapcraft logout
-       fi
   allow_failure: false
   artifacts:
     paths: ['./*.snap']
