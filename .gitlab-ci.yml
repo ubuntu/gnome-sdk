@@ -10,19 +10,15 @@ before_script:
   - export PATH=/snap/bin:$PATH
   - apt-get update
 
-build-gnome-3-28-1804-sdk-snap:
+build-gnome-3-28-1804-snaps:
   stage: build
   script:
     - echo $LOGIN | snapcraft login --with -
 
-    - ln -s sdk-snapcraft.yaml snapcraft.yaml
-    - SNAPCRAFT_SETUP_CORE=1 snapcraft --destructive-mode
+    - SNAPCRAFT_SETUP_CORE=1 ./sdk-snapcraft --destructive-mode
     - snapcraft push gnome-3-28-1804-sdk_*.snap --release edge
 
-    - rm snapcraft.yaml
-
-    - ln -s platform-snapcraft.yaml snapcraft.yaml
-    - SNAPCRAFT_SETUP_CORE=1 snapcraft --destructive-mode
+    - SNAPCRAFT_SETUP_CORE=1 ./platform-snapcraft --destructive-mode
     - snapcraft push gnome-3-28-1804_*.snap --release edge
 
     - snapcraft logout

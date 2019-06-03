@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ln -sf platform-snapcraft.yaml snapcraft.yaml
+snapcraft "$@"
+rm -f snapcraft.yaml
