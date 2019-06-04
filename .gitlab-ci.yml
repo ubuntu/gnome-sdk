@@ -1,4 +1,4 @@
-image: ubuntudesktop/gnome-3-32-1804
+image: ubuntudesktop/gnome-3-28-1804
 
 stages:
   - build
