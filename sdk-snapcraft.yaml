@@ -2,7 +2,7 @@ name: gnome-3-32-1804-sdk
 version: git
 version-script: |
   echo $(git describe --tags).$(git describe --always)
-summary: Shared GNOME 3.28 Ubuntu stack
+summary: Shared GNOME 3.32 Ubuntu stack
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
@@ -409,7 +409,7 @@ parts:
   # gnome-desktop:
   #   after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
   #   source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-  #   source-branch: gnome-3-28
+  #   source-branch: gnome-3-32
   #   plugin: autotools
   #   configflags: [ --prefix=/usr, --disable-Werror ]
   #   build-environment: *buildenv

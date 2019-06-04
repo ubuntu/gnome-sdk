@@ -1,10 +1,10 @@
-name: gnome-3-28-1804
+name: gnome-3-32-1804
 version: git
 version-script: |
   echo $(git describe --tags).$(git describe --always)
-summary: Shared GNOME 3.28 Ubuntu stack
+summary: Shared GNOME 3.32 Ubuntu stack
 description: |
- This snap includes a GNOME 3.28 stack (the base libraries and desktop 
+ This snap includes a GNOME 3.32 stack (the base libraries and desktop 
  integration components) and shares it through the content interface. 
  It's built using the Ubuntu xenial backport binaries.
 confinement: strict
@@ -14,72 +14,161 @@ base: core18
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-3-28-1804:
+    gnome-3-32-1804:
       interface: content
       read:
         - /
 
 parts:
-  deb:
+  gnome-sdk:
     plugin: nil
+    stage-snaps: [ gnome-3-32-1804-sdk/latest/edge ]
+    filesets: &gnome-fs
+      gnome-fs-includes:
+      - usr/bin
+      - usr/lib
+      - usr/libexec
+      - usr/sbin
+      - usr/share
+      - -usr/**/*.a
+      - -usr/**/*.c
+      - -usr/**/*.cpp
+      - -usr/**/*.o
+      - -usr/**/*.gz
+      - -usr/**/*.h
+      - -usr/**/*.hpp
+      gnome-fs-replaces:
+      - -usr/bin/gapplication
+      - -usr/bin/gdbus
+      - -usr/bin/gio
+      - -usr/bin/gio-querymodules
+      - -usr/bin/glib-compile-schemas
+      - -usr/bin/gresource
+      - -usr/bin/gsettings
+      - -usr/bin/gtk-update-icon-cache
+      - -usr/lib/*/gdk-pixbuf-2.0
+      - -usr/lib/*/girepository-1.0
+      - -usr/lib/*/glib-2.0
+      - -usr/lib/*/gtk-3.0
+      - -usr/lib/*/libatk*.so*
+      - -usr/lib/*/libatspi*.so*
+      - -usr/lib/*/libepoxy*.so*
+      - -usr/lib/*/libgdk*.so*
+      - -usr/lib/*/libgio*.so*
+      - -usr/lib/*/libgirepository*.so*
+      - -usr/lib/*/libglib*.so*
+      - -usr/lib/*/libgmodule*.so*
+      - -usr/lib/*/libgobject*.so*
+      - -usr/lib/*/libgthread*.so*
+      - -usr/lib/*/libgtk*.so*
+      - -usr/lib/*/libgtk-3-0
+      - -usr/lib/*/libjson-glib*.so*
+      - -usr/lib/*/libpango*.so*
+      - -usr/lib/*/libsoup*.so*
+      - -usr/share/GConf/gsettings/gsettings-desktop-schemas.convert
+      - -usr/share/glib-2.0
+    stage:
+      - $gnome-fs-includes
+
+  debs:
+    after: [ gnome-sdk ]
+    plugin: nil
+    filesets: *gnome-fs
+    stage:
+      - $gnome-fs-replaces
     stage-packages:
-      - libatk1.0-0
+      - fonts-noto-color-emoji
+      - libavahi-client3
+      - libavahi-common3
+      - libbrotli1
+      - libc-bin
+      - libcdt5
+      - libcgraph6
+      - libcups2
+      - libdatrie1
+      - libdb5.3
+      - libfontconfig1
+      - libfreetype6
+      - libgl1
+      - libgl1-mesa-dri
+      - libgraphite2-3
+      - libicu60
+      - libjbig0
+      - libjpeg-turbo8
+      - liblcms2-2
+      - libllvm4.0
+      - libmpc3
+      - libmpfr6
+      - libpathplan4
+      - libpng16-16
+      - libthai0
+      - libtiff5
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1
+      - libx11-6
+      - libxau6
+      - libxcb-render0
+      - libxcb-shm0
+      - libxcb1
+      - libxcomposite1
+      - libxcursor1
+      - libxdamage1
+      - libxdmcp6
+      - libxext6
+      - libxfixes3
+      - libxi6
+      - libxinerama1
+      - libxkbcommon0
+      - libxml2
+      - libxrandr2
+      - libxrender1
+      - libxtst6
+      - libxft2
+      - locales-all
+      - shared-mime-info
+      - xdg-user-dirs
+      # MAY NEED SOURCES IN SDK:
+      - fcitx-frontend-gtk3
+      - gir1.2-ggit-1.0
+      - gir1.2-glib-2.0
+      - gir1.2-gtk-3.0
+      - gir1.2-gtksource-3.0
+      - gir1.2-gucharmap-2.90
+      - gir1.2-pango-1.0
+      - gir1.2-peas-1.0
+      - gir1.2-vte-2.91
+      - ibus-gtk3
       - libcanberra-gtk3-0
+      - libcanberra-gtk3-module
       - libcanberra-pulse
       - libclutter-1.0-0
       - libclutter-gst-3.0-0
       - libclutter-gtk-1.0-0
       - libcogl20
-      - libdb5.3
-      - libgail-3-0
+      - libcolord2
       - libgck-1-0
       - libgcr-base-3-1
       - libgcr-ui-3-1
-      - libgdk-pixbuf2.0-0
-      - libgee-0.8-2
-      - libgirepository-1.0-1
-      - libglib2.0-0
-      - libgl1-mesa-dri
       - libgnome-desktop-3-17
       - libgoa-1.0-0b
+      - libgspell-1-1
       - libgstreamer-plugins-base1.0-0
       - libgstreamer-plugins-good1.0-0
       - libgstreamer1.0-0
-      - libgtk-3-0
-      - libgtksourceview-3.0-1
-      - libgspell-1-1
+      - libgvc6
       - libpeas-1.0-0
-      - gir1.2-peas-1.0
-      - gir1.2-gtk-3.0
-      - gir1.2-gtksource-3.0
-      - gir1.2-glib-2.0
-      - gir1.2-pango-1.0
-      - gir1.2-ggit-1.0
-      - gir1.2-gucharmap-2.90
-      - gir1.2-vte-2.91
-      - libmpc3
-      - libpango-1.0-0
-      - libsoup-gnome2.4-1
-      - libsoup2.4-1
+      - librsvg2-2
       - libwebkit2gtk-4.0-37
-      - libxml2
-      - libllvm4.0
       - python3-dbus
       - python3-gi
       - python3-gi-cairo
-      # desktop integration components
-      - unity-gtk3-module
-      - fcitx-frontend-gtk3
-      - ibus-gtk3
-      - libc-bin
-      - locales-all
-      - libglib2.0-bin
-      - libgtk-3-bin
-      - shared-mime-info
-      - xdg-user-dirs
-      - libcanberra-gtk3-module
       - ubuntu-settings
-      - fonts-noto-color-emoji
+      - unity-gtk3-module
+
+  last:
+    after: [ debs ]
+    plugin: nil
     build-packages:
       - gtk-update-icon-cache
       - libglib2.0-bin
@@ -87,27 +176,10 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      glib-compile-schemas $SNAPCRAFT_PART_INSTALL/usr/share/glib-2.0/schemas
-      update-mime-database $SNAPCRAFT_PART_INSTALL/usr/share/mime
-      for dir in $SNAPCRAFT_PART_INSTALL/usr/share/icons/*; do
+      glib-compile-schemas $SNAPCRAFT_STAGE/usr/share/glib-2.0/schemas
+      update-mime-database $SNAPCRAFT_STAGE/usr/share/mime
+      for dir in $SNAPCRAFT_STAGE/usr/share/icons/*; do
         if [ -f "$dir/index.theme" ]; then
           gtk-update-icon-cache --force "$dir"
         fi
       done
-  # In Ubuntu compiled locales for GTK are installed by langpacks, not by
-  # libgtk-3-common. Fetch all the langpacks and keep only the GTK locales.
-  gtk3-locales:
-    after: [ deb ]
-    plugin: nil
-    build-packages:
-      - apt
-      - dpkg
-    override-pull: |
-      set -eux
-      apt download "language-pack-gnome-*-base"
-    override-build: |
-      set -eux
-      for deb in *.deb; do dpkg-deb -x $deb .; done
-      find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm '{}' \;
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share
-      cp -R usr/share/locale-langpack $SNAPCRAFT_PART_INSTALL/usr/share/
