@@ -37,6 +37,7 @@ parts:
       - -usr/**/*.gz
       - -usr/**/*.h
       - -usr/**/*.hpp
+      - -usr/**/*.pc
       gnome-fs-replaces:
       - -usr/bin/gapplication
       - -usr/bin/gdbus
