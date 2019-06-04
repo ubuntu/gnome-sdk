@@ -563,5 +563,8 @@ parts:
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
         sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
+        sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+        sed -i 's#libdir=/usr/lib/$SNAPCRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$SNAPCRAFT_ARCH_TRIPLET#' $PC
+        sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
       done
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
