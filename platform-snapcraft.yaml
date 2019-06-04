@@ -6,7 +6,6 @@ summary: Shared GNOME 3.32 Ubuntu stack
 description: |
  This snap includes a GNOME 3.32 stack (the base libraries and desktop 
  integration components) and shares it through the content interface. 
- It's built using the Ubuntu xenial backport binaries.
 confinement: strict
 grade: stable
 icon: icon.png
@@ -23,13 +22,9 @@ parts:
   gnome-sdk:
     plugin: nil
     stage-snaps: [ gnome-3-32-1804-sdk/latest/edge ]
-    filesets: &gnome-fs
-      gnome-fs-includes:
-      - usr/bin
-      - usr/lib
-      - usr/libexec
-      - usr/sbin
-      - usr/share
+    stage:
+      - usr
+      - -usr/include
       - -usr/**/*.a
       - -usr/**/*.c
       - -usr/**/*.cpp
@@ -38,45 +33,10 @@ parts:
       - -usr/**/*.h
       - -usr/**/*.hpp
       - -usr/**/*.pc
-      gnome-fs-replaces:
-      - -usr/bin/gapplication
-      - -usr/bin/gdbus
-      - -usr/bin/gio
-      - -usr/bin/gio-querymodules
-      - -usr/bin/glib-compile-schemas
-      - -usr/bin/gresource
-      - -usr/bin/gsettings
-      - -usr/bin/gtk-update-icon-cache
-      - -usr/lib/*/gdk-pixbuf-2.0
-      - -usr/lib/*/girepository-1.0
-      - -usr/lib/*/glib-2.0
-      - -usr/lib/*/gtk-3.0/3.0.0/printbackends
-      - -usr/lib/*/libatk*.so*
-      - -usr/lib/*/libatspi*.so*
-      - -usr/lib/*/libepoxy*.so*
-      - -usr/lib/*/libgdk*.so*
-      - -usr/lib/*/libgio*.so*
-      - -usr/lib/*/libgirepository*.so*
-      - -usr/lib/*/libglib*.so*
-      - -usr/lib/*/libgmodule*.so*
-      - -usr/lib/*/libgobject*.so*
-      - -usr/lib/*/libgthread*.so*
-      - -usr/lib/*/libgtk*.so*
-      - -usr/lib/*/libgtk-3-0
-      - -usr/lib/*/libjson-glib*.so*
-      - -usr/lib/*/libpango*.so*
-      - -usr/lib/*/libsoup*.so*
-      - -usr/share/GConf/gsettings/gsettings-desktop-schemas.convert
-      - -usr/share/glib-2.0
-    stage:
-      - $gnome-fs-includes
 
   debs:
     after: [ gnome-sdk ]
     plugin: nil
-    filesets: *gnome-fs
-    stage:
-      - $gnome-fs-replaces
     stage-packages:
       - fonts-noto-color-emoji
       - libavahi-client3
@@ -127,9 +87,8 @@ parts:
       - libxtst6
       - libxft2
       - locales-all
-      - shared-mime-info
       - xdg-user-dirs
-      # MAY NEED SOURCES IN SDK:
+      # THESE CAUSE CONFLICTS (SOME WILL NEED SOURCES IN SDK):
       - fcitx-frontend-gtk3
       - gir1.2-ggit-1.0
       - gir1.2-glib-2.0
@@ -164,8 +123,39 @@ parts:
       - python3-dbus
       - python3-gi
       - python3-gi-cairo
+      - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
+    stage:
+      - -usr/bin/gapplication
+      - -usr/bin/gdbus
+      - -usr/bin/gio
+      - -usr/bin/gio-querymodules
+      - -usr/bin/glib-compile-schemas
+      - -usr/bin/gresource
+      - -usr/bin/gsettings
+      - -usr/bin/gtk-update-icon-cache
+      - -usr/lib/*/gdk-pixbuf-2.0
+      - -usr/lib/*/girepository-1.0
+      - -usr/lib/*/glib-2.0
+      - -usr/lib/*/gtk-3.0/3.0.0/printbackends
+      - -usr/lib/*/libatk*.so*
+      - -usr/lib/*/libatspi*.so*
+      - -usr/lib/*/libepoxy*.so*
+      - -usr/lib/*/libgdk*.so*
+      - -usr/lib/*/libgio*.so*
+      - -usr/lib/*/libgirepository*.so*
+      - -usr/lib/*/libglib*.so*
+      - -usr/lib/*/libgmodule*.so*
+      - -usr/lib/*/libgobject*.so*
+      - -usr/lib/*/libgthread*.so*
+      - -usr/lib/*/libgtk*.so*
+      - -usr/lib/*/libgtk-3-0
+      - -usr/lib/*/libjson-glib*.so*
+      - -usr/lib/*/libpango*.so*
+      - -usr/lib/*/libsoup*.so*
+      - -usr/share/GConf/gsettings/gsettings-desktop-schemas.convert
+      - -usr/share/glib-2.0
 
   last:
     after: [ debs ]
