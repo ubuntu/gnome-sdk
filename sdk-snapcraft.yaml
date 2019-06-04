@@ -568,6 +568,6 @@ parts:
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr/lib/$SNAPCRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$SNAPCRAFT_ARCH_TRIPLET#' $PC
         sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
-        sed -i 's#-I/usr/include#-I${includedir}#' $PC
+        sed -i 's#-I/usr/include/freetype2 -I/usr/include/libpng16#-I${includedir}/freetype2 -I${includedir}/libpng16#' $PC
       done
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
