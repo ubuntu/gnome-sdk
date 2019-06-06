@@ -297,13 +297,13 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters: 
-     - --prefix=/usr
-     - -Dvapi=true
+      - --prefix=/usr
+      - -Dvapi=true
     build-environment: *buildenv
     build-packages:
-     - libsqlite3-dev
-     - libkrb5-dev
-     - libbrotli-dev
+      - libsqlite3-dev
+      - libkrb5-dev
+      - libbrotli-dev
 
   librest:
     after: [ libsoup ]
@@ -566,7 +566,7 @@ parts:
         sed -i 's#prefix=/usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
         sed -i 's#original_prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#original_prefix=/usr#' $PC
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-        sed -i 's#libdir=/usr/lib/$SNAPCRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$SNAPCRAFT_ARCH_TRIPLET#' $PC
+        sed -i 's#libdir=/usr/lib#libdir=${prefix}/lib#' $PC
         sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
         sed -i 's#-I/usr/include/freetype2 -I/usr/include/libpng16#-I${includedir}/freetype2 -I${includedir}/libpng16#' $PC
       done
