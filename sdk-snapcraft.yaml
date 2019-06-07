@@ -378,6 +378,14 @@ parts:
       - gettext
       - libxml2-dev
 
+  libdazzle:
+    after: [ gtksourceview ]
+    source: https://gitlab.gnome.org/GNOME/libdazzle.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+
   # meson:
   #   plugin: python
   #   source: https://github.com/mesonbuild/meson.git
@@ -400,7 +408,7 @@ parts:
   #     - libgstreamer1.0-dev
 
   gsettings-desktop-schemas:
-    after: [ gtksourceview ]
+    after: [ libdazzle ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
