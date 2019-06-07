@@ -576,6 +576,6 @@ parts:
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr/lib#libdir=${prefix}/lib#' $PC
         sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
-        sed -i 's#-I/usr/include/freetype2 -I/usr/include/libpng16#-I${includedir}/freetype2 -I${includedir}/libpng16#' $PC
+        sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#' $PC
       done
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
