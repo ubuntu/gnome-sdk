@@ -513,6 +513,10 @@ parts:
       - gettext
       - shared-mime-info
       - libwebkit2gtk-4.0-dev
+      - libgcr-3-dev
+      - libnotify-dev
+      - libsecret-1-dev
+      - itstool
     override-build: |
       set -eux
       snapcraftctl build
