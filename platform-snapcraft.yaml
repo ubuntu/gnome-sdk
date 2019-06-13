@@ -126,36 +126,11 @@ parts:
       - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
-    stage:
-      - -usr/bin/gapplication
-      - -usr/bin/gdbus
-      - -usr/bin/gio
-      - -usr/bin/gio-querymodules
-      - -usr/bin/glib-compile-schemas
-      - -usr/bin/gresource
-      - -usr/bin/gsettings
-      - -usr/bin/gtk-update-icon-cache
-      - -usr/lib/*/gdk-pixbuf-2.0
-      - -usr/lib/*/girepository-1.0
-      - -usr/lib/*/glib-2.0
-      - -usr/lib/*/gtk-3.0/3.0.0/printbackends
-      - -usr/lib/*/libatk*.so*
-      - -usr/lib/*/libatspi*.so*
-      - -usr/lib/*/libepoxy*.so*
-      - -usr/lib/*/libgdk*.so*
-      - -usr/lib/*/libgio*.so*
-      - -usr/lib/*/libgirepository*.so*
-      - -usr/lib/*/libglib*.so*
-      - -usr/lib/*/libgmodule*.so*
-      - -usr/lib/*/libgobject*.so*
-      - -usr/lib/*/libgthread*.so*
-      - -usr/lib/*/libgtk*.so*
-      - -usr/lib/*/libgtk-3-0
-      - -usr/lib/*/libjson-glib*.so*
-      - -usr/lib/*/libpango*.so*
-      - -usr/lib/*/libsoup*.so*
-      - -usr/share/GConf/gsettings/gsettings-desktop-schemas.convert
-      - -usr/share/glib-2.0
+    override-build: |
+      set -eux
+      snapcraftctl build
+      cd $SNAPCRAFT_STAGE/usr
+      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{} \;
 
   last:
     after: [ debs ]
