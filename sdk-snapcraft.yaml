@@ -386,101 +386,91 @@ parts:
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
-  # meson:
-  #   plugin: python
-  #   source: https://github.com/mesonbuild/meson.git
-  #   source-tag: 0.48.2
-  #   build-packages:
-  #     - ninja-build
-
-  # libcanberra: 
-  #   after: [glib, gtk]
-  #   source: git://git.0pointer.net/libcanberra.git
-  #   configflags: [ --prefix=/usr ]
-  #   plugin: autotools
-  #   build-environment: *buildenv
-  #   build-packages:
-  #     - libasound2-dev
-  #     - libvorbis-dev
-  #     - libx11-dev
-  #     - libtdb-dev
-  #     - libpulse-dev
-  #     - libgstreamer1.0-dev
+  libcanberra: 
+    after: [ libdazzle ]
+    source: git://git.0pointer.net/libcanberra.git
+    source-depth: 1
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - libasound2-dev
+      - libvorbis-dev
+      - libtdb-dev
+      - libpulse-dev
+      - libgstreamer1.0-dev
 
   gsettings-desktop-schemas:
-    after: [ libdazzle ]
+    after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PC=$SNAPCRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
+      sed -i 's#/usr/#${prefix}/#' $PC
+
+  gnome-desktop:
+    after: [ gsettings-desktop-schemas ]
+    source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - iso-codes
+      - itstool
+      - libseccomp-dev
+      - libudev-dev
+      - xkb-data
+      - yelp-tools
+
+  cogl:
+    after: [ gnome-desktop ]
+    source: https://gitlab.gnome.org/GNOME/cogl.git
+    source-branch: cogl-1.22
+    source-depth: 1
+    plugin: autotools
+    configflags: 
+      - --prefix=/usr
+      - --enable-wayland-egl-platform=yes
+    build-environment: *buildenv
+    build-packages:
+      - libgbm-dev
+      - libgles2-mesa-dev
+      - xauth
+      - xvfb
+      - libgstreamer-plugins-base1.0-dev
+
+  clutter:
+    after: [ cogl ]
+    source: https://gitlab.gnome.org/GNOME/clutter.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters: 
+      - --prefix=/usr
+      - -Dbuild_examples=false
+      - -Ddocumentation=false
+    build-environment: *buildenv
+    build-packages:
+      - libdrm-dev
+      - xsltproc
+      - libinput-dev
+      - libgudev-1.0-dev
+
+  clutter-gtk:
+    after: [ clutter ]
+    source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
-  # gnome-desktop:
-  #   after: [glib, gobject-introspection, gtk, gdk-pixbuf, gsettings-desktop-schemas]
-  #   source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-  #   source-branch: gnome-3-32
-  #   plugin: autotools
-  #   configflags: [ --prefix=/usr, --disable-Werror ]
-  #   build-environment: *buildenv
-  #   build-packages:
-  #     - iso-codes
-  #     - libgl1-mesa-dev
-  #     - libseccomp-dev
-  #     - libudev-dev
-  #     - libx11-dev
-  #     - libxml2-dev
-  #     - xkb-data
-  #     - yelp-tools
-
-  # clutter:
-  #   after: [glib, gobject-introspection, json-glib, atk, cairo, pango, cogl, gtk]
-  #   source: https://gitlab.gnome.org/GNOME/clutter.git
-  #   plugin: meson
-  #   meson-parameters: [ --prefix=/usr ]
-  #   build-environment: *buildenv
-  #   build-packages:
-  #     - libgl1-mesa-dev
-  #     - libdrm-dev
-  #     - libxext-dev
-  #     - libxdamage-dev
-  #     - libxcomposite-dev
-  #     - libxi-dev
-  #     - xauth
-  #     - xsltproc
-  #     - xvfb
-  #     - libinput-dev
-  #     - libudev-dev
-  #     - libgudev-1.0-dev
-  #     - libxkbcommon-dev
-
-  # clutter-gtk:
-  #   after: [clutter, glib, gobject-introspection, gtk, gdk-pixbuf]
-  #   source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
-  #   plugin: meson
-  #   meson-parameters: [ --prefix=/usr ]
-  #   build-environment: *buildenv
-
-  # cogl:
-  #   after: [glib, gobject-introspection, cairo, pango]
-  #   source: https://gitlab.gnome.org/GNOME/cogl.git
-  #   source-branch: cogl-1.22
-  #   plugin: autotools
-  #   configflags: [ --prefix=/usr, --enable-wayland-egl-platform=yes ]
-  #   build-environment: *buildenv
-  #   build-packages:
-  #     - libgbm-dev
-  #     - libgl1-mesa-dev
-  #     - libgles2-mesa-dev
-  #     - libwayland-dev
-  #     - libxfixes-dev
-  #     - libxdamage-dev
-  #     - libxcomposite-dev
-  #     - libxrandr-dev
-  #     - xauth
-  #     - xvfb
-  #     - libgstreamer-plugins-base1.0-dev
-
   debs:
-    after: [ gsettings-desktop-schemas ]
+    after: [ clutter-gtk ]
     plugin: nil
     stage-packages:
       - pkg-config
