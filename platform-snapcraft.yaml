@@ -38,35 +38,66 @@ parts:
     after: [ gnome-sdk ]
     plugin: nil
     stage-packages:
+      - fcitx-frontend-gtk3
       - fonts-noto-color-emoji
+      - gir1.2-ggit-1.0
+      - gir1.2-gucharmap-2.90
+      - gir1.2-vte-2.91
+      - ibus-gtk3
+      - libasound2
+      - libasyncns0
       - libavahi-client3
       - libavahi-common3
       - libbrotli1
       - libc-bin
       - libcdt5
       - libcgraph6
+      - libcolord2
       - libcups2
       - libdatrie1
       - libdb5.3
+      - libevdev2
+      - libflac8
       - libfontconfig1
       - libfreetype6
+      - libgck-1-0
+      - libgcr-base-3-1
+      - libgcr-ui-3-1
       - libgl1
       - libgl1-mesa-dri
+      - libgoa-1.0-0b
       - libgraphite2-3
+      - libgspell-1-1
+      - libgstreamer-plugins-base1.0-0
+      - libgstreamer-plugins-good1.0-0
+      - libgstreamer1.0-0
+      - libgvc6
       - libicu60
+      - libinput10
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
       - libllvm4.0
       - libmpc3
       - libmpfr6
+      - libmtdev1
+      - libogg0
       - libpathplan4
       - libpng16-16
+      - libpulse0
+      - librsvg2-2
+      - libsndfile1
+      - libtdb1
       - libthai0
       - libtiff5
+      - libvorbis0a
+      - libvorbisenc2
+      - libvorbisfile3
+      - libwacom2
       - libwayland-client0
       - libwayland-cursor0
       - libwayland-egl1
+      - libwebkit2gtk-4.0-37
       - libx11-6
       - libxau6
       - libxcb-render0
@@ -78,6 +109,7 @@ parts:
       - libxdmcp6
       - libxext6
       - libxfixes3
+      - libxft2
       - libxi6
       - libxinerama1
       - libxkbcommon0
@@ -85,47 +117,13 @@ parts:
       - libxrandr2
       - libxrender1
       - libxtst6
-      - libxft2
       - locales-all
-      - xdg-user-dirs
-      # THESE CAUSE CONFLICTS (SOME WILL NEED SOURCES IN SDK):
-      - fcitx-frontend-gtk3
-      - gir1.2-ggit-1.0
-      - gir1.2-glib-2.0
-      - gir1.2-gtk-3.0
-      - gir1.2-gtksource-3.0
-      - gir1.2-gucharmap-2.90
-      - gir1.2-pango-1.0
-      - gir1.2-peas-1.0
-      - gir1.2-vte-2.91
-      - ibus-gtk3
-      - libcanberra-gtk3-0
-      - libcanberra-gtk3-module
-      - libcanberra-pulse
-      - libclutter-1.0-0
-      - libclutter-gst-3.0-0
-      - libclutter-gtk-1.0-0
-      - libcogl20
-      - libcolord2
-      - libgck-1-0
-      - libgcr-base-3-1
-      - libgcr-ui-3-1
-      - libgnome-desktop-3-17
-      - libgoa-1.0-0b
-      - libgspell-1-1
-      - libgstreamer-plugins-base1.0-0
-      - libgstreamer-plugins-good1.0-0
-      - libgstreamer1.0-0
-      - libgvc6
-      - libpeas-1.0-0
-      - librsvg2-2
-      - libwebkit2gtk-4.0-37
       - python3-dbus
       - python3-gi
-      - python3-gi-cairo
       - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
+      - xdg-user-dirs
     override-build: |
       set -eux
       snapcraftctl build

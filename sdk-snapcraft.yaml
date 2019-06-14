@@ -469,8 +469,27 @@ parts:
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
-  debs:
+  libpeas:
     after: [ clutter-gtk ]
+    source: https://gitlab.gnome.org/GNOME/libpeas.git
+    source-depth: 1
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --enable-python2
+      - --enable-python3
+    build-environment: *buildenv
+    build-packages:
+      - gnome-pkg-tools
+      - gnome-common
+      - intltool
+      - libgladeui-dev
+      - python-dev
+      - python-gi-dev
+      - adwaita-icon-theme
+
+  debs:
+    after: [ libpeas ]
     plugin: nil
     stage-packages:
       - pkg-config
@@ -507,6 +526,8 @@ parts:
       - libnotify-dev
       - libsecret-1-dev
       - itstool
+      - libudev-dev
+      - libseccomp-dev
     override-build: |
       set -eux
       snapcraftctl build
