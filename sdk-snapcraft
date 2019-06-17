@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -e
-ln -sf sdk-snapcraft.yaml snapcraft.yaml
-snapcraft "$@"
-rm -f snapcraft.yaml
