@@ -11,13 +11,6 @@ confinement: strict
 grade: stable
 base: core18
 
-# the recommended mountpoint for that content is /gnome-platform
-slots:
-    gnome-3-32-1804-sdk:
-      interface: content
-      read:
-        - /
-
 parts:
   buildenv:
     plugin: nil
