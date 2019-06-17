@@ -554,6 +554,6 @@ parts:
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr/lib#libdir=${prefix}/lib#' $PC
         sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
-        sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#' $PC
+        sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $PC
       done
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
