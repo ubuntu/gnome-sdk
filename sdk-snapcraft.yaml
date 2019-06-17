@@ -528,6 +528,9 @@ parts:
       - itstool
       - libudev-dev
       - libseccomp-dev
+      - libjpeg-dev
+      - librsvg2-dev
+      - liblcms2-dev
     override-build: |
       set -eux
       snapcraftctl build
@@ -546,6 +549,7 @@ parts:
     override-prime: |
       set -eux
       snapcraftctl prime
+
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
         sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
@@ -556,4 +560,10 @@ parts:
         sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
         sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $PC
       done
+
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
+
+      LIBTOOLIZE=usr/bin/libtoolize
+      sed -i 's#pkgauxdir="$SNAPCRAFT_STAGE#pkgauxdir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="$SNAPCRAFT_STAGE#pkgltdldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="$SNAPCRAFT_STAGE#aclocaldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
