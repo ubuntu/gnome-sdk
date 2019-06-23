@@ -112,10 +112,8 @@ parts:
       set -eux
       snapcraftctl build
       SCANNER=$SNAPCRAFT_PART_INSTALL/usr/bin/g-ir-scanner
-      mkdir -p $SNAPCRAFT_STAGE/usr/bin
-      cp $SCANNER $SNAPCRAFT_STAGE/usr/bin/g-ir-scanner.orig
-      sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#' $SCANNER
-      sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#' $SCANNER
+      sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#g' $SCANNER
+      sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#g' $SCANNER
     build-packages:
       - python3-dev
       - bison
@@ -524,6 +522,9 @@ parts:
       - libjpeg-dev
       - librsvg2-dev
       - liblcms2-dev
+      - libgspell-1-dev
+      - python2.7-minimal
+      - python3-minimal
     override-build: |
       set -eux
       snapcraftctl build
@@ -534,11 +535,6 @@ parts:
     after: [ debs ]
     plugin: nil
     build-environment: *buildenv
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      SCANNER=$SNAPCRAFT_STAGE/usr/bin/g-ir-scanner
-      mv $SCANNER.orig $SCANNER
     override-prime: |
       set -eux
       snapcraftctl prime
@@ -560,3 +556,13 @@ parts:
       sed -i 's#pkgauxdir="$SNAPCRAFT_STAGE#pkgauxdir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="$SNAPCRAFT_STAGE#pkgltdldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
       sed -i 's#aclocaldir="$SNAPCRAFT_STAGE#aclocaldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+
+      SCANNER=usr/bin/g-ir-scanner
+      sed -i 's#$SNAPCRAFT_STAGE/usr/lib#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib#g' $SCANNER
+      sed -i 's#$SNAPCRAFT_STAGE/usr/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share#g' $SCANNER
+
+      ITSTOOL=usr/bin/itstool
+      sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $ITSTOOL
+
+      GETTEXTIZE=usr/bin/gettextize
+      sed -i 's#prefix="/usr"#prefix="/snap/$SNAPCRAFT_PROJECT_NAME/current/usr"#g' $ITSTOOL
