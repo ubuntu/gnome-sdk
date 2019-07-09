@@ -588,6 +588,7 @@ parts:
 
       ITSTOOL=usr/bin/itstool
       sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $ITSTOOL
-
-      GETTEXTIZE=usr/bin/gettextize
-      sed -i 's#prefix="/usr"#prefix="/snap/$SNAPCRAFT_PROJECT_NAME/current/usr"#g' $ITSTOOL
+      
+      ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib/vala-0.44 usr/lib/vala-current
+      ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/gettext-0.19.8 usr/share/gettext-current
+      
