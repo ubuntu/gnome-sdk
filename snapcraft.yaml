@@ -17,7 +17,7 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.46
+      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.44
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   libtool:
@@ -38,7 +38,8 @@ parts:
 
   libffi:
     after: [ libtool ]
-    source: https://github.com/centricular/libffi.git
+    source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
+    source-branch: meson
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -47,6 +48,7 @@ parts:
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
+    source-branch: glib-2-60
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -63,6 +65,7 @@ parts:
   pixman:
     after: [ glib ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
+    source-tag: pixman-0.38.4
     source-depth: 1
     plugin: autotools
     configflags: 
@@ -73,6 +76,7 @@ parts:
   cairo:
     after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
+    source-tag: '1.17.2'
     source-depth: 1
     plugin: autotools
     configflags:
@@ -104,6 +108,7 @@ parts:
   gobject-introspection:
     after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -122,6 +127,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
+    source-branch: '0.44'
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -133,6 +139,7 @@ parts:
   gee: 
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
+    source-tag: '0.20.1'
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -151,6 +158,7 @@ parts:
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -169,6 +177,7 @@ parts:
   at-spi2-core:
     after: [ atk ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -183,6 +192,7 @@ parts:
   at-spi2-atk:
     after: [ at-spi2-core ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -191,6 +201,7 @@ parts:
   fribidi:
     after: [ at-spi2-atk ]
     source: https://github.com/fribidi/fribidi.git
+    source-tag: v1.0.5
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -201,6 +212,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: git://anongit.freedesktop.org/git/harfbuzz
+    source-tag: '2.4.0'
     source-depth: 1
     plugin: autotools
     configflags:
@@ -216,6 +228,7 @@ parts:
   pango:
     after: [ harfbuzz ]
     source: https://gitlab.gnome.org/GNOME/pango.git
+    source-tag: '1.43.0'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -229,6 +242,7 @@ parts:
   gdk-pixbuf:
     after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
+    source-branch: gdk-pixbuf-2-38
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -250,6 +264,7 @@ parts:
   epoxy:
     after: [ gdk-pixbuf ]
     source: https://github.com/anholt/libepoxy.git
+    source-tag: '1.5.3'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -262,6 +277,7 @@ parts:
   json-glib: 
     after: [ epoxy ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
+    source-branch: json-glib-1-4
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -272,6 +288,7 @@ parts:
   libpsl:
     after: [ json-glib ]
     source: https://github.com/rockdaboot/libpsl.git
+    source-tag: libpsl-0.21.0
     source-depth: 1
     plugin: autotools
     configflags:
@@ -285,6 +302,7 @@ parts:
   libsoup:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -299,6 +317,7 @@ parts:
   librest:
     after: [ libsoup ]
     source: https://gitlab.gnome.org/GNOME/librest.git
+    source-branch: librest-0-7
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -361,6 +380,7 @@ parts:
   gtksourceview:
     after: [ gtk-locales ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
+    source-tag: '4.3.1'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -372,6 +392,7 @@ parts:
   libdazzle:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
+    source-branch: libdazzle-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -394,6 +415,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -407,6 +429,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
+    source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -455,6 +478,7 @@ parts:
   clutter-gtk:
     after: [ clutter ]
     source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
+    source-tag: '1.8.4'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -463,6 +487,7 @@ parts:
   libpeas:
     after: [ clutter-gtk ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
+    source-tag: libpeas-1.22.0
     source-depth: 1
     plugin: autotools
     configflags:
