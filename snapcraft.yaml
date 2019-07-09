@@ -25,6 +25,8 @@ parts:
     stage:
       - usr
       - -usr/include
+      - -usr/lib/vala-current
+      - -usr/share/gettext-current
       - -usr/**/*.a
       - -usr/**/*.c
       - -usr/**/*.cpp
