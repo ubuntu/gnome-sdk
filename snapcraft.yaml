@@ -33,6 +33,12 @@ parts:
       - -usr/**/*.h
       - -usr/**/*.hpp
       - -usr/**/*.pc
+      - -usr/bin/g++*
+      - -usr/bin/x86_64-linux-gnu-g++*
+      - -usr/bin/gcc*
+      - -usr/bin/x86_64-linux-gnu-gcc*
+      - -usr/bin/python*
+      - -usr/bin/vala*
 
   debs:
     after: [ gnome-sdk ]
