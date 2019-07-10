@@ -595,6 +595,12 @@ parts:
       ITSTOOL=usr/bin/itstool
       sed -i 's#/usr/local/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/local/share#g' $ITSTOOL
       sed -i 's#/usr/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share#g' $ITSTOOL
-      
+
+      LOADERS=usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $LOADERS
+
+      XML2_CONFIG=usr/bin/xml2-config
+      sed -i 's#/root/parts/debs/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
+
       ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib/vala-0.44 usr/lib/vala-current
       ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/gettext-0.19.8 usr/share/gettext-current
