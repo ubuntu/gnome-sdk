@@ -424,7 +424,7 @@ parts:
       set -eux
       snapcraftctl build
       PC=$SNAPCRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
-      sed -i 's#/usr/#${prefix}/#' $PC
+      sed -i 's#-I/usr#-I${prefix}#' $PC
 
   gnome-desktop:
     after: [ gsettings-desktop-schemas ]
@@ -567,12 +567,19 @@ parts:
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
         sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
+        sed -i 's#prefix = /usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
         sed -i 's#prefix=/usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
         sed -i 's#original_prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#original_prefix=/usr#' $PC
+
+        sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+        sed -i 's#libdir=/lib#libdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/lib#' $PC
+
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-        sed -i 's#libdir=/usr/lib#libdir=${prefix}/lib#' $PC
-        sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
+        sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/etc#' $PC
+        
         sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $PC
+        sed -i 's#/etc/#/snap/$SNAPCRAFT_PROJECT_NAME/current/etc/#g' $PC
       done
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
@@ -583,12 +590,11 @@ parts:
       sed -i 's#aclocaldir="$SNAPCRAFT_STAGE#aclocaldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
 
       SCANNER=usr/bin/g-ir-scanner
-      sed -i 's#$SNAPCRAFT_STAGE/usr/lib#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib#g' $SCANNER
-      sed -i 's#$SNAPCRAFT_STAGE/usr/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share#g' $SCANNER
+      sed -i 's#$SNAPCRAFT_STAGE#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $SCANNER
 
       ITSTOOL=usr/bin/itstool
-      sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $ITSTOOL
+      sed -i 's#/usr/local/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/local/share#g' $ITSTOOL
+      sed -i 's#/usr/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share#g' $ITSTOOL
       
       ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib/vala-0.44 usr/lib/vala-current
       ln -s /snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/gettext-0.19.8 usr/share/gettext-current
-      
