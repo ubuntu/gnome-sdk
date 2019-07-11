@@ -16,8 +16,8 @@ parts:
     plugin: nil
     build-environment: &buildenv
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - XDG_DATA_DIRS: $XDG_DATA_DIRS:$SNAPCRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAPCRAFT_STAGE/usr/lib/vala-0.44
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.44:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   libtool:
@@ -239,8 +239,20 @@ parts:
       - libxrender-dev
       - libxt-dev
 
-  gdk-pixbuf:
+  librsvg:
     after: [ pango ]
+    source: https://gitlab.gnome.org/GNOME/librsvg.git
+    source-branch: librsvg-2.44
+    source-depth: 1
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - cargo
+      - libcroco3-dev
+
+  gdk-pixbuf:
+    after: [ librsvg ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
     source-branch: gdk-pixbuf-2-38
     source-depth: 1
@@ -251,7 +263,6 @@ parts:
       set -eux
       snapcraftctl build
       LOADERS_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
-      cp /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader-svg.so $LOADERS_PATH
       $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
     organize:
       usr/bin/gdk-pixbuf-query-loaders: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
@@ -259,7 +270,6 @@ parts:
       - libpng-dev
       - libjpeg-dev
       - libtiff-dev
-      - librsvg2-common
 
   epoxy:
     after: [ gdk-pixbuf ]
@@ -550,6 +560,7 @@ parts:
       - libgspell-1-dev
       - python2.7-minimal
       - python3-minimal
+      - libxml2-utils
     override-build: |
       set -eux
       snapcraftctl build
