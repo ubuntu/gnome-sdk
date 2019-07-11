@@ -609,6 +609,7 @@ parts:
 
       LOADERS=usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       sed -i 's#/root/parts/gdk-pixbuf/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $LOADERS
+      sed -i 's#/build/$SNAPCRAFT_PROJECT_NAME/parts/gdk-pixbuf/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $LOADERS
 
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
