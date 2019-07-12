@@ -555,7 +555,6 @@ parts:
       - libudev-dev
       - libseccomp-dev
       - libjpeg-dev
-      - librsvg2-dev
       - liblcms2-dev
       - libgspell-1-dev
       - python2.7-minimal
