@@ -42,7 +42,9 @@ parts:
     source-branch: meson
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
 
   glib:
@@ -51,8 +53,12 @@ parts:
     source-branch: glib-2-60
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
+    build-environment:
+      - CFLAGS: -Wno-nonnull
     override-build: |
       set -eux
       snapcraftctl build
@@ -111,7 +117,9 @@ parts:
     source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -163,6 +171,7 @@ parts:
     plugin: meson
     meson-parameters: 
       - --prefix=/usr
+      - --buildtype=release
       - -Dintrospection=true
       - -Ddocs=false
     build-environment: *buildenv
@@ -182,6 +191,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - --buildtype=release
       - -Dintrospection=yes
       - -Ddocs=false
     build-environment: *buildenv
@@ -195,7 +205,9 @@ parts:
     source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
 
   fribidi:
@@ -206,6 +218,7 @@ parts:
     plugin: meson
     meson-parameters: 
      - --prefix=/usr
+     - --buildtype=release
      - -Ddocs=false
     build-environment: *buildenv
 
@@ -231,7 +244,9 @@ parts:
     source-tag: '1.43.0'
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     build-packages:
       - libthai-dev
@@ -257,7 +272,9 @@ parts:
     source-branch: gdk-pixbuf-2-38
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -277,7 +294,9 @@ parts:
     source-tag: '1.5.3'
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     build-packages:
       - libgl1-mesa-dev
@@ -292,6 +311,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - --buildtype=release
       - -Dgtk_doc=disabled
     build-environment: *buildenv
 
@@ -317,6 +337,7 @@ parts:
     plugin: meson
     meson-parameters: 
       - --prefix=/usr
+      - --buildtype=release
       - -Dvapi=true
     build-environment: *buildenv
     build-packages:
@@ -343,6 +364,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - --buildtype=release
       - -Dbroadway_backend=true
       - -Dx11_backend=true
       - -Dwayland_backend=true
@@ -393,7 +415,9 @@ parts:
     source-tag: '4.3.1'
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     build-packages:
       - gettext
@@ -405,7 +429,9 @@ parts:
     source-branch: libdazzle-3-32
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
 
   libcanberra: 
@@ -428,7 +454,9 @@ parts:
     source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -442,7 +470,9 @@ parts:
     source-branch: gnome-3-32
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
     build-packages:
       - iso-codes
@@ -474,8 +504,9 @@ parts:
     source: https://gitlab.gnome.org/GNOME/clutter.git
     source-depth: 1
     plugin: meson
-    meson-parameters: 
+    meson-parameters:
       - --prefix=/usr
+      - --buildtype=release
       - -Dbuild_examples=false
       - -Ddocumentation=false
     build-environment: *buildenv
@@ -491,7 +522,9 @@ parts:
     source-tag: '1.8.4'
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
 
   libpeas:
