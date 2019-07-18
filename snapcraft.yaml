@@ -565,6 +565,7 @@ parts:
       snapcraftctl build
       cd $SNAPCRAFT_STAGE/usr
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{} \;
+      find . -type f,l -name "*.so" -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{}.* \;
 
   last:
     after: [ debs ]
