@@ -1,7 +1,5 @@
 name: gnome-3-32-1804
 version: git
-version-script: |
-  echo $(git describe --tags).$(git describe --always)
 summary: Shared GNOME 3.32 Ubuntu stack
 description: |
  This snap includes a GNOME 3.32 stack (the base libraries and desktop 
@@ -135,6 +133,7 @@ parts:
       snapcraftctl build
       cd $SNAPCRAFT_STAGE/usr
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/{}.*" \;
 
   last:
     after: [ debs ]
