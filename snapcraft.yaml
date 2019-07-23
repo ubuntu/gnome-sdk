@@ -128,6 +128,8 @@ parts:
       - ubuntu-settings
       - unity-gtk3-module
       - xdg-user-dirs
+    stage:
+      - -usr/lib/x86_64-linux-gnu/libLLVM-4.0.so*
     override-build: |
       set -eux
       snapcraftctl build
