@@ -357,7 +357,7 @@ parts:
   gtk:
     after: [ librest ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-branch: gtk-3-24
+    source-tag: '3.24.10'
     source-depth: 1
     plugin: meson
     meson-parameters:
