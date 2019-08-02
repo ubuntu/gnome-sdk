@@ -545,8 +545,19 @@ parts:
       - python-gi-dev
       - adwaita-icon-theme
 
-  debs:
+  pygobject:
     after: [ libpeas ]
+    source: https://gitlab.gnome.org/GNOME/pygobject.git
+    source-branch: pygobject-3-32
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
+    build-environment: *buildenv
+
+  debs:
+    after: [ pygobject ]
     plugin: nil
     stage-packages:
       - pkg-config
