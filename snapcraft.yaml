@@ -545,8 +545,18 @@ parts:
       - python-gi-dev
       - adwaita-icon-theme
 
-  pygobject:
+  pycairo:
     after: [ libpeas ]
+    source: https://github.com/pygobject/pycairo.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
+    build-environment: *buildenv
+
+  pygobject:
+    after: [ pycairo ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
     source-branch: pygobject-3-32
     source-depth: 1
