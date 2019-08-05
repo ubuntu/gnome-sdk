@@ -574,6 +574,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - --buildtype=release
       - -Dgtk_doc=false
       - -Dtests=false
       - -Dexamples=false
@@ -626,6 +627,7 @@ parts:
       - python2.7-minimal
       - python3-minimal
       - libxml2-utils
+      - libgtksourceview-3.0-dev
     override-build: |
       set -eux
       snapcraftctl build
