@@ -22,7 +22,7 @@ parts:
     stage-snaps: [ gnome-3-32-1804-sdk/latest/edge ]
     stage:
       - usr
-      - -usr/include
+      
       - -usr/**/*.a
       - -usr/**/*.c
       - -usr/**/*.cpp
@@ -31,12 +31,22 @@ parts:
       - -usr/**/*.h
       - -usr/**/*.hpp
       - -usr/**/*.pc
+      - -usr/**/*.zip
+
       - -usr/bin/g++*
       - -usr/bin/x86_64-linux-gnu-g++*
       - -usr/bin/gcc*
       - -usr/bin/x86_64-linux-gnu-gcc*
       - -usr/bin/python*
       - -usr/bin/vala*
+      - -usr/bin/vapi*
+
+      - -usr/include
+
+      - -usr/lib/*vala*
+
+      - -usr/share/vala*
+      - -usr/share/gir*
 
   debs:
     after: [ gnome-sdk ]
