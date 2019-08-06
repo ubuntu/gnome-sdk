@@ -154,7 +154,7 @@ parts:
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
 
-  last:
+  caches:
     after: [ debs ]
     plugin: nil
     build-packages:
@@ -171,3 +171,13 @@ parts:
           gtk-update-icon-cache --force "$dir"
         fi
       done
+
+  cleanup:
+    after: [ caches ]
+    plugin: nil
+    build-snaps:
+      - gtk-common-themes
+    override-prime: |
+      set -eux
+      cd /snap/gtk-common-themes/current
+      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/{} \;
