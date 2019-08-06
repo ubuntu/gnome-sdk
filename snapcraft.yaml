@@ -640,6 +640,8 @@ parts:
       cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
+      cd $SNAPCRAFT_PART_INSTALL
+      find . -type d -empty -delete
 
   last:
     after: [ debs ]
