@@ -703,8 +703,6 @@ parts:
       set -eux
 
       rm -rf usr/share/doc
-
-      find . -type f,l -name "*.gz" -delete
-      find . -type f,l -name "*.zip" -delete
+      rm -rf usr/share/man
 
       find . -type d -empty -delete
