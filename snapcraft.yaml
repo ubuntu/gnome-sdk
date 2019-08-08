@@ -645,13 +645,21 @@ parts:
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
 
-  restructure:
+  conditioning:
     after: [ debs ]
     plugin: nil
     build-environment: *buildenv
     override-prime: |
       set -eux
       snapcraftctl prime
+
+      glib-compile-schemas usr/share/glib-2.0/schemas
+      update-mime-database usr/share/mime
+      for dir in usr/share/icons/*; do
+        if [ -f "$dir/index.theme" ]; then
+          gtk-update-icon-cache --force "$dir"
+        fi
+      done
 
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
@@ -697,7 +705,7 @@ parts:
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
   cleanup:
-    after: [ restructure ]
+    after: [ conditioning ]
     plugin: nil
     override-prime: |
       set -eux
