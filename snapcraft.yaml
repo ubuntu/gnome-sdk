@@ -27,11 +27,9 @@ parts:
       - -usr/**/*.c
       - -usr/**/*.cpp
       - -usr/**/*.o
-      - -usr/**/*.gz
       - -usr/**/*.h
       - -usr/**/*.hpp
       - -usr/**/*.pc
-      - -usr/**/*.zip
 
       - -usr/bin/g++*
       - -usr/bin/x86_64-linux-gnu-g++*
@@ -45,6 +43,7 @@ parts:
 
       - -usr/lib/*vala*
 
+      - -usr/share/perl
       - -usr/share/vala*
       - -usr/share/gir*
 
@@ -153,8 +152,6 @@ parts:
       cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
-      cd $SNAPCRAFT_PART_INSTALL
-      find . -type d -empty -delete
 
   caches:
     after: [ debs ]
@@ -181,7 +178,14 @@ parts:
       - gtk-common-themes
     override-prime: |
       set -eux
+
       cd /snap/gtk-common-themes/current
       find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/{} \;
       cd $SNAPCRAFT_PRIME
+
+      rm -rf usr/share/doc
+
+      find . -type f,l -name "*.gz" -delete
+      find . -type f,l -name "*.zip" -delete
+
       find . -type d -empty -delete
