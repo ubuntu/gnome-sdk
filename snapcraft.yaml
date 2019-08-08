@@ -245,6 +245,7 @@ parts:
     meson-parameters:
      - --prefix=/usr
      - --buildtype=release
+     - -Dinstall-tests=false
     build-environment: *buildenv
     build-packages:
       - libthai-dev
@@ -273,6 +274,7 @@ parts:
     meson-parameters:
      - --prefix=/usr
      - --buildtype=release
+     - -Dinstalled_tests=false
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -507,6 +509,8 @@ parts:
       - --buildtype=release
       - -Dbuild_examples=false
       - -Ddocumentation=false
+      - -Dbuild_tests=false
+      - -Dpixbuf_tests=false
     build-environment: *buildenv
     build-packages:
       - libdrm-dev
