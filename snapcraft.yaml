@@ -644,10 +644,8 @@ parts:
       cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
       find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
-      cd $SNAPCRAFT_PART_INSTALL
-      find . -type d -empty -delete
 
-  last:
+  restructure:
     after: [ debs ]
     plugin: nil
     build-environment: *buildenv
@@ -697,3 +695,16 @@ parts:
       ln -s vala-0.44 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+
+  cleanup:
+    after: [ restructure ]
+    plugin: nil
+    override-prime: |
+      set -eux
+
+      rm -rf usr/share/doc
+
+      find . -type f,l -name "*.gz" -delete
+      find . -type f,l -name "*.zip" -delete
+
+      find . -type d -empty -delete
