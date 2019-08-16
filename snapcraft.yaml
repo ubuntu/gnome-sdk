@@ -628,7 +628,6 @@ parts:
       - libjpeg-dev
       - liblcms2-dev
       - libgspell-1-dev
-      - python2.7-minimal
       - python3-minimal
       - libxml2-utils
       - libgtksourceview-3.0-dev
