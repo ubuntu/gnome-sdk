@@ -364,7 +364,7 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - --buildtype=debug
       - -Dbroadway_backend=true
       - -Dx11_backend=true
       - -Dwayland_backend=true
