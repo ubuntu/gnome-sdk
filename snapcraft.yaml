@@ -32,9 +32,9 @@ parts:
       - -usr/**/*.pc
 
       - -usr/bin/g++*
-      - -usr/bin/x86_64-linux-gnu-g++*
+      - -usr/bin/*-linux-gnu-g++*
       - -usr/bin/gcc*
-      - -usr/bin/x86_64-linux-gnu-gcc*
+      - -usr/bin/*-linux-gnu-gcc*
       - -usr/bin/python*
       - -usr/bin/vala*
       - -usr/bin/vapi*
@@ -139,7 +139,7 @@ parts:
       - xdg-user-dirs
       - libgtksourceview-3.0-1
     stage:
-      - -usr/lib/x86_64-linux-gnu/libLLVM-4.0.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
     override-build: |
       set -eux
       snapcraftctl build
