@@ -19,7 +19,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-3-32-1804-sdk/latest/edge ]
+    stage-snaps: [ gnome-3-32-1804-sdk/latest/candidate ]
     stage:
       - usr
       
