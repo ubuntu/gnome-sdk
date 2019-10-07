@@ -1,6 +1,6 @@
-name: gnome-3-32-1804-sdk
+name: gnome-3-34-1804-sdk
 version: git
-summary: Shared GNOME 3.32 Ubuntu stack
+summary: Shared GNOME 3.34 Ubuntu stack
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
@@ -16,7 +16,7 @@ parts:
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.44:$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.38.2/loaders.cache
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
@@ -41,19 +41,19 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - --buildtype=release
     build-environment: *buildenv
 
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: glib-2-60
+    source-branch: glib-2-62
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - --buildtype=release
     build-environment: *buildenv
     build-environment:
       - CFLAGS: -Wno-nonnull
@@ -112,12 +112,12 @@ parts:
   gobject-introspection:
     after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: gnome-3-32
+    source-branch: gnome-3-34
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - --buildtype=release
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -164,7 +164,7 @@ parts:
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: gnome-3-32
+    source-branch: gnome-3-34
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -184,7 +184,7 @@ parts:
   at-spi2-core:
     after: [ atk ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-branch: gnome-3-32
+    source-tag: AT_SPI2_CORE_2_34_0 
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -200,24 +200,24 @@ parts:
   at-spi2-atk:
     after: [ at-spi2-core ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
-    source-branch: gnome-3-32
+    source-tag: AT_SPI2_ATK_2_34_1
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - --buildtype=release
     build-environment: *buildenv
 
   fribidi:
     after: [ at-spi2-atk ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: v1.0.5
+    source-tag: v1.0.7
     source-depth: 1
     plugin: meson
     meson-parameters: 
-     - --prefix=/usr
-     - --buildtype=release
-     - -Ddocs=false
+      - --prefix=/usr
+      - --buildtype=release
+      - -Ddocs=false
     build-environment: *buildenv
 
   harfbuzz:
@@ -451,7 +451,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-branch: gnome-3-32
+    source-branch: gnome-3-34
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -467,7 +467,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-branch: gnome-3-32
+    source-tag: 3.34.0
     source-depth: 1
     plugin: meson
     meson-parameters:
