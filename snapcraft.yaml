@@ -16,7 +16,7 @@ parts:
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.44:$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.38.2/loaders.cache
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
