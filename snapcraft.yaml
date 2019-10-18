@@ -235,6 +235,13 @@ parts:
     build-environment: *buildenv
     build-packages:
       - ragel
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
+      sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
 
   pango:
     after: [ harfbuzz ]
