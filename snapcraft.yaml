@@ -48,7 +48,7 @@ parts:
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: glib-2-62
+    source-tag: '2.62.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -80,7 +80,7 @@ parts:
   cairo:
     after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
-    source-tag: '1.17.2'
+    source-tag: '1.17.2' # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
     plugin: autotools
     configflags:
@@ -222,8 +222,8 @@ parts:
 
   harfbuzz:
     after: [ fribidi ]
-    source: git://anongit.freedesktop.org/git/harfbuzz
-    source-tag: '2.4.0'
+    source: https://github.com/harfbuzz/harfbuzz.git
+    source-tag: '2.6.2'
     source-depth: 1
     plugin: autotools
     configflags:
@@ -233,30 +233,41 @@ parts:
       - --with-gobject
       - --enable-static
     build-environment: *buildenv
+    override-build: |
+      set -eux
+      snapcraftctl build
+      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
+      sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
     build-packages:
       - ragel
 
   pango:
     after: [ harfbuzz ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.43.0'
+    source-tag: '1.44.6-2'
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
-     - -Dinstall-tests=false
+      - --prefix=/usr
+      - --buildtype=release
+      - -Dinstall-tests=false
+      - -Dgtk_doc=false
+      - -Dgir=true
     build-environment: *buildenv
     build-packages:
       - libthai-dev
       - libxft-dev
       - libxrender-dev
       - libxt-dev
+      - cmake
 
   librsvg:
     after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
     source-branch: librsvg-2.44
+    #source-branch: librsvg-2.46 
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -291,7 +302,7 @@ parts:
   epoxy:
     after: [ gdk-pixbuf ]
     source: https://github.com/anholt/libepoxy.git
-    source-tag: '1.5.3'
+    source-tag: '1.5.3'  # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -332,13 +343,13 @@ parts:
   libsoup:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-branch: gnome-3-32
+    source-tag: '2.68.2'   # not a gnome-3-34 branch yet
     source-depth: 1
     plugin: meson
     meson-parameters: 
       - --prefix=/usr
       - --buildtype=release
-      - -Dvapi=true
+      - -Dvapi=enabled
     build-environment: *buildenv
     build-packages:
       - libsqlite3-dev
@@ -348,7 +359,7 @@ parts:
   librest:
     after: [ libsoup ]
     source: https://gitlab.gnome.org/GNOME/librest.git
-    source-branch: librest-0-7
+    source-branch: librest-0-7  # looks like this branch has been updated more recently than the 0.8 tags - weird
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -360,6 +371,7 @@ parts:
     after: [ librest ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.10'
+    #source-branch: gtk-3-24
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -412,7 +424,7 @@ parts:
   gtksourceview:
     after: [ gtk-locales ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '4.3.1'
+    source-tag: '4.4.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -426,7 +438,7 @@ parts:
   libdazzle:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
-    source-branch: libdazzle-3-32
+    source-branch: libdazzle-3-34
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -467,7 +479,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: 3.34.0
+    source-branch: 'gnome-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -521,7 +533,7 @@ parts:
   clutter-gtk:
     after: [ clutter ]
     source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
-    source-tag: '1.8.4'
+    source-tag: '1.8.4'  # ancient tag. should just build from master since it gets updates (like clutter)
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -533,6 +545,7 @@ parts:
     after: [ clutter-gtk ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
     source-tag: libpeas-1.22.0
+    #source-tag: libpeas-1.24.0
     source-depth: 1
     plugin: autotools
     configflags:
@@ -563,7 +576,7 @@ parts:
   pygobject:
     after: [ pycairo ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-branch: pygobject-3-32
+    source-branch: pygobject-3-34
     source-depth: 1
     plugin: meson
     meson-parameters:
