@@ -15,7 +15,7 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.44:$LD_LIBRARY_PATH
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
 
   libtool:
@@ -133,7 +133,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-branch: '0.44'
+    source-branch: '0.46'
     plugin: autotools
     configflags: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -145,7 +145,7 @@ parts:
   gee: 
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
-    source-tag: '0.20.1'
+    source-tag: '0.20.2'
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -699,7 +699,7 @@ parts:
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
 
-      ln -s vala-0.44 usr/lib/vala-current
+      ln -s vala-0.46 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
