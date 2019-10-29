@@ -80,7 +80,7 @@ parts:
   cairo:
     after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
-    source-tag: '1.17.2'
+    source-tag: '1.16.0'
     source-depth: 1
     plugin: autotools
     configflags:
