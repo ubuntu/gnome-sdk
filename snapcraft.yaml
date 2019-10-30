@@ -79,8 +79,8 @@ parts:
 
   cairo:
     after: [ pixman ]
-    source: git://anongit.freedesktop.org/git/cairo
-    source-tag: '1.16.0' # see: https://gitlab.freedesktop.org/cairo/cairo/issues/382
+    source: https://gitlab.freedesktop.org/psychon/cairo.git
+    source-branch: invalid-free-crash
     source-depth: 1
     plugin: autotools
     configflags:
