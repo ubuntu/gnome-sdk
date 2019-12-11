@@ -19,7 +19,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-3-34-1804-sdk/latest/edge ]
+    stage-snaps: [ gnome-3-34-1804-sdk/latest/stable ]
     stage:
       - usr
       
@@ -136,6 +136,9 @@ parts:
       - unity-gtk3-module
       - xdg-user-dirs
       - libgtksourceview-3.0-1
+      - libappindicator-dev
+      - libappindicator3-dev
+      - libappindicator3-1
     stage:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
     override-build: |
