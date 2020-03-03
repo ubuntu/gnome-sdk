@@ -586,6 +586,7 @@ parts:
   libhandy:
     after: [ pygobject ]
     source: https://source.puri.sm/Librem5/libhandy.git
+    source-branch: libhandy-0-0
     source-depth: 1
     plugin: meson
     meson-parameters:
