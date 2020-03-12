@@ -432,6 +432,8 @@ parts:
       set -eux
       snapcraftctl build
     build-environment: *buildenv
+    build-packages:
+      - wget
 
   glibmm:
     after: [ mm-common ]
