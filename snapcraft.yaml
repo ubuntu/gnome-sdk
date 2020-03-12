@@ -37,7 +37,7 @@ parts:
   libffi:
     after: [ libtool ]
     source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
-    source-branch: meson
+    source-branch: 'meson'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -48,7 +48,7 @@ parts:
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: glib-2-62
+    source-branch: 'glib-2-62'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -69,7 +69,7 @@ parts:
   pixman:
     after: [ glib ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
-    source-tag: pixman-0.38.4
+    source-tag: 'pixman-0.38.4'
     source-depth: 1
     plugin: autotools
     configflags: 
@@ -112,7 +112,7 @@ parts:
   gobject-introspection:
     after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: gnome-3-34
+    source-branch: 'gnome-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -164,7 +164,7 @@ parts:
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: gnome-3-34
+    source-branch: 'gnome-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -184,7 +184,7 @@ parts:
   at-spi2-core:
     after: [ atk ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: AT_SPI2_CORE_2_34_0 
+    source-tag: 'AT_SPI2_CORE_2_34_0' 
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -200,7 +200,7 @@ parts:
   at-spi2-atk:
     after: [ at-spi2-core ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
-    source-tag: AT_SPI2_ATK_2_34_1
+    source-tag: 'AT_SPI2_ATK_2_34_1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -211,7 +211,7 @@ parts:
   fribidi:
     after: [ at-spi2-atk ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: v1.0.7
+    source-tag: 'v1.0.7'
     source-depth: 1
     plugin: meson
     meson-parameters: 
@@ -266,7 +266,7 @@ parts:
   librsvg:
     after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: librsvg-2.44
+    source-branch: 'librsvg-2.44'
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -278,7 +278,7 @@ parts:
   gdk-pixbuf:
     after: [ librsvg ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-branch: gdk-pixbuf-2-38
+    source-branch: 'gdk-pixbuf-2-38'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -316,7 +316,7 @@ parts:
   json-glib: 
     after: [ epoxy ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-branch: json-glib-1-4
+    source-branch: 'json-glib-1-4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -328,7 +328,7 @@ parts:
   libpsl:
     after: [ json-glib ]
     source: https://github.com/rockdaboot/libpsl.git
-    source-tag: libpsl-0.21.0
+    source-tag: 'libpsl-0.21.0'
     source-depth: 1
     plugin: autotools
     configflags:
@@ -358,7 +358,7 @@ parts:
   librest:
     after: [ libsoup ]
     source: https://gitlab.gnome.org/GNOME/librest.git
-    source-branch: librest-0-7  # looks like this branch has been updated more recently than the 0.8 tags - weird
+    source-branch: 'librest-0-7'  # looks like this branch has been updated more recently than the 0.8 tags - weird
     source-depth: 1
     plugin: autotools
     configflags: [ --prefix=/usr ]
@@ -420,8 +420,116 @@ parts:
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $SNAPCRAFT_PART_INSTALL/usr/share/
 
-  gtksourceview:
+  mm-common:
     after: [ gtk-locales ]
+    source: https://gitlab.gnome.org/GNOME/mm-common.git
+    source-tag: '1.0.0'
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Duse-network=true
+    override-build: |
+      set -eux
+      snapcraftctl build
+    build-environment: *buildenv
+
+  glibmm:
+    after: [ mm-common ]
+    source: https://gitlab.gnome.org/GNOME/glibmm.git
+    source-tag: '2.62.0'
+    plugin: autotools
+    override-build: |
+      set -eux
+    
+      # Make sure all of the *.am files from mm-common are found
+      mkdir -p /usr/bin
+      mkdir -p /usr/share/mm-common/build/
+      mkdir -p /usr/share/mm-common/doctool/
+      cp $SNAPCRAFT_STAGE/usr/bin/mm-common-prepare /usr/bin/mm-common-prepare
+      cp $SNAPCRAFT_STAGE/usr/share/mm-common/build/*.am /usr/share/mm-common/build/
+      cp $SNAPCRAFT_STAGE/usr/share/mm-common/doctool/* /usr/share/mm-common/doctool/
+
+      # Manual build of glibmm
+      cd $SNAPCRAFT_PART_BUILD
+      ./autogen.sh --prefix=/usr
+      make -j8
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+    build-packages:
+      - libsigc++-2.0-dev
+    build-environment: *buildenv
+    
+  cairomm:
+    after: [ glibmm ]
+    source: https://gitlab.freedesktop.org/cairo/cairomm.git
+    source-tag: 'v1.12.2'
+    plugin: autotools
+    override-build: |
+      set -eux
+      cd $SNAPCRAFT_PART_BUILD
+      ./autogen.sh --prefix=/usr
+      make -j8
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+    configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+
+  pangomm:
+    after: [ cairomm ]
+    source: https://gitlab.gnome.org/GNOME/pangomm.git
+    source-tag: '2.42.0'
+    plugin: autotools
+    configflags: 
+      - --prefix=/usr
+      - --enable-maintainer-mode
+    build-environment:
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
+      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+
+  atkmm:
+    after: [ pangomm ]
+    source: https://gitlab.gnome.org/GNOME/atkmm.git
+    source-tag: '2.28.0'
+    plugin: autotools
+    override-build: |
+      set -eux
+      cd $SNAPCRAFT_PART_BUILD
+      ./autogen.sh --prefix=/usr
+      make -j8
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+    build-environment: 
+      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+
+  gtkmm:
+    after: [ atkmm ]
+    source: https://gitlab.gnome.org/GNOME/gtkmm.git
+    source-tag: '3.24.2'
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    override-build: |
+      set -eux
+      cd $SNAPCRAFT_PART_BUILD
+      ./autogen.sh --prefix=/usr
+      make -j8
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+    build-environment: 
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
+      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
+      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+    build-packages:
+      - gtk-doc-tools
+
+  gtksourceview:
+    after: [ gtkmm ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
     source-tag: '4.4.0'
     source-depth: 1
@@ -437,7 +545,7 @@ parts:
   libdazzle:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
-    source-branch: libdazzle-3-34
+    source-branch: 'libdazzle-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -462,7 +570,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-branch: gnome-3-34
+    source-branch: 'gnome-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -496,7 +604,7 @@ parts:
   cogl:
     after: [ gnome-desktop ]
     source: https://gitlab.gnome.org/GNOME/cogl.git
-    source-branch: cogl-1.22
+    source-branch: 'cogl-1.22'
     source-depth: 1
     plugin: autotools
     configflags: 
@@ -513,7 +621,7 @@ parts:
   clutter:
     after: [ cogl ]
     source: https://gitlab.gnome.org/GNOME/clutter.git
-    source-depth: 1
+    source-commit: 09788c786f832deec2ae5d9e7b468e7ee0df112d 
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -543,8 +651,7 @@ parts:
   libpeas:
     after: [ clutter-gtk ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: libpeas-1.22.0
-    #source-tag: libpeas-1.24.0
+    source-tag: 'libpeas-1.22.0'
     source-depth: 1
     plugin: autotools
     configflags:
@@ -564,7 +671,7 @@ parts:
   pycairo:
     after: [ libpeas ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: v1.18.1
+    source-tag: 'v1.18.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -575,7 +682,7 @@ parts:
   pygobject:
     after: [ pycairo ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-branch: pygobject-3-34
+    source-branch: 'pygobject-3-34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -586,7 +693,7 @@ parts:
   libhandy:
     after: [ pygobject ]
     source: https://source.puri.sm/Librem5/libhandy.git
-    source-branch: libhandy-0-0
+    source-branch: 'libhandy-0-0'
     source-depth: 1
     plugin: meson
     meson-parameters:
