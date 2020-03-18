@@ -755,6 +755,7 @@ parts:
       - libgtksourceview-3.0-dev
       - libtdb1
       - libvorbisfile3
+      - libegl-mesa0
     override-build: |
       set -eux
       snapcraftctl build
