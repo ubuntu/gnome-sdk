@@ -366,10 +366,19 @@ parts:
     build-packages:
       - gtk-doc-tools
 
-  gtk:
+  wayland-protocols:
     after: [ librest ]
+    source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+    source-tag: '1.20'
+    source-depth: 1
+    plugin: autotools
+    configflags: [ --prefix=/usr ]
+    build-environment: *buildenv
+
+  gtk:
+    after: [ wayland-protocols ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.10'
+    source-tag: '3.24.11'
     #source-branch: gtk-3-24
     source-depth: 1
     plugin: meson
