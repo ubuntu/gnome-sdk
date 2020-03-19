@@ -1,6 +1,6 @@
-name: gnome-3-34-1804-sdk
+name: gnome-3-36-1804-sdk
 version: git
-summary: Shared GNOME 3.34 Ubuntu stack
+summary: Shared GNOME 3.36 Ubuntu stack
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
