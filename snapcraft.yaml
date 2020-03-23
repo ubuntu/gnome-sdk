@@ -720,6 +720,7 @@ parts:
     after: [ libhandy ]
     plugin: nil
     stage-packages:
+      - gcc
       - pkg-config
       - libpcre3-dev
       - zlib1g-dev
