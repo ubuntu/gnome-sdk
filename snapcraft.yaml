@@ -647,6 +647,8 @@ parts:
       - xsltproc
       - libinput-dev
       - libgudev-1.0-dev
+    stage-packages:
+      - libinput-dev
 
   clutter-gtk:
     after: [ clutter ]
