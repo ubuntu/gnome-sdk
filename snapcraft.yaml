@@ -17,6 +17,7 @@ parts:
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
@@ -649,6 +650,32 @@ parts:
       - libgudev-1.0-dev
     stage-packages:
       - libinput-dev
+    stage:
+      - -usr/bin/gapplication
+      - -usr/bin/gdbus
+      - -usr/bin/gio*
+      - -usr/bin/glib*
+      - -usr/bin/gobject-query
+      - -usr/bin/gresource
+      - -usr/bin/gsettings
+      - -usr/bin/gtester*
+      - -usr/include/gio-unix-2.0/gio/gdesktopappinfo.h
+      - -usr/include/gio-unix-2.0/gio/gunixmounts.h
+      - -usr/include/glib-2.0/*
+      - -usr/lib/*/glib-2.0/*
+      - -usr/lib/*/libgio*
+      - -usr/lib/*/libglib*
+      - -usr/lib/*/libgmodule*
+      - -usr/lib/*/libgobject*
+      - -usr/lib/*/libgthread*
+      - -usr/lib/*/pkgconfig/gio*
+      - -usr/lib/*/pkgconfig/glib-2.0.pc
+      - -usr/lib/*/pkgconfig/gmodule*
+      - -usr/lib/*/pkgconfig/gobject-2.0.pc
+      - -usr/lib/*/pkgconfig/gthread-2.0.pc
+      - -usr/share/aclocal/glib-2.0.m4
+      - -usr/share/aclocal/gsettings.m4
+      - -usr/share/glib-2.0/*
 
   clutter-gtk:
     after: [ clutter ]
