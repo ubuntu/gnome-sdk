@@ -663,6 +663,7 @@ parts:
       - -usr/include/gio-unix-2.0/gio/gunixmounts.h
       - -usr/include/glib-2.0/*
       - -usr/lib/*/glib-2.0/*
+      - -usr/lib/*/libffi*
       - -usr/lib/*/libgio*
       - -usr/lib/*/libglib*
       - -usr/lib/*/libgmodule*
@@ -745,8 +746,27 @@ parts:
       - -Dglade_catalog=disabled
     build-environment: *buildenv
 
-  debs:
+  gjs:
     after: [ libhandy ]
+    source: https://gitlab.gnome.org/GNOME/gjs.git
+    source-branch: 'gnome-3-28'
+    source-depth: 1
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --disable-Werror
+    build-environment: *buildenv
+    build-environment:
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
+      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
+    build-packages:
+      - dbus
+      - libmozjs-52-dev
+
+  debs:
+    after: [ gjs ]
     plugin: nil
     stage-packages:
       - gcc
@@ -795,6 +815,7 @@ parts:
       - libtdb1
       - libvorbisfile3
       - libegl-mesa0
+      - libmozjs-52-dev
     override-build: |
       set -eux
       snapcraftctl build
