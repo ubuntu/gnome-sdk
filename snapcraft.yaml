@@ -139,6 +139,7 @@ parts:
       - libappindicator-dev
       - libappindicator3-dev
       - libappindicator3-1
+      - libmozjs-52-0
     stage:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
     override-build: |
