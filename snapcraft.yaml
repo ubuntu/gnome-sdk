@@ -764,10 +764,6 @@ parts:
     build-packages:
       - dbus
       - libmozjs-52-dev
-    override-stage: |
-      set -eux
-      snapcraftctl stage
-      sed -i 's#gjs_console=${bindir}/gjs-console#gjs_console=/usr/bin/gjs-console#' $SNAPCRAFT_STAGE/usr/lib/pkgconfig/gjs-1.0.pc
 
   debs:
     after: [ gjs ]
@@ -891,6 +887,10 @@ parts:
       ln -s vala-0.46 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+
+
+      # We need to ensure the interpreter path for gjs is set to /usr/bin/gjs (handled by a layout)
+      sed -i 's#gjs_console=${bindir}/gjs-console#gjs_console=/usr/bin/gjs-console#' usr/lib/pkgconfig/gjs-1.0.pc
 
   cleanup:
     after: [ conditioning ]
