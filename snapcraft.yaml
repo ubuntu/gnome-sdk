@@ -764,6 +764,10 @@ parts:
     build-packages:
       - dbus
       - libmozjs-52-dev
+    override-build:
+      set -eux
+      snapcraftctl build
+      sed -i 's#gjs_console=${bindir}/gjs-console#gjs_console=/usr/bin/gjs-console#' $SNAPCRAFT_STAGE/usr/lib/pkgconfig/gjs-1.0.pc
 
   debs:
     after: [ gjs ]
