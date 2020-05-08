@@ -890,7 +890,7 @@ parts:
 
 
       # We need to ensure the interpreter path for gjs is set to /usr/bin/gjs (handled by a layout)
-      sed -i 's#gjs_console=${bindir}/gjs-console#gjs_console=/usr/bin/gjs-console#' usr/lib/pkgconfig/gjs-1.0.pc
+      sed -i 's#bindir=${exec_prefix}/bin#bindir=/usr/bin#g' usr/lib/pkgconfig/gjs-1.0.pc
 
   cleanup:
     after: [ conditioning ]
