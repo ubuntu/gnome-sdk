@@ -888,10 +888,6 @@ parts:
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
-
-      # We need to ensure the interpreter path for gjs is set to /usr/bin/gjs (handled by a layout)
-      sed -i 's#bindir=${exec_prefix}/bin#bindir=/usr/bin#g' usr/lib/pkgconfig/gjs-1.0.pc
-
   cleanup:
     after: [ conditioning ]
     plugin: nil
