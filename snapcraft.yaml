@@ -49,7 +49,7 @@ parts:
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: 'glib-2-62'
+    source-branch: 'glib-2-64'
     source-depth: 1
     plugin: meson
     meson-parameters:
