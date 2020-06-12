@@ -279,7 +279,7 @@ parts:
   gdk-pixbuf:
     after: [ librsvg ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-branch: 'gdk-pixbuf-2-38'
+    source-branch: 'gdk-pixbuf-2-40'
     source-depth: 1
     plugin: meson
     meson-parameters:
