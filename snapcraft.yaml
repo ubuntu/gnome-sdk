@@ -137,10 +137,10 @@ parts:
       - unity-gtk3-module
       - xdg-user-dirs
       - libgtksourceview-3.0-1
-      - libappindicator-dev
-      - libappindicator3-dev
       - libappindicator3-1
       - libmozjs-52-0
+      - libsigc++-2.0-0v5
+      - libpython3.6
     stage:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
     override-build: |
