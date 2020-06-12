@@ -68,6 +68,7 @@ parts:
       - libcolord2
       - libcups2
       - libdatrie1
+      - libdbus-glib-1-2
       - libdb5.3
       - libevdev2
       - libflac8
