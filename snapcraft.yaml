@@ -22,11 +22,15 @@ parts:
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
       - help2man
       - texinfo
+    override-build: |
+      set -eux
+      ./bootstrap
+      snapcraftctl build
     override-stage: |
       set -eux
       snapcraftctl stage
@@ -73,7 +77,7 @@ parts:
     source-tag: 'pixman-0.38.4'
     source-depth: 1
     plugin: autotools
-    configflags: 
+    autotools-configure-parameters: 
       - --prefix=/usr
       - --disable-gtk
     build-environment: *buildenv
@@ -84,7 +88,7 @@ parts:
     source-tag: '1.16.0' # see: https://gitlab.freedesktop.org/cairo/cairo/issues/382
     source-depth: 1
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-pdf
       - --enable-ps
@@ -136,7 +140,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/vala.git
     source-branch: '0.48'
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
       - autoconf-archive
@@ -149,7 +153,7 @@ parts:
     source-tag: '0.20.3'
     source-depth: 1
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -227,7 +231,7 @@ parts:
     source-tag: '2.6.2'
     source-depth: 1
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --with-graphite2=yes
       - --enable-introspection
@@ -270,7 +274,7 @@ parts:
     source-branch: 'librsvg-2.44'
     source-depth: 1
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
       - cargo
@@ -332,7 +336,7 @@ parts:
     source-tag: 'libpsl-0.21.0'
     source-depth: 1
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-runtime=libidn2
     build-environment: *buildenv
@@ -362,7 +366,7 @@ parts:
     source-branch: 'librest-0-7'  # looks like this branch has been updated more recently than the 0.8 tags - weird
     source-depth: 1
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
@@ -373,7 +377,7 @@ parts:
     source-tag: '1.20'
     source-depth: 1
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
   gtk:
@@ -481,7 +485,7 @@ parts:
       ./autogen.sh --prefix=/usr
       make -j8
       make install DESTDIR=$SNAPCRAFT_PART_INSTALL
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
   pangomm:
@@ -489,7 +493,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.42.0'
     plugin: autotools
-    configflags: 
+    autotools-configure-parameters: 
       - --prefix=/usr
       - --enable-maintainer-mode
     build-environment:
@@ -523,7 +527,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
     source-tag: '3.24.2'
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     override-build: |
       set -eux
       cd $SNAPCRAFT_PART_BUILD
@@ -570,7 +574,7 @@ parts:
     source: git://git.0pointer.net/libcanberra.git
     source-depth: 1
     plugin: autotools
-    configflags: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
     build-packages:
       - libasound2-dev
@@ -619,7 +623,7 @@ parts:
     source-branch: 'cogl-1.22'
     source-depth: 1
     plugin: autotools
-    configflags: 
+    autotools-configure-parameters: 
       - --prefix=/usr
       - --enable-wayland-egl-platform=yes
     build-environment: *buildenv
@@ -695,7 +699,7 @@ parts:
     source-tag: 'libpeas-1.22.0'
     source-depth: 1
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-python2
       - --enable-python3
@@ -752,7 +756,7 @@ parts:
     source-branch: 'gnome-3-28'
     source-depth: 1
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --disable-Werror
     build-environment: *buildenv
