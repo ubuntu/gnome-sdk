@@ -1,6 +1,6 @@
-name: gnome-3-36-1804-sdk
+name: gnome-3-38-2004-sdk
 version: git
-summary: Shared GNOME 3.36 Ubuntu stack
+summary: Shared GNOME 3.38 Ubuntu stack
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
@@ -15,7 +15,7 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$LD_LIBRARY_PATH
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
 
@@ -70,16 +70,19 @@ parts:
     build-packages:
       - pkg-config
       - libmount-dev
+      - gcc
+      - g++
+      - clang
 
   pixman:
     after: [ glib ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
-    source-tag: 'pixman-0.38.4'
+    source-tag: 'pixman-0.40.0'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters: 
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --disable-gtk
+      - -Dgtk=disabled
     build-environment: *buildenv
 
   cairo:
@@ -113,11 +116,15 @@ parts:
       - libsm-dev
       - zlib1g-dev
       - liblzo2-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   gobject-introspection:
     after: [ cairo ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: 'gnome-3-34'
+    source-branch: 'gnome-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -146,6 +153,10 @@ parts:
       - autoconf-archive
       - valac
       - libgraphviz-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   gee: 
     after: [ vala ]
@@ -157,6 +168,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
+      NOCONFIGURE=1 ./autogen.sh
       snapcraftctl build
       GIREPOSITORY_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/girepository-1.0
       mkdir -p $GIREPOSITORY_PATH
@@ -164,15 +176,15 @@ parts:
       GIR_PATH=$SNAPCRAFT_PART_INSTALL/usr/share/gir-1.0
       mkdir -p $GIR_PATH
       cp gee/Gee-0.8.gir $GIR_PATH/
-      rm -r $SNAPCRAFT_PART_INSTALL/$(echo $SNAPCRAFT_STAGE | cut -d/ -f2)
+      #rm -r $SNAPCRAFT_PART_INSTALL/$(echo $SNAPCRAFT_STAGE | cut -d/ -f2)
 
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: 'gnome-3-34'
+    source-branch: 'gnome-3-36'
     source-depth: 1
     plugin: meson
-    meson-parameters: 
+    meson-parameters:
       - --prefix=/usr
       - --buildtype=release
       - -Dintrospection=true
@@ -219,7 +231,7 @@ parts:
     source-tag: 'v1.0.7'
     source-depth: 1
     plugin: meson
-    meson-parameters: 
+    meson-parameters:
       - --prefix=/usr
       - --buildtype=release
       - -Ddocs=false
@@ -228,7 +240,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '2.6.2'
+    source-tag: '2.6.8'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -240,6 +252,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
+      NOCONFIGURE=1 ./autogen.sh
       snapcraftctl build
       PC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
@@ -268,20 +281,8 @@ parts:
       - libxt-dev
       - cmake
 
-  librsvg:
-    after: [ pango ]
-    source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: 'librsvg-2.44'
-    source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
-    build-environment: *buildenv
-    build-packages:
-      - cargo
-      - libcroco3-dev
-
   gdk-pixbuf:
-    after: [ librsvg ]
+    after: [ pango ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
     source-branch: 'gdk-pixbuf-2-40'
     source-depth: 1
@@ -294,6 +295,7 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
+      cp $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $SNAPCRAFT_STAGE/usr/bin/
       LOADERS_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
       $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
     organize:
@@ -303,10 +305,26 @@ parts:
       - libjpeg-dev
       - libtiff-dev
 
-  epoxy:
+  librsvg:
     after: [ gdk-pixbuf ]
+    source: https://gitlab.gnome.org/GNOME/librsvg.git
+    source-branch: 'librsvg-2.48'
+    source-depth: 1
+    plugin: autotools
+    autotools-configure-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - cargo
+      - libcroco3-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
+
+  epoxy:
+    after: [ librsvg ]
     source: https://github.com/anholt/libepoxy.git
-    source-tag: '1.5.3'  # Note minor version of tag/branch can be even or odd and be stable
+    source-tag: '1.5.4'  # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -343,14 +361,18 @@ parts:
     build-packages:
       - libidn2-0-dev
       - libunistring-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   libsoup:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '2.68.2'   # not a gnome-3-34 branch yet
+    source-tag: '2.71.0'   # not a gnome-3-36 branch yet
     source-depth: 1
     plugin: meson
-    meson-parameters: 
+    meson-parameters:
       - --prefix=/usr
       - --buildtype=release
       - -Dvapi=enabled
@@ -370,6 +392,10 @@ parts:
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   wayland-protocols:
     after: [ librest ]
@@ -379,11 +405,15 @@ parts:
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   gtk:
     after: [ wayland-protocols ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.18'
+    source-tag: '3.24.22'
     #source-branch: gtk-3-24
     source-depth: 1
     plugin: meson
@@ -493,7 +523,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.42.0'
     plugin: autotools
-    autotools-configure-parameters: 
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-maintainer-mode
     build-environment:
@@ -503,6 +533,10 @@ parts:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   atkmm:
     after: [ pangomm ]
@@ -547,7 +581,7 @@ parts:
   gtksourceview:
     after: [ gtkmm ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '4.4.0'
+    source-branch: 'gtksourceview-4-6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -561,7 +595,7 @@ parts:
   libdazzle:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
-    source-branch: 'libdazzle-3-34'
+    source-branch: 'libdazzle-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -582,11 +616,15 @@ parts:
       - libtdb-dev
       - libpulse-dev
       - libgstreamer1.0-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   gsettings-desktop-schemas:
     after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-branch: 'gnome-3-34'
+    source-branch: 'gnome-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -602,7 +640,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-branch: 'gnome-3-34'
+    source-branch: 'gnome-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -623,7 +661,7 @@ parts:
     source-branch: 'cogl-1.22'
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: 
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-wayland-egl-platform=yes
     build-environment: *buildenv
@@ -633,6 +671,10 @@ parts:
       - xauth
       - xvfb
       - libgstreamer-plugins-base1.0-dev
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   clutter:
     after: [ cogl ]
@@ -696,7 +738,7 @@ parts:
   libpeas:
     after: [ clutter-gtk ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.22.0'
+    source-tag: 'libpeas-1.26.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -712,6 +754,10 @@ parts:
       - python-dev
       - python-gi-dev
       - adwaita-icon-theme
+    override-build: |
+      set -eux
+      NOCONFIGURE=1 ./autogen.sh
+      snapcraftctl build
 
   pycairo:
     after: [ libpeas ]
@@ -727,7 +773,7 @@ parts:
   pygobject:
     after: [ pycairo ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-branch: 'pygobject-3-34'
+    source-branch: 'pygobject-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -753,21 +799,23 @@ parts:
   gjs:
     after: [ libhandy ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-branch: 'gnome-3-28'
+    source-branch: 'gnome-3-36'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --disable-Werror
+      - --buildtype=release
+      - -Dgtk_doc=false
+      - -Dtests=false
     build-environment: *buildenv
     build-environment:
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$PKG_CONFIG_PATH
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.46:$LD_LIBRARY_PATH
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$LD_LIBRARY_PATH
     build-packages:
       - dbus
-      - libmozjs-52-dev
+      - libmozjs-68-dev
 
   debs:
     after: [ gjs ]
