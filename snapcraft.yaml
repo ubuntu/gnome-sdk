@@ -74,6 +74,14 @@ parts:
       - g++
       - clang
 
+  libportal:
+    after: [ glib ]
+    plugin: meson
+    source: https://github.com/flatpak/libportal.git
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
+
   pixman:
     after: [ glib ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
