@@ -15,7 +15,7 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$LD_LIBRARY_PATH
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
       - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig:$PKG_CONFIG_PATH
 
@@ -79,7 +79,7 @@ parts:
       - -Dgtk_doc=false
 
   pixman:
-    after: [ glib ]
+    after: [ libportal ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
     source-depth: 1
@@ -257,6 +257,7 @@ parts:
       sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
     build-packages:
       - ragel
+      - libgraphite2-dev
 
   pango:
     after: [ harfbuzz ]
@@ -358,14 +359,19 @@ parts:
   libsoup:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '2.71.0'   # not a gnome-3-36 branch yet
+    source-branch: gnome-3-38
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
       - -Dvapi=enabled
+      - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
     build-environment: *buildenv
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
     build-packages:
       - libsqlite3-dev
       - libkrb5-dev
@@ -392,6 +398,9 @@ parts:
       - --prefix=/usr
       - --disable-documentation
     build-environment: *buildenv
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
 
   wayland-protocols:
     after: [ wayland ]
@@ -449,7 +458,7 @@ parts:
     plugin: nil
     override-pull: |
       set -eux
-      apt download "language-pack-gnome-en-base"
+      apt-get download "language-pack-gnome-*-base"
     override-build: |
       set -eux
       for deb in *.deb; do dpkg-deb -x $deb .; done
@@ -496,6 +505,7 @@ parts:
       make install DESTDIR=$SNAPCRAFT_PART_INSTALL
     build-packages:
       - libsigc++-2.0-dev
+      - libxml-parser-perl
     build-environment: *buildenv
     
   cairomm:
@@ -581,37 +591,32 @@ parts:
      - --prefix=/usr
      - --buildtype=release
     build-environment: *buildenv
+    build-environment:
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
     build-packages:
       - gettext
       - libxml2-dev
+    override-build: |
+      set -eux
+      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#' ../src/meson.build
+      snapcraftctl build
 
   libdazzle:
     after: [ gtksourceview ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
-    source-branch: 'libdazzle-3-36'
+    source-tag: '3.38.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
      - --prefix=/usr
      - --buildtype=release
     build-environment: *buildenv
-
-  #libcanberra:
-  #  after: [ libdazzle ]
-  #  source: git://git.0pointer.net/libcanberra.git
-  #  source-depth: 1
-  #  plugin: autotools
-  #  autotools-configure-parameters: [ --prefix=/usr ]
-  #  build-environment: *buildenv
-  #  build-environment:
-  #    - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
-  #    - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
-  #  build-packages:
-  #    - libasound2-dev
-  #    - libvorbis-dev
-  #    - libtdb-dev
-  #    - libpulse-dev
-  #    - libgstreamer1.0-dev
+    override-build: |
+      set -eux
+      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
+      snapcraftctl build
 
   gsettings-desktop-schemas:
     after: [ libdazzle ]
@@ -666,6 +671,7 @@ parts:
       - --with-gles2-libname=libGLESv2.so.2
     build-environment: *buildenv
     build-environment:
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
     build-packages:
@@ -707,6 +713,7 @@ parts:
       - -usr/include/gio-unix-2.0/gio/gdesktopappinfo.h
       - -usr/include/gio-unix-2.0/gio/gunixmounts.h
       - -usr/include/glib-2.0/*
+      - -usr/include/pixman-1/*
       - -usr/lib/*/glib-2.0/*
       - -usr/lib/*/libffi*
       - -usr/lib/*/libgio*
@@ -714,14 +721,44 @@ parts:
       - -usr/lib/*/libgmodule*
       - -usr/lib/*/libgobject*
       - -usr/lib/*/libgthread*
+      - -usr/lib/*/libpixman*
       - -usr/lib/*/pkgconfig/gio*
       - -usr/lib/*/pkgconfig/glib-2.0.pc
       - -usr/lib/*/pkgconfig/gmodule*
       - -usr/lib/*/pkgconfig/gobject-2.0.pc
       - -usr/lib/*/pkgconfig/gthread-2.0.pc
+      - -usr/lib/*/pkgconfig/libffi.pc
+      - -usr/lib/*/pkgconfig/pixman-1.pc
       - -usr/share/aclocal/glib-2.0.m4
       - -usr/share/aclocal/gsettings.m4
       - -usr/share/glib-2.0/*
+      - -usr/lib/*/girepository-1.0/GIRepository-2.0.typelib
+      - -usr/lib/*/girepository-1.0/GLib-2.0.typelib
+      - -usr/lib/*/girepository-1.0/GObject-2.0.typelib
+      - -usr/lib/*/girepository-1.0/Gio-2.0.typelib
+      - -usr/lib/*/libgirepository*
+      - -usr/include/fribidi/*
+      - -usr/lib/*/libfribidi*
+      - -usr/lib/*/pkgconfig/fribidi.pc
+      - -usr/include/harfbuzz/*
+      - -usr/share/gir-1.0/HarfBuzz-0.0.gir
+      - -usr/bin/pango*
+      - -usr/include/pango-1.0/pango/*
+      - -usr/lib/*/girepository-1.0/Pango*
+      - -usr/lib/*/libpango*
+      - -usr/lib/*/pkgconfig/pango*
+      - -usr/share/gir-1.0/Pango*
+      - -usr/bin/gdk-pixbuf*
+      - -usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-features.h
+      - -usr/lib/*/gdk-pixbuf-2.0/*
+      - -usr/lib/*/girepository-1.0/GdkPixbuf-2.0.typelib
+      - -usr/lib/*/libgdk_pixbuf*
+      - -usr/lib/*/pkgconfig/gdk-pixbuf*
+      - -usr/share/gir-1.0/GdkPix*
+      - -usr/bin/wayland-scanner
+      - -usr/include/wayland*
+      - -usr/share/aclocal/wayland-scanner.m4
+      - -usr/share/wayland/wayland.xml
 
   clutter-gtk:
     after: [ clutter ]
@@ -737,14 +774,22 @@ parts:
   libpeas:
     after: [ clutter-gtk ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.26.0'
+    source-tag: 'libpeas-1.28.0'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --enable-python2
-      - --enable-python3
+      - -Dpython2=true
+      - -Dpython3=true
+      - -Dintrospection=true
+      - -Dvapi=false
+      - -Ddemos=false
+      - -Dglade_catalog=false
+      - -Dgtk_doc=false
     build-environment: *buildenv
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
     build-packages:
       - python-dev
       - python-gi-dev
@@ -774,8 +819,8 @@ parts:
 
   libhandy:
     after: [ pygobject ]
-    source: https://source.puri.sm/Librem5/libhandy.git
-    source-branch: 'libhandy-0-0'
+    source: https://gitlab.gnome.org/GNOME/libhandy.git
+    source-branch: 'libhandy-1-0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -790,7 +835,7 @@ parts:
   gjs:
     after: [ libhandy ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-branch: 'gnome-3-38'
+    source-branch: 'gnome-3-36' # 3-38 requires libmozjs-78
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -840,7 +885,7 @@ parts:
       - libxtst-dev
       - gettext
       - shared-mime-info
-      #- libwebkit2gtk-4.0-dev
+      - libwebkit2gtk-4.0-dev
       - libgcr-3-dev
       - libnotify-dev
       - libsecret-1-dev
@@ -855,7 +900,8 @@ parts:
       - libtdb1
       - libvorbisfile3
       - libegl-mesa0
-      - libmozjs-52-dev
+      - libmozjs-68-dev
+      - libcanberra-gtk3-dev
     override-build: |
       set -eux
       snapcraftctl build
