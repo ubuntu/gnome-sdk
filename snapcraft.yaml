@@ -81,17 +81,17 @@ parts:
       - libgl1-mesa-dri
       - libgoa-1.0-0b
       - libgraphite2-3
-      - libgspell-1-1
+      - libgspell-1-2
       - libgstreamer-plugins-base1.0-0
       - libgstreamer-plugins-good1.0-0
       - libgstreamer1.0-0
       - libgvc6
-      - libicu60
+      - libicu66
       - libinput10
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
-      - libllvm4.0
+      - libllvm11
       - libmpc3
       - libmpfr6
       - libmtdev1
@@ -143,7 +143,7 @@ parts:
       - libsigc++-2.0-0v5
       - libpython3.8
     stage:
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM*
     override-build: |
       set -eux
       snapcraftctl build
