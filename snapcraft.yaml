@@ -598,10 +598,10 @@ parts:
     build-packages:
       - gettext
       - libxml2-dev
-    override-build: |
+    override-pull: |
       set -eux
+      snapcraftctl pull
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
-      snapcraftctl build
 
   libdazzle:
     after: [ gtksourceview ]
@@ -613,10 +613,10 @@ parts:
      - --prefix=/usr
      - --buildtype=release
     build-environment: *buildenv
-    override-build: |
+    override-pull: |
       set -eux
+      snapcraftctl pull
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
-      snapcraftctl build
 
   gsettings-desktop-schemas:
     after: [ libdazzle ]
