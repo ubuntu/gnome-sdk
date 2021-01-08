@@ -1,17 +1,17 @@
-name: gnome-3-34-1804
+name: gnome-3-38-2004
 version: git
-summary: Shared GNOME 3.34 Ubuntu stack
+summary: Shared GNOME 3.38 Ubuntu stack
 description: |
- This snap includes a GNOME 3.34 stack (the base libraries and desktop 
+ This snap includes a GNOME 3.38 stack (the base libraries and desktop 
  integration components) and shares it through the content interface. 
 confinement: strict
 grade: stable
 icon: icon.png
-base: core18
+base: core20
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-3-34-1804:
+    gnome-3-38-2004:
       interface: content
       read:
         - /
@@ -19,7 +19,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-3-34-1804-sdk/latest/candidate ]
+    stage-snaps: [ gnome-3-38-2004-sdk/latest/candidate ]
     stage:
       - usr
       
@@ -138,9 +138,10 @@ parts:
       - xdg-user-dirs
       - libgtksourceview-3.0-1
       - libappindicator3-1
-      - libmozjs-52-0
+      - gir1.2-appindicator3-0.1
+      - libmozjs-68-0
       - libsigc++-2.0-0v5
-      - libpython3.6
+      - libpython3.8
     stage:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM-4.0.so*
     override-build: |
