@@ -600,7 +600,7 @@ parts:
       - libxml2-dev
     override-build: |
       set -eux
-      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#' ../src/meson.build
+      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
       snapcraftctl build
 
   libdazzle:
