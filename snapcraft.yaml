@@ -537,8 +537,8 @@ parts:
       - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
-      mkdir -p untracked/build_scripts/
-      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py untracked/build_scripts/
+      mkdir -p ../src/untracked/build_scripts/
+      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       snapcraftctl build
 
   atkmm:
@@ -577,8 +577,8 @@ parts:
       - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
-      mkdir -p untracked/build_scripts/
-      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py untracked/build_scripts/
+      mkdir -p ../src/untracked/build_scripts/
+      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       snapcraftctl build
 
   gtksourceview:
