@@ -340,7 +340,7 @@ parts:
       - --prefix=/usr
       - --buildtype=release
       - -Dgtk_doc=disabled
-      - -Dinstalled_tests=false
+      - -Dtests=false
     build-environment: *buildenv
 
   libpsl:
@@ -984,5 +984,7 @@ parts:
 
       rm -rf usr/share/doc
       rm -rf usr/share/man
+      rm -rf usr/libexec/*/installed-tests
+      rm -rf usr/libexec/installed-tests
 
       find . -type d -empty -delete
