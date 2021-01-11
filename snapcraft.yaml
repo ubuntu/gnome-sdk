@@ -340,6 +340,7 @@ parts:
       - --prefix=/usr
       - --buildtype=release
       - -Dgtk_doc=disabled
+      - -Dinstalled_tests=false
     build-environment: *buildenv
 
   libpsl:
@@ -843,6 +844,7 @@ parts:
       - --buildtype=release
       - -Dgtk_doc=false
       - -Dtests=false
+      - -Dinstalled_tests=false
     build-environment: *buildenv
     build-environment:
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig:$PKG_CONFIG_PATH
