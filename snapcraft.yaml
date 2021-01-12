@@ -35,19 +35,19 @@ parts:
       sed -i 's#pkgltdldir="#pkgltdldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
 
-  libffi:
-    after: [ libtool ]
-    source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
-    source-branch: 'meson'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - --buildtype=release
-    build-environment: *buildenv
+  #libffi:
+  #  after: [ libtool ]
+  #  source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
+  #  source-branch: 'meson'
+  #  source-depth: 1
+  #  plugin: meson
+  #  meson-parameters:
+  #    - --prefix=/usr
+  #    - --buildtype=release
+  #  build-environment: *buildenv
 
   glib:
-    after: [ libffi ]
+    after: [ libtool ]
     source: https://gitlab.gnome.org/GNOME/glib.git
     source-branch: 'glib-2-64'
     source-depth: 1
@@ -69,6 +69,7 @@ parts:
       - gcc
       - g++
       - clang
+      - libffi-dev
 
   libportal:
     after: [ glib ]
@@ -904,6 +905,7 @@ parts:
       - libegl-mesa0
       - libmozjs-68-dev
       - libcanberra-gtk3-dev
+      - libffi-dev
     override-build: |
       set -eux
       snapcraftctl build
