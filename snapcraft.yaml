@@ -93,22 +93,17 @@ parts:
   cairo:
     after: [ pixman ]
     source: git://anongit.freedesktop.org/git/cairo
-    source-tag: '1.16.0' # see: https://gitlab.freedesktop.org/cairo/cairo/issues/382
+    source-tag: '1.17.4'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --enable-pdf
-      - --enable-ps
-      - --enable-xlib
-      - --enable-png
-      - --enable-tee
-      - --enable-svg
-      - --enable-xcb
-      - --enable-perf-utils
-      - --disable-silent-rules
-      - --disable-maintainer-mode
-      - --disable-gl
+      - -Dxlib=enabled
+      - -Dpng=enabled
+      - -Dxcb=enabled
+      - -Dtee=enabled
+      - -Dzlib=enabled
+      - -Dgl_backend=disabled
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
@@ -620,8 +615,22 @@ parts:
       snapcraftctl pull
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
-  gsettings-desktop-schemas:
+  libcanberra:
     after: [ libdazzle ]
+    source: git://git.0pointer.net/libcanberra.git
+    source-depth: 1
+    plugin: autotools
+    autotools-configure-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - libasound2-dev
+      - libvorbis-dev
+      - libtdb-dev
+      - libpulse-dev
+      - libgstreamer1.0-dev
+
+  gsettings-desktop-schemas:
+    after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-branch: 'gnome-3-38'
     source-depth: 1
