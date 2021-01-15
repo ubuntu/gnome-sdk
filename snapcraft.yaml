@@ -620,7 +620,7 @@ parts:
     source: git://git.0pointer.net/libcanberra.git
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters: [ --prefix=/usr, --with-builtin=pulse ]
     build-environment: *buildenv
     build-packages:
       - libasound2-dev
