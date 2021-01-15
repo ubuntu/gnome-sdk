@@ -915,6 +915,9 @@ parts:
       - libmozjs-68-dev
       - libcanberra-gtk3-dev
       - liblzo2-dev
+      - libx11-xcb-dev
+      - libgbm-dev
+      - libdrm-dev
     override-build: |
       set -eux
       snapcraftctl build
