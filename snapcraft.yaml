@@ -637,6 +637,7 @@ parts:
     autotools-configure-parameters: [--prefix=/usr, --disable-Werror]
     organize:
       snap/quadrapassel/current/usr: usr
+    build-environment: *buildenv
     build-packages:
       - autoconf-archive
       - intltool
