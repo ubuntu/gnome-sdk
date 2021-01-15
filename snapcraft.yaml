@@ -914,6 +914,7 @@ parts:
       - libegl-mesa0
       - libmozjs-68-dev
       - libcanberra-gtk3-dev
+      - liblzo2-dev
     override-build: |
       set -eux
       snapcraftctl build
