@@ -629,8 +629,23 @@ parts:
       - libpulse-dev
       - libgstreamer1.0-dev
 
-  gsettings-desktop-schemas:
+  gsound:
     after: [ libcanberra ]
+    source: https://gitlab.gnome.org/GNOME/gsound.git
+    source-type: git
+    plugin: autotools
+    autotools-configure-parameters: [--prefix=/usr, --disable-Werror]
+    organize:
+      snap/quadrapassel/current/usr: usr
+    build-packages:
+      - autoconf-archive
+      - intltool
+    override-pull: |
+      snapcraftctl pull
+      sed -i.bak -e "s|{abs_top_builddir}|(abs_top_builddir)|g" tools/Makefile.am
+
+  gsettings-desktop-schemas:
+    after: [ gsound ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-branch: 'gnome-3-38'
     source-depth: 1
