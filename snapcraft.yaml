@@ -997,5 +997,7 @@ parts:
       rm -rf usr/share/man
       rm -rf usr/libexec/*/installed-tests
       rm -rf usr/libexec/installed-tests
+      rm -f usr/lib/*.la
+      rm -f usr/lib/*/*.la
 
       find . -type d -empty -delete
