@@ -300,12 +300,15 @@ parts:
       - libtiff-dev
 
   librsvg:
-    after: [ gdk-pixbuf ]
+    after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: 'librsvg-2.44'
+    source-branch: 'librsvg-2.50'
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --enable-introspection
+      - --enable-vala
     build-environment: *buildenv
     build-packages:
       - cargo
