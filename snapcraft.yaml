@@ -937,6 +937,7 @@ parts:
       - libx11-xcb-dev
       - libgbm-dev
       - libdrm-dev
+      - libpulse-dev
     override-build: |
       set -eux
       snapcraftctl build
