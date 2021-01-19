@@ -938,6 +938,8 @@ parts:
       - libgbm-dev
       - libdrm-dev
       - libpulse-dev
+      - desktop-file-utils
+      - appstream-util
     override-build: |
       set -eux
       snapcraftctl build
