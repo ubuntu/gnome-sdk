@@ -952,6 +952,7 @@ parts:
       - libpulse-dev
       - desktop-file-utils
       - appstream-util
+      - libgnutls28-dev
     override-build: |
       set -eux
       snapcraftctl build
