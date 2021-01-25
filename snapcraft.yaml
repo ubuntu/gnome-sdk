@@ -884,8 +884,20 @@ parts:
       - dbus
       - libmozjs-68-dev
 
-  debs:
+  p11-kit:
     after: [ gjs ]
+    source: https://github.com/p11-glue/p11-kit.git
+    source-tag: 0.23.22
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Dhash_impl=internal
+      - -Dtrust_paths=/etc/ssl/certs/ca-certificates.crt
+    build-packages:
+      - libtasn1-6-dev
+
+  debs:
+    after: [ p11-kit ]
     plugin: nil
     stage-packages:
       - gcc
