@@ -953,6 +953,7 @@ parts:
       - desktop-file-utils
       - appstream-util
       - libgnutls28-dev
+      - libpython3-dev
     override-build: |
       set -eux
       snapcraftctl build
