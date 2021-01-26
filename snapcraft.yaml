@@ -954,6 +954,7 @@ parts:
       - appstream-util
       - libgnutls28-dev
       - libpython3-dev
+      - libpython3.8-dev
     override-build: |
       set -eux
       snapcraftctl build
