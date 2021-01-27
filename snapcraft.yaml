@@ -813,7 +813,7 @@ parts:
       - -Dpython3=true
       - -Dintrospection=true
       - -Dvapi=false
-      - -Ddemos=false
+      - -Ddemos=true
       - -Dglade_catalog=false
       - -Dgtk_doc=false
     build-environment: *buildenv
@@ -823,7 +823,6 @@ parts:
     build-packages:
       - python-dev
       - python-gi-dev
-      - adwaita-icon-theme
 
   pycairo:
     after: [ libpeas ]
