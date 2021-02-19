@@ -895,8 +895,19 @@ parts:
     build-packages:
       - libtasn1-6-dev
 
-  debs:
+  libsecret:
     after: [ p11-kit ]
+    source: https://gitlab.gnome.org/sbacher/libsecret.git
+    source-branch: snaps-use-portal
+    plugin: meson
+    meson-parameters: [--prefix=/usr]
+    organize:
+      snap/fractal/current/usr: usr
+    build-packages:
+      - libgcrypt20-dev
+
+  debs:
+    after: [ libsecret ]
     plugin: nil
     stage-packages:
       - gcc
@@ -930,7 +941,6 @@ parts:
       - libwebkit2gtk-4.0-dev
       - libgcr-3-dev
       - libnotify-dev
-      - libsecret-1-dev
       - itstool
       - libudev-dev
       - libseccomp-dev
