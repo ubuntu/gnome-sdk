@@ -894,6 +894,7 @@ parts:
       - -Dtrust_paths=/etc/ssl/certs/ca-certificates.crt
     build-packages:
       - libtasn1-6-dev
+    build-environment: *buildenv
 
   libsecret:
     after: [ p11-kit ]
@@ -905,6 +906,7 @@ parts:
       snap/fractal/current/usr: usr
     build-packages:
       - libgcrypt20-dev
+    build-environment: *buildenv
 
   debs:
     after: [ libsecret ]
