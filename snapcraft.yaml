@@ -898,8 +898,8 @@ parts:
 
   libsecret:
     after: [ p11-kit ]
-    source: https://gitlab.gnome.org/sbacher/libsecret.git
-    source-branch: snaps-use-portal
+    source: https://gitlab.gnome.org/GNOME/libsecret.git
+    source-depth: 1
     plugin: meson
     meson-parameters: [--prefix=/usr]
     organize:
@@ -968,6 +968,7 @@ parts:
       - libgnutls28-dev
       - libpython3-dev
       - libpython3.8-dev
+      - libgcrypt20-dev
     override-build: |
       set -eux
       snapcraftctl build
