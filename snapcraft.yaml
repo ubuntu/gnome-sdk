@@ -964,6 +964,7 @@ parts:
       - libdrm-dev
       - libpulse-dev
       - desktop-file-utils
+      - appstream
       - appstream-util
       - libgnutls28-dev
       - libpython3-dev
