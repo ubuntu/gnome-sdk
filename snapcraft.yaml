@@ -970,6 +970,10 @@ parts:
       - libpython3-dev
       - libpython3.8-dev
       - libgcrypt20-dev
+      - python3-dev
+      - python3-pip
+      - python3-setuptools
+      - python3-wheel
     override-build: |
       set -eux
       snapcraftctl build
