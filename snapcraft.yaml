@@ -156,7 +156,7 @@ parts:
   gee: 
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
-    source-tag: '0.20.3'
+    source-tag: '0.20.4'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
