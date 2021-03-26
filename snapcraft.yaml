@@ -952,6 +952,7 @@ parts:
       - python3-minimal
       - python3.8-minimal
       - python3-distutils
+      - python3-venv
       - libxml2-utils
       - libtdb1
       - libvorbisfile3
