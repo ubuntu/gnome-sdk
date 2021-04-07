@@ -709,10 +709,27 @@ parts:
       - xvfb
       - libgstreamer-plugins-base1.0-dev
 
-  clutter:
+  libinput:
     after: [ cogl ]
+    source: https://gitlab.freedesktop.org/libinput/libinput.git
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - --buildtype=release
+      - -Ddocumentation=false
+    build-environment: *buildenv
+    build-packages:
+      - check
+      - libmtdev-dev
+      - libudev-dev
+      - libevdev-dev
+      - libwacom-dev
+
+  clutter:
+    after: [ cogl, libinput ]
     source: https://gitlab.gnome.org/GNOME/clutter.git
-    source-commit: 09788c786f832deec2ae5d9e7b468e7ee0df112d 
+    source-tag: '1.26.4'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -725,10 +742,7 @@ parts:
     build-packages:
       - libdrm-dev
       - xsltproc
-      - libinput-dev
       - libgudev-1.0-dev
-    stage-packages:
-      - libinput-dev
     stage:
       - -usr/bin/gapplication
       - -usr/bin/gdbus
