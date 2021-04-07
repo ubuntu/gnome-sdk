@@ -925,6 +925,7 @@ parts:
     source-tag: '1.8.1'
     plugin: meson
     meson-parameters: [--prefix=/usr]
+    build-environment: *buildenv
 
   debs:
     after: [ libsecret ]
