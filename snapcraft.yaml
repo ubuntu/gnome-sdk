@@ -638,8 +638,6 @@ parts:
     source-type: git
     plugin: autotools
     autotools-configure-parameters: [--prefix=/usr, --disable-Werror]
-    organize:
-      snap/quadrapassel/current/usr: usr
     build-environment: *buildenv
     build-packages:
       - autoconf-archive
@@ -902,11 +900,17 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters: [--prefix=/usr]
-    organize:
-      snap/fractal/current/usr: usr
     build-packages:
       - libgcrypt20-dev
     build-environment: *buildenv
+
+  libgnome-games-support:
+    after: [ libsecret ]
+    source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
+    source-type: git
+    source-tag: '1.8.1'
+    plugin: meson
+    meson-parameters: [--prefix=/usr]
 
   debs:
     after: [ libsecret ]
