@@ -165,7 +165,7 @@ parts:
   atk:
     after: [ gee ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: 'gnome-3-34'
+    source-branch: 'gnome-3-36'
     source-depth: 1
     plugin: meson
     meson-parameters: 
