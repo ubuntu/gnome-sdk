@@ -484,7 +484,7 @@ parts:
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.62.0'
+    source-tag: '2.64.4'
     plugin: autotools
     override-build: |
       set -eux
