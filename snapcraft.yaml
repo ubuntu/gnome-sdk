@@ -943,28 +943,41 @@ parts:
       - libdrm-dev
       - libegl-mesa0
       - libegl1-mesa-dev
+      - libexpat1
       - libfontconfig1-dev
       - libgbm-dev
       - libgcr-3-dev
+      - libgcrypt20
       - libgcrypt20-dev
       - libgl1-mesa-dev
+      - libgmp10
       - libgnutls28-dev
+      - libgnutls30
       - libgspell-1-dev
+      - libhogweed5
+      - libidn2-0
       - libjpeg-dev
       - liblcms2-dev
       - liblzo2-dev
       - libmount-dev
       - libmozjs-68-dev
+      - libnettle7
       - libnotify-dev
+      - libpcre2-8-0
+      - libpcre3
       - libpcre3-dev
       - libpulse-dev
       - libpython3-dev
       - libpython3.8-dev
       - libseccomp-dev
+      - libseccomp2
+      - libsqlite3-0
       - libsqlite3-dev
+      - libtasn1-6
       - libtdb1
       - libthai-dev
       - libudev-dev
+      - libudev1
       - libvorbisfile3
       - libwebkit2gtk-4.0-dev
       - libx11-xcb-dev
