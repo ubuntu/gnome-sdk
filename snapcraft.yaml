@@ -17,8 +17,27 @@ slots:
         - /
 
 parts:
+  # Patched libwayland-cursor to address https://gitlab.gnome.org/Community/Ubuntu/gnome-sdk/-/issues/6
+  libwayland-cursor:
+    source: https://gitlab.freedesktop.org/oSoMoN/wayland.git
+    source-branch: 'xcursor-default-fallback'
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      - --disable-documentation
+      - --disable-dtd-validation
+    build-packages:
+      - pkg-config
+      - libexpat1-dev
+      - libffi-dev
+    organize:
+      usr/lib/libwayland-cursor.so*: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/
+    stage:
+      - usr/lib/*/libwayland-cursor.so*
+
   gnome-sdk:
     plugin: nil
+    after: [ libwayland-cursor ]
     stage-snaps: [ gnome-3-34-1804-sdk/latest/candidate ]
     stage:
       - usr
@@ -42,6 +61,7 @@ parts:
       - -usr/include
 
       - -usr/lib/*vala*
+      - -usr/lib/*/libwayland-cursor.so*
 
       - -usr/share/perl
       - -usr/share/vala*
@@ -107,7 +127,6 @@ parts:
       - libvorbisenc2
       - libwacom2
       - libwayland-client0
-      - libwayland-cursor0
       - libwayland-egl1
       - libwebkit2gtk-4.0-37
       - libx11-6
