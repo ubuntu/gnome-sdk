@@ -928,7 +928,7 @@ parts:
     build-environment: *buildenv
 
   debs:
-    after: [ libsecret ]
+    after: [ libgnome-games-support ]
     plugin: nil
     stage-packages:
       - appstream
