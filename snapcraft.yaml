@@ -954,6 +954,7 @@ parts:
       - libgnutls28-dev
       - libgnutls30
       - libgspell-1-dev
+      - libgudev-1.0-dev
       - libhogweed5
       - libidn2-0
       - libjpeg-dev
