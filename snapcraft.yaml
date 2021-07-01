@@ -944,6 +944,7 @@ parts:
       - libegl-mesa0
       - libegl1-mesa-dev
       - libexpat1
+      - libevdev2
       - libfontconfig1-dev
       - libgbm-dev
       - libgcr-3-dev
@@ -962,6 +963,7 @@ parts:
       - liblzo2-dev
       - libmount-dev
       - libmozjs-68-dev
+      - libmtdev1
       - libnettle7
       - libnotify-dev
       - libpcre2-8-0
@@ -980,6 +982,7 @@ parts:
       - libudev-dev
       - libudev1
       - libvorbisfile3
+      - libwacom2
       - libwebkit2gtk-4.0-dev
       - libx11-xcb-dev
       - libxcb-render0-dev
