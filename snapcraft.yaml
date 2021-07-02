@@ -939,6 +939,7 @@ parts:
       - itstool
       - libbrotli-dev
       - libcanberra-gtk3-dev
+      - libdbus-1-3
       - libdbus-1-dev
       - libdrm-dev
       - libegl-mesa0
