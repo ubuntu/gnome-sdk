@@ -970,6 +970,7 @@ parts:
       - libpcre2-8-0
       - libpcre3
       - libpcre3-dev
+      - libpulse0
       - libpulse-dev
       - libpython3-dev
       - libpython3.8-dev
