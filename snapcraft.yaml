@@ -62,7 +62,7 @@ parts:
       set -eux
       snapcraftctl build
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
-      cp $SNAPCRAFT_PART_INSTALL/usr/bin/glib-compile-schemas $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
+      cp $SNAPCRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
     build-packages:
       - pkg-config
       - libmount-dev
