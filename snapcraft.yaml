@@ -636,15 +636,11 @@ parts:
     after: [ libcanberra ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
     source-type: git
-    plugin: autotools
-    autotools-configure-parameters: [--prefix=/usr, --disable-Werror]
+    plugin: meson
+    meson-parameters:
+     - --prefix=/usr
+     - --buildtype=release
     build-environment: *buildenv
-    build-packages:
-      - autoconf-archive
-      - intltool
-    override-pull: |
-      snapcraftctl pull
-      sed -i.bak -e "s|{abs_top_builddir}|(abs_top_builddir)|g" tools/Makefile.am
 
   gsettings-desktop-schemas:
     after: [ gsound ]
