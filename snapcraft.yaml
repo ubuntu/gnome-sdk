@@ -861,7 +861,7 @@ parts:
   libhandy:
     after: [ pygobject ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    #source-branch: 'libhandy-1-0'
+    source-branch: 'libhandy-1-2'
     source-depth: 1
     plugin: meson
     meson-parameters:
