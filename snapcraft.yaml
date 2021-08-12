@@ -21,6 +21,7 @@ parts:
     plugin: nil
     stage-snaps: [ gnome-3-38-2004-sdk/latest/candidate ]
     stage:
+      - lib/*/bindtextdomain.so
       - usr
       
       - -usr/**/*.a
