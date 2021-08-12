@@ -1083,6 +1083,15 @@ parts:
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
+  # Used by the gnome snapcraft extensions to load translations from within the content snap
+  bindtextdomain:
+    after: [ conditioning ]
+    plugin: nil
+    override-build: |
+      set -eux
+      mkdir -p $SNAPCRAFT_PART_INSTALL/lib/$SNAPCRAFT_ARCH_TRIPLET
+      gcc -Wall -O2 -o $SNAPCRAFT_PART_INSTALL/lib/$SNAPCRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $SNAPCRAFT_PROJECT_DIR/bindtextdomain.c -ldl
+
   cleanup:
     after: [ conditioning ]
     plugin: nil
