@@ -980,6 +980,7 @@ parts:
       - libthai-dev
       - libudev-dev
       - libudev1
+      - libunity-dev
       - libvorbisfile3
       - libwacom2
       - libwebkit2gtk-4.0-dev
