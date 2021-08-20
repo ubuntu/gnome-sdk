@@ -1106,4 +1106,13 @@ parts:
       rm -f usr/lib/*.la
       rm -f usr/lib/*/*.la
 
+      # Cleanup from libunity addition
+      rm -f usr/bin/dbus-binding-tool
+      rm -f usr/bin/unity-scope-loader
+      rm -rf usr/lib/python2.7
+      rm -f usr/share/glib-2.0/schemas/com.canonical.Unity.Lenses.gschema.xml
+      rm -rf usr/share/lintian/overrides
+      rm -rf usr/share/locale-langpack/kab
+      rm -f usr/share/unity/client-scopes.json
+
       find . -type d -empty -delete
