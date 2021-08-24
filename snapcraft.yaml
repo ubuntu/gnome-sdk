@@ -477,6 +477,7 @@ parts:
       - -Ddemos=false
       - -Dbuild-examples=false
       - -Dmedia-gstreamer=disabled
+      - -Dinstall-tests=false
     build-environment: *buildenv
     build-environment:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
