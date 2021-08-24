@@ -411,7 +411,7 @@ parts:
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
 
-  gtk:
+  gtk3:
     after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.25'
@@ -455,7 +455,7 @@ parts:
 
 
   gtk4:
-    after: [ wayland-protocols, wayland, gtk ]
+    after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-4-4
     source-depth: 1
@@ -480,7 +480,6 @@ parts:
       - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
     organize:
       usr/lib/gtk-4.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gtk-4.0
-      usr/bin/gtk-query-immodules-4.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libgtk-4-0/gtk-query-immodules-4.0
     build-packages:
       - libxkbcommon-dev
       - libcups2-dev
@@ -496,7 +495,7 @@ parts:
       - libxml2-utils
 
   gtk-locales:
-    after: [ gtk, gtk4 ]
+    after: [ gtk3, gtk4 ]
     plugin: nil
     override-pull: |
       set -eux
