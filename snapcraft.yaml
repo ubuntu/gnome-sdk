@@ -414,7 +414,7 @@ parts:
   gtk:
     after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.25'
+    source-tag: '3.24.29'
     #source-branch: gtk-3-24
     source-depth: 1
     plugin: meson
