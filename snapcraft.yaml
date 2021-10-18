@@ -143,6 +143,11 @@ parts:
       - libmozjs-68-0
       - libsigc++-2.0-0v5
       - libpython3.8
+      # VA-API drivers for HW-accelerated video decoding
+      - mesa-va-drivers
+      - on amd64:
+        - i965-va-driver
+        - intel-media-va-driver
     stage:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM*
     override-build: |
