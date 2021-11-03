@@ -138,8 +138,6 @@ parts:
       - unity-gtk3-module
       - xdg-user-dirs
       - libgtksourceview-3.0-1
-      - libappindicator3-1
-      - gir1.2-appindicator3-0.1
       - libmozjs-68-0
       - libsigc++-2.0-0v5
       - libpython3.8
