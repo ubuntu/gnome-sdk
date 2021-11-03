@@ -96,6 +96,7 @@ parts:
     source-tag: '1.17.4'
     source-depth: 1
     plugin: meson
+    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - -Dxlib=enabled
