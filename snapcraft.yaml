@@ -933,6 +933,7 @@ parts:
       - gcc
       - gettext
       - itstool
+      - libappindicator3-dev
       - libbrotli-dev
       - libcanberra-gtk3-dev
       - libdbus-1-3
