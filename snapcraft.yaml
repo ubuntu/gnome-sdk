@@ -262,6 +262,7 @@ parts:
     source-tag: '1.48.0'
     source-depth: 1
     plugin: meson
+    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
