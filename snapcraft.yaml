@@ -323,7 +323,7 @@ parts:
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
-      - -Dgtk_doc=disabled
+      - -Ddocs=false
     build-environment: *buildenv
 
   libpsl:
