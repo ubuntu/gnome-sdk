@@ -255,7 +255,7 @@ parts:
       - --buildtype=release
       - -Dinstall-tests=false
       - -Dgtk_doc=false
-      - -Dgir=true
+      - -Dintrospection=true
     build-environment: *buildenv
     build-packages:
       - libthai-dev
