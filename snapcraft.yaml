@@ -341,7 +341,7 @@ parts:
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
-      - -Dgtk_doc=disabled
+      - -Ddocs=false
       - -Dtests=false
     build-environment: *buildenv
 
