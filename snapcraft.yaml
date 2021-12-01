@@ -49,7 +49,7 @@ parts:
   glib:
     after: [ libffi ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: 'glib-2-68'
+    source-branch: 'glib-2-70'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -395,7 +395,7 @@ parts:
   wayland:
     after: [ librest ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
-    source-tag: '1.16.93'
+    source-tag: '1.19.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -409,16 +409,17 @@ parts:
   wayland-protocols:
     after: [ wayland ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.21'
+    source-tag: '1.24'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    plugin: meson
+    meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
+    meson-version: "0.54.0"
 
   gtk3:
     after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.29'
+    source-tag: '3.24.30'
     #source-branch: gtk-3-24
     source-depth: 1
     plugin: meson
