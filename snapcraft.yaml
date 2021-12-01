@@ -983,6 +983,7 @@ parts:
       - itstool
       - libappindicator3-dev
       - libbrotli-dev
+      - libcairo2-dev
       - libcanberra-gtk3-dev
       - libdbus-1-3
       - libdbus-1-dev
@@ -993,6 +994,7 @@ parts:
       - libevdev2
       - libfontconfig1-dev
       - libgbm-dev
+      - libgraphene-1.0-dev
       - libgcr-3-dev
       - libgcrypt20
       - libgcrypt20-dev
