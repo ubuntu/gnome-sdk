@@ -360,7 +360,7 @@ parts:
       - libidn2-0-dev
       - libunistring-dev
 
-  libsoup:
+  libsoup2:
     after: [ libpsl ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-branch: gnome-3-38
@@ -381,8 +381,30 @@ parts:
       - libkrb5-dev
       - libbrotli-dev
 
+  libsoup3:
+    after: [ libsoup2 ]
+    source: https://gitlab.gnome.org/GNOME/libsoup.git
+    source-tag: '3.0.3'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - --buildtype=release
+      - -Dvapi=enabled
+      - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
+    build-environment: *buildenv
+    build-environment:
+      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.54:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig
+      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
+    build-packages:
+      - libsqlite3-dev
+      - libkrb5-dev
+      - libbrotli-dev
+      - libnghttp2-dev
+
   librest:
-    after: [ libsoup ]
+    after: [ libsoup3 ]
     source: https://gitlab.gnome.org/GNOME/librest.git
     source-branch: 'librest-0-7'  # looks like this branch has been updated more recently than the 0.8 tags - weird
     source-depth: 1
