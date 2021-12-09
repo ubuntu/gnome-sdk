@@ -1,13 +1,13 @@
-name: gnome-3-38-2004-sdk
+name: gnome-42-2204-sdk
 version: git
-summary: Shared GNOME 3.38 Ubuntu stack
+summary: Shared GNOME 42 Ubuntu stack
 description: |
  This snap contains only the necessary libraries required by
  GNOME applications.
 
 confinement: strict
-grade: stable
-base: core20
+grade: devel
+base: core22
 
 parts:
   buildenv:
