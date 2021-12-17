@@ -929,11 +929,30 @@ parts:
     meson-parameters: [--prefix=/usr]
     build-environment: *buildenv
 
-  debs:
+  appstream:
     after: [ libgnome-games-support ]
+    source: https://github.com/ximion/appstream.git
+    plugin: meson
+    source-tag: "v0.14.6"
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgir=false
+      - -Ddocs=false
+      - -Dapidocs=false
+      - -Dinstall-docs=false
+    build-environment: *buildenv
+    build-packages:
+      - gperf
+      - libcurl4-gnutls-dev
+      - liblmdb-dev
+      - liblzma-dev
+      - libstemmer-dev
+      - libyaml-dev
+
+  debs:
+    after: [ appstream ]
     plugin: nil
     stage-packages:
-      - appstream
       - appstream-util
       - desktop-file-utils
       - gcc
@@ -1019,6 +1038,8 @@ parts:
       - python3.8-venv
       - shared-mime-info
       - zlib1g-dev
+    prime:
+      - -usr/lib/*/gtk-3.0/3.0.0
     override-build: |
       set -eux
       snapcraftctl build
