@@ -1038,6 +1038,7 @@ parts:
       - python3.8-venv
       - shared-mime-info
       - zlib1g-dev
+      - liblmdb-dev
     prime:
       - -usr/lib/*/gtk-3.0/3.0.0
     override-build: |
