@@ -883,6 +883,7 @@ parts:
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
+      - --libdir=lib
       - -Dgtk_doc=false
       - -Dtests=false
       - -Dinstalled_tests=false
