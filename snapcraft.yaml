@@ -195,3 +195,6 @@ parts:
       rm -rf usr/share/man
 
       find . -type d -empty -delete
+
+      # Needed to work around a packaging bug in libmozjs from focal
+      ln -sfr usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmozjs-68.so.68.6.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmozjs-68.so.0
