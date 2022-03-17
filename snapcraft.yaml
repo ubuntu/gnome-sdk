@@ -125,6 +125,7 @@ parts:
     source-branch: 'gnome-3-38'
     source-depth: 1
     plugin: meson
+    meson-version: "0.60.3"
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
