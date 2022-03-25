@@ -916,7 +916,7 @@ parts:
     after: [ p11-kit ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
     source-depth: 1
-    source-commit: f882a03f
+    source-commit: f882a03f44e30c6978d9af6772653e740c84fffd
     plugin: meson
     meson-parameters: [--prefix=/usr]
     build-packages:
