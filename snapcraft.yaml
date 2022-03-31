@@ -75,7 +75,7 @@ parts:
     after: [ glib ]
     plugin: meson
     source: https://github.com/flatpak/libportal.git
-    source-tag: '0.4'
+    source-tag: '0.6'
     meson-parameters:
       - --prefix=/usr
       - -Dgtk_doc=false
@@ -97,7 +97,6 @@ parts:
     source-tag: '1.17.4'
     source-depth: 1
     plugin: meson
-    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - -Dxlib=enabled
@@ -236,7 +235,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '2.6.8'
+    source-tag: '4.2.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -263,7 +262,6 @@ parts:
     source-tag: '1.48.0'
     source-depth: 1
     plugin: meson
-    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
@@ -338,7 +336,6 @@ parts:
     source-branch: 'json-glib-1-4'
     source-depth: 1
     plugin: meson
-    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
@@ -436,13 +433,11 @@ parts:
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
-    meson-version: "0.54.0"
 
   gtk3:
     after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.30'
-    #source-branch: gtk-3-24
+    source-tag: '3.24.33'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -484,7 +479,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-branch: gtk-4-4
+    source-branch: gtk-4-6
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -943,7 +938,6 @@ parts:
     source-branch: 'gnome-3-36' # 3-38 requires libmozjs-78
     source-depth: 1
     plugin: meson
-    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
@@ -965,7 +959,6 @@ parts:
     source: https://github.com/p11-glue/p11-kit.git
     source-tag: 0.23.22
     plugin: meson
-    meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
       - -Dhash_impl=internal
