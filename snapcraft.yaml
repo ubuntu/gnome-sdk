@@ -13,11 +13,20 @@ parts:
   buildenv:
     plugin: nil
     build-environment: &buildenv
-      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.56:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - PKG_CONFIG_PATH: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig:$SNAPCRAFT_STAGE/usr/lib/pkgconfig:$SNAPCRAFT_STAGE/usr/share/pkgconfig:$PKG_CONFIG_PATH
+      - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+  meson:
+    plugin: nil
+    source: https://github.com/mesonbuild/meson.git
+    override-build:
+      # Install on the host
+      pip install .
+    build-packages:
+      - python3-pip
+      - ninja-build
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
@@ -31,12 +40,12 @@ parts:
       set -eux
       snapcraftctl stage
       LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="#pkgauxdir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="#pkgltdldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="#aclocaldir="$SNAPCRAFT_STAGE#' $LIBTOOLIZE
+      sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
 
   libffi:
-    after: [ libtool ]
+    after: [ meson, libtool ]
     source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
     source-branch: 'meson'
     source-depth: 1
@@ -47,7 +56,7 @@ parts:
     build-environment: *buildenv
 
   glib:
-    after: [ libffi ]
+    after: [ libffi, meson ]
     source: https://gitlab.gnome.org/GNOME/glib.git
     source-branch: 'glib-2-70'
     source-depth: 1
@@ -59,8 +68,8 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
-      cp $SNAPCRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/glib-2.0/
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
+      cp $CRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
     build-packages:
       - pkg-config
       - libmount-dev
@@ -70,7 +79,7 @@ parts:
       - libffi-dev
 
   libportal:
-    after: [ glib ]
+    after: [glib, meson ]
     plugin: meson
     source: https://github.com/flatpak/libportal.git
     source-tag: '0.6'
@@ -79,7 +88,7 @@ parts:
       - -Dgtk_doc=false
 
   pixman:
-    after: [ libportal ]
+    after: [libportal, meson ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
     source-depth: 1
@@ -90,7 +99,7 @@ parts:
     build-environment: *buildenv
 
   cairo:
-    after: [ pixman ]
+    after: [ pixman, meson ]
     source: git://anongit.freedesktop.org/git/cairo
     source-tag: '1.17.4'
     source-depth: 1
@@ -117,7 +126,7 @@ parts:
       - liblzo2-dev
 
   gobject-introspection:
-    after: [ cairo ]
+    after: [ cairo, meson ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
     source-branch: 'gnome-3-38'
     source-depth: 1
@@ -129,9 +138,9 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      SCANNER=$SNAPCRAFT_PART_INSTALL/usr/bin/g-ir-scanner
-      sed -i 's#/usr/lib#$SNAPCRAFT_STAGE/usr/lib#g' $SCANNER
-      sed -i 's#/usr/share#$SNAPCRAFT_STAGE/usr/share#g' $SCANNER
+      SCANNER=$CRAFT_PART_INSTALL/usr/bin/g-ir-scanner
+      sed -i 's#/usr/lib#$CRAFT_STAGE/usr/lib#g' $SCANNER
+      sed -i 's#/usr/share#$CRAFT_STAGE/usr/share#g' $SCANNER
     build-packages:
       - python3-dev
       - bison
@@ -160,16 +169,16 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      GIREPOSITORY_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/girepository-1.0
+      GIREPOSITORY_PATH=$CRAFT_PART_INSTALL/usr/lib/girepository-1.0
       mkdir -p $GIREPOSITORY_PATH
       cp gee/Gee-0.8.typelib $GIREPOSITORY_PATH/
-      GIR_PATH=$SNAPCRAFT_PART_INSTALL/usr/share/gir-1.0
+      GIR_PATH=$CRAFT_PART_INSTALL/usr/share/gir-1.0
       mkdir -p $GIR_PATH
       cp gee/Gee-0.8.gir $GIR_PATH/
-      #rm -r $SNAPCRAFT_PART_INSTALL/$(echo $SNAPCRAFT_STAGE | cut -d/ -f2)
+      #rm -r $CRAFT_PART_INSTALL/$(echo $CRAFT_STAGE | cut -d/ -f2)
 
   atk:
-    after: [ gee ]
+    after: [ gee, meson ]
     source: https://gitlab.gnome.org/GNOME/atk.git
     source-branch: 'gnome-3-36'
     source-depth: 1
@@ -183,13 +192,13 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig/atk.pc
+      PC=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/atk.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-      sed -i 's#libdir=/usr/lib/$SNAPCRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$SNAPCRAFT_ARCH_TRIPLET#' $PC
+      sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET#' $PC
       sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
 
   at-spi2-core:
-    after: [ atk ]
+    after: [ atk, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
     source-tag: 'AT_SPI2_CORE_2_34_0' 
     source-depth: 1
@@ -205,7 +214,7 @@ parts:
       - libxtst-dev
 
   at-spi2-atk:
-    after: [ at-spi2-core ]
+    after: [ at-spi2-core, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
     source-tag: 'AT_SPI2_ATK_2_34_1'
     source-depth: 1
@@ -216,7 +225,7 @@ parts:
     build-environment: *buildenv
 
   fribidi:
-    after: [ at-spi2-atk ]
+    after: [ at-spi2-atk, meson ]
     source: https://github.com/fribidi/fribidi.git
     source-tag: 'v1.0.7'
     source-depth: 1
@@ -243,7 +252,7 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      PC=$SNAPCRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
+      PC=$CRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
       sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
       sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
@@ -252,7 +261,7 @@ parts:
       - libgraphite2-dev
 
   pango:
-    after: [ harfbuzz ]
+    after: [ harfbuzz, meson ]
     source: https://gitlab.gnome.org/GNOME/pango.git
     source-tag: '1.48.0'
     source-depth: 1
@@ -272,7 +281,7 @@ parts:
       - cmake
 
   gdk-pixbuf:
-    after: [ pango ]
+    after: [ pango, meson ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
     source-branch: 'gdk-pixbuf-2-40'
     source-depth: 1
@@ -285,11 +294,11 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      cp $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $SNAPCRAFT_STAGE/usr/bin/
-      LOADERS_PATH=$SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
-      $SNAPCRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
+      cp $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/bin/
+      LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
+      $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
     organize:
-      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
+      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
     build-packages:
       - libpng-dev
       - libjpeg-dev
@@ -308,10 +317,10 @@ parts:
     build-environment: *buildenv
     build-packages:
       - cargo
-      - libcroco3-dev
+      #- libcroco3-dev
 
   epoxy:
-    after: [ librsvg ]
+    after: [ librsvg, meson ]
     source: https://github.com/anholt/libepoxy.git
     source-tag: '1.5.4'  # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
@@ -326,7 +335,7 @@ parts:
       - xutils-dev
 
   json-glib: 
-    after: [ epoxy ]
+    after: [ epoxy, meson ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
     source-branch: 'json-glib-1-4'
     source-depth: 1
@@ -353,7 +362,7 @@ parts:
       - libunistring-dev
 
   libsoup2:
-    after: [ libpsl ]
+    after: [ libpsl, meson ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-branch: gnome-3-38
     source-depth: 1
@@ -370,7 +379,7 @@ parts:
       - libbrotli-dev
 
   libsoup3:
-    after: [ libsoup2 ]
+    after: [ libsoup2, meson ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-tag: '3.0.3'
     source-depth: 1
@@ -410,7 +419,7 @@ parts:
     build-environment: *buildenv
 
   wayland-protocols:
-    after: [ wayland ]
+    after: [ wayland, meson ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
     source-tag: '1.24'
     source-depth: 1
@@ -419,7 +428,7 @@ parts:
     build-environment: *buildenv
 
   gtk3:
-    after: [ wayland-protocols, wayland ]
+    after: [ wayland-protocols, wayland, meson ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.33'
     source-depth: 1
@@ -439,8 +448,8 @@ parts:
       - -Dexamples=false
     build-environment: *buildenv
     organize:
-      usr/lib/gtk-3.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gtk-3.0
-      usr/bin/gtk-query-immodules-3.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libgtk-3-0/gtk-query-immodules-3.0
+      usr/lib/gtk-3.0: usr/lib/$CRAFT_ARCH_TRIPLET/gtk-3.0
+      usr/bin/gtk-query-immodules-3.0: usr/lib/$CRAFT_ARCH_TRIPLET/libgtk-3-0/gtk-query-immodules-3.0
     build-packages:
       - libxkbcommon-dev
       - libxinerama-dev
@@ -458,7 +467,7 @@ parts:
 
 
   gtk4:
-    after: [ wayland-protocols, wayland ]
+    after: [ wayland-protocols, wayland, meson ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-4-6
     source-depth: 1
@@ -479,7 +488,7 @@ parts:
       - -Dinstall-tests=false
     build-environment: *buildenv
     organize:
-      usr/lib/gtk-4.0: usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gtk-4.0
+      usr/lib/gtk-4.0: usr/lib/$CRAFT_ARCH_TRIPLET/gtk-4.0
     build-packages:
       - libxkbcommon-dev
       - libcups2-dev
@@ -504,11 +513,11 @@ parts:
       set -eux
       for deb in *.deb; do dpkg-deb -x $deb .; done
       find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm '{}' \;
-      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/share
-      cp -r usr/share/locale-langpack $SNAPCRAFT_PART_INSTALL/usr/share/
+      mkdir -p $CRAFT_PART_INSTALL/usr/share
+      cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
   mm-common:
-    after: [ gtk-locales ]
+    after: [ gtk-locales, meson ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
     source-tag: '1.0.2'
     plugin: meson
@@ -534,23 +543,23 @@ parts:
       mkdir -p /usr/bin
       mkdir -p /usr/share/mm-common/build/
       mkdir -p /usr/share/mm-common/doctool/
-      cp $SNAPCRAFT_STAGE/usr/bin/mm-common-prepare /usr/bin/mm-common-prepare
-      cp $SNAPCRAFT_STAGE/usr/bin/mm-common-get /usr/bin/mm-common-get
-      cp $SNAPCRAFT_STAGE/usr/share/mm-common/build/*.am /usr/share/mm-common/build/
-      cp $SNAPCRAFT_STAGE/usr/share/mm-common/doctool/* /usr/share/mm-common/doctool/
+      cp $CRAFT_STAGE/usr/bin/mm-common-prepare /usr/bin/mm-common-prepare
+      cp $CRAFT_STAGE/usr/bin/mm-common-get /usr/bin/mm-common-get
+      cp $CRAFT_STAGE/usr/share/mm-common/build/*.am /usr/share/mm-common/build/
+      cp $CRAFT_STAGE/usr/share/mm-common/doctool/* /usr/share/mm-common/doctool/
 
       # Manual build of glibmm
-      cd $SNAPCRAFT_PART_BUILD
+      cd $CRAFT_PART_BUILD
       ./autogen.sh --prefix=/usr
       make -j8
-      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+      make install DESTDIR=$CRAFT_PART_INSTALL
     build-packages:
       - libsigc++-2.0-dev
       - libxml-parser-perl
     build-environment: *buildenv
     
   cairomm:
-    after: [ glibmm ]
+    after: [ glibmm, meson ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
     source-tag: '1.14.2'
     plugin: meson
@@ -562,7 +571,7 @@ parts:
     build-environment: *buildenv
 
   pangomm:
-    after: [ cairomm ]
+    after: [ cairomm, meson ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.42.2'
     plugin: meson
@@ -571,15 +580,15 @@ parts:
       - -Dmaintainer-mode=true
       - -Dbuild-documentation=false
     build-environment:
-      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.56:$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
       mkdir -p ../src/untracked/build_scripts/
-      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
+      cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       snapcraftctl build
 
   atkmm:
@@ -589,19 +598,19 @@ parts:
     plugin: autotools
     override-build: |
       set -eux
-      cd $SNAPCRAFT_PART_BUILD
+      cd $CRAFT_PART_BUILD
       ./autogen.sh --prefix=/usr
       make -j8
-      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+      make install DESTDIR=$CRAFT_PART_INSTALL
     build-environment: 
-      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.56:$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
 
   gtkmm:
-    after: [ atkmm ]
+    after: [ atkmm, meson ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
     source-tag: '3.24.3'
     plugin: meson
@@ -611,19 +620,19 @@ parts:
       - -Dbuild-documentation=false
       - -Dbuild-demos=false
     build-environment: 
-      - ACLOCAL_PATH: $SNAPCRAFT_STAGE/usr/share/aclocal
-      - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
-      - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.56:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/$LD_LIBRARY_PATH
-      - GDK_PIXBUF_MODULE_FILE: $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $SNAPCRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
+      - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
       mkdir -p ../src/untracked/build_scripts/
-      cp -p $SNAPCRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
+      cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       snapcraftctl build
 
   gtksourceview:
-    after: [ gtkmm ]
+    after: [ gtkmm, meson ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
     source-branch: 'gtksourceview-4-6'
     source-depth: 1
@@ -641,7 +650,7 @@ parts:
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libdazzle:
-    after: [ gtksourceview ]
+    after: [ gtksourceview, meson ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
     source-tag: '3.38.0'
     source-depth: 1
@@ -670,7 +679,7 @@ parts:
       - libgstreamer1.0-dev
 
   gsound:
-    after: [ libcanberra ]
+    after: [ libcanberra, meson ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
     source-type: git
     plugin: meson
@@ -680,7 +689,7 @@ parts:
     build-environment: *buildenv
 
   gsettings-desktop-schemas:
-    after: [ gsound ]
+    after: [ gsound, meson ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-branch: 'gnome-3-38'
     source-depth: 1
@@ -692,11 +701,11 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      PC=$SNAPCRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
+      PC=$CRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
       sed -i 's#-I/usr#-I${prefix}#' $PC
 
   gnome-desktop:
-    after: [ gsettings-desktop-schemas ]
+    after: [ gsettings-desktop-schemas, meson ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
     source-branch: 'gnome-3-38'
     source-depth: 1
@@ -739,7 +748,7 @@ parts:
       - libgstreamer-plugins-base1.0-dev
 
   libinput:
-    after: [ cogl ]
+    after: [ cogl, meson ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
     source-depth: 1
     plugin: meson
@@ -756,7 +765,7 @@ parts:
       - libwacom-dev
 
   clutter:
-    after: [ cogl, libinput ]
+    after: [ cogl, libinput, meson ]
     source: https://gitlab.gnome.org/GNOME/clutter.git
     source-tag: '1.26.4'
     plugin: meson
@@ -832,7 +841,7 @@ parts:
       - -usr/share/wayland/wayland.xml
 
   clutter-gtk:
-    after: [ clutter ]
+    after: [ clutter, meson ]
     source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
     source-tag: '1.8.4'  # ancient tag. should just build from master since it gets updates (like clutter)
     source-depth: 1
@@ -843,7 +852,7 @@ parts:
     build-environment: *buildenv
 
   libpeas:
-    after: [ clutter-gtk ]
+    after: [ clutter-gtk, meson ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
     source-tag: 'libpeas-1.28.0'
     source-depth: 1
@@ -859,11 +868,11 @@ parts:
       - -Dgtk_doc=false
     build-environment: *buildenv
     build-packages:
-      - python-dev
+      - python3-dev
       - python-gi-dev
 
   pycairo:
-    after: [ libpeas ]
+    after: [ libpeas, meson ]
     source: https://github.com/pygobject/pycairo.git
     source-tag: 'v1.18.1'
     source-depth: 1
@@ -874,7 +883,7 @@ parts:
     build-environment: *buildenv
 
   pygobject:
-    after: [ pycairo ]
+    after: [ pycairo, meson ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
     source-branch: 'pygobject-3-36'
     source-depth: 1
@@ -885,7 +894,7 @@ parts:
     build-environment: *buildenv
 
   libhandy:
-    after: [ pygobject ]
+    after: [ pygobject, meson ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
     source-branch: 'libhandy-1-2'
     source-depth: 1
@@ -900,7 +909,7 @@ parts:
     build-environment: *buildenv
 
   gjs:
-    after: [ libhandy ]
+    after: [ libhandy, meson ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
     source-branch: 'gnome-3-36' # 3-38 requires libmozjs-78
     source-depth: 1
@@ -914,10 +923,10 @@ parts:
     build-environment: *buildenv
     build-packages:
       - dbus
-      - libmozjs-68-dev
+      - libmozjs-91-dev
 
   p11-kit:
-    after: [ gjs ]
+    after: [ gjs, meson ]
     source: https://github.com/p11-glue/p11-kit.git
     source-tag: 0.23.22
     plugin: meson
@@ -930,7 +939,7 @@ parts:
     build-environment: *buildenv
 
   libsecret:
-    after: [ p11-kit ]
+    after: [ p11-kit, meson ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
     source-depth: 1
     plugin: meson
@@ -940,7 +949,7 @@ parts:
     build-environment: *buildenv
 
   libgnome-games-support:
-    after: [ libsecret ]
+    after: [ libsecret, meson ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
     source-tag: '1.8.1'
@@ -987,7 +996,7 @@ parts:
       - liblcms2-dev
       - liblzo2-dev
       - libmount-dev
-      - libmozjs-68-dev
+      - libmozjs-91-dev
       - libmtdev1
       - libnettle7
       - libnotify-dev
@@ -1043,15 +1052,15 @@ parts:
     override-build: |
       set -eux
       snapcraftctl build
-      cd $SNAPCRAFT_STAGE/usr
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/{}*" \;
-      cd $SNAPCRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/{}*" \;
-      cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
+      cd $CRAFT_STAGE/usr
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
+      cd $CRAFT_STAGE/usr/lib
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
+      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
   conditioning:
     after: [ debs ]
@@ -1071,46 +1080,46 @@ parts:
 
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
-        sed -i 's#prefix=$SNAPCRAFT_STAGE#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current#' $PC
-        sed -i 's#prefix = /usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
-        sed -i 's#prefix=/usr#prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#' $PC
-        sed -i 's#original_prefix=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr#original_prefix=/usr#' $PC
+        sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/gnome-42-2204-sdk/current#' $PC
+        sed -i 's#prefix = /usr#prefix=/snap/gnome-42-2204-sdk/current/usr#' $PC
+        sed -i 's#prefix=/usr#prefix=/snap/gnome-42-2204-sdk/current/usr#' $PC
+        sed -i 's#original_prefix=/snap/gnome-42-2204-sdk/current/usr#original_prefix=/usr#' $PC
 
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-        sed -i 's#libdir=/lib#libdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/lib#' $PC
+        sed -i 's#libdir=/lib#libdir=/snap/gnome-42-2204-sdk/current/lib#' $PC
 
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
-        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/etc#' $PC
+        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/gnome-42-2204-sdk/current/etc#' $PC
         
-        sed -i 's#/usr/#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/#g' $PC
-        sed -i 's#/etc/#/snap/$SNAPCRAFT_PROJECT_NAME/current/etc/#g' $PC
+        sed -i 's#/usr/#/snap/gnome-42-2204-sdk/current/usr/#g' $PC
+        sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
       done
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
 
       LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="$SNAPCRAFT_STAGE#pkgauxdir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="$SNAPCRAFT_STAGE#pkgltdldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="$SNAPCRAFT_STAGE#aclocaldir="/snap/$SNAPCRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
 
       SCANNER=usr/bin/g-ir-scanner
-      sed -i 's#$SNAPCRAFT_STAGE#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $SCANNER
+      sed -i 's#$CRAFT_STAGE#/snap/gnome-42-2204-sdk/current#g' $SCANNER
 
       ITSTOOL=usr/bin/itstool
-      sed -i 's#/usr/local/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/local/share#g' $ITSTOOL
-      sed -i 's#/usr/share#/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share#g' $ITSTOOL
+      sed -i 's#/usr/local/share#/snap/gnome-42-2204-sdk/current/usr/local/share#g' $ITSTOOL
+      sed -i 's#/usr/share#/snap/gnome-42-2204-sdk/current/usr/share#g' $ITSTOOL
 
-      LOADERS=usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $LOADERS
-      sed -i 's#/build/$SNAPCRAFT_PROJECT_NAME/parts/gdk-pixbuf/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $LOADERS
+      LOADERS=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
+      sed -i 's#/build/gnome-42-2204-sdk/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
 
       XML2_CONFIG=usr/bin/xml2-config
-      sed -i 's#/root/parts/debs/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
+      sed -i 's#/root/parts/debs/install#/snap/gnome-42-2204-sdk/current#g' $XML2_CONFIG
 
       ln -s vala-0.56 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
-      ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+      ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
@@ -1118,8 +1127,8 @@ parts:
     plugin: nil
     override-build: |
       set -eux
-      mkdir -p $SNAPCRAFT_PART_INSTALL/lib/$SNAPCRAFT_ARCH_TRIPLET
-      gcc -Wall -O2 -o $SNAPCRAFT_PART_INSTALL/lib/$SNAPCRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $SNAPCRAFT_PROJECT_DIR/bindtextdomain.c -ldl
+      mkdir -p $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET
+      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/bindtextdomain.c -ldl
 
   cleanup:
     after: [ conditioning ]
