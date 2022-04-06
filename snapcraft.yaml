@@ -38,7 +38,7 @@ parts:
       - texinfo
     override-stage: |
       set -eux
-      snapcraftctl stage
+      craftctl default
       LIBTOOLIZE=usr/bin/libtoolize
       sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
@@ -67,7 +67,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
       cp $CRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
     build-packages:
@@ -137,7 +137,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       SCANNER=$CRAFT_PART_INSTALL/usr/bin/g-ir-scanner
       sed -i 's#/usr/lib#$CRAFT_STAGE/usr/lib#g' $SCANNER
       sed -i 's#/usr/share#$CRAFT_STAGE/usr/share#g' $SCANNER
@@ -168,7 +168,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       GIREPOSITORY_PATH=$CRAFT_PART_INSTALL/usr/lib/girepository-1.0
       mkdir -p $GIREPOSITORY_PATH
       cp gee/Gee-0.8.typelib $GIREPOSITORY_PATH/
@@ -191,7 +191,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       PC=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/atk.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
       sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET#' $PC
@@ -251,7 +251,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       PC=$CRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
       sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
@@ -293,7 +293,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       cp $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/bin/
       LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
       $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
@@ -526,7 +526,7 @@ parts:
       - -Duse-network=true
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
     build-environment: *buildenv
     build-packages:
       - wget
@@ -589,7 +589,7 @@ parts:
       set -eux
       mkdir -p ../src/untracked/build_scripts/
       cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
-      snapcraftctl build
+      craftctl default
 
   atkmm:
     after: [ pangomm ]
@@ -629,7 +629,7 @@ parts:
       set -eux
       mkdir -p ../src/untracked/build_scripts/
       cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
-      snapcraftctl build
+      craftctl default
 
   gtksourceview:
     after: [ gtkmm, meson ]
@@ -646,7 +646,7 @@ parts:
       - libxml2-dev
     override-pull: |
       set -eux
-      snapcraftctl pull
+      craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libdazzle:
@@ -661,7 +661,7 @@ parts:
     build-environment: *buildenv
     override-pull: |
       set -eux
-      snapcraftctl pull
+      craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libcanberra:
@@ -700,7 +700,7 @@ parts:
     build-environment: *buildenv
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       PC=$CRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
       sed -i 's#-I/usr#-I${prefix}#' $PC
 
@@ -990,7 +990,7 @@ parts:
       - libgnutls30
       - libgspell-1-dev
       - libgudev-1.0-dev
-      - libhogweed5
+      - libhogweed6
       - libidn2-0
       - libjpeg-dev
       - liblcms2-dev
@@ -998,7 +998,7 @@ parts:
       - libmount-dev
       - libmozjs-91-dev
       - libmtdev1
-      - libnettle7
+      - libnettle8
       - libnotify-dev
       - libpcre2-8-0
       - libpcre3
@@ -1007,7 +1007,7 @@ parts:
       - libpulse-dev
       - libwrap0
       - libpython3-dev
-      - libpython3.8-dev
+      - libpython3.10-dev
       - libseccomp-dev
       - libseccomp2
       - libsqlite3-0
@@ -1019,7 +1019,7 @@ parts:
       - libudev1
       - libunity-dev
       - libvorbisfile3
-      - libwacom2
+      - libwacom9
       - libwebkit2gtk-4.0-dev
       - libx11-xcb-dev
       - libxcb-render0-dev
@@ -1045,13 +1045,13 @@ parts:
       - python3-setuptools
       - python3-venv
       - python3-wheel
-      - python3.8-minimal
-      - python3.8-venv
+      - python3.10-minimal
+      - python3.10-venv
       - shared-mime-info
       - zlib1g-dev
     override-build: |
       set -eux
-      snapcraftctl build
+      craftctl default
       cd $CRAFT_STAGE/usr
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
@@ -1068,7 +1068,7 @@ parts:
     build-environment: *buildenv
     override-prime: |
       set -eux
-      snapcraftctl prime
+      craftctl default
 
       glib-compile-schemas usr/share/glib-2.0/schemas
       update-mime-database usr/share/mime
