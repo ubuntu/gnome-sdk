@@ -85,7 +85,7 @@ parts:
     source-tag: '0.6'
     meson-parameters:
       - --prefix=/usr
-      - -Dgtk_doc=false
+      - -Ddocs=false
 
   pixman:
     after: [libportal, meson ]
