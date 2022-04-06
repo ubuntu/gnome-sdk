@@ -990,7 +990,7 @@ parts:
       - libgnutls30
       - libgspell-1-dev
       - libgudev-1.0-dev
-      - libhogweed5
+      - libhogweed6
       - libidn2-0
       - libjpeg-dev
       - liblcms2-dev
@@ -998,7 +998,7 @@ parts:
       - libmount-dev
       - libmozjs-91-dev
       - libmtdev1
-      - libnettle7
+      - libnettle8
       - libnotify-dev
       - libpcre2-8-0
       - libpcre3
@@ -1007,7 +1007,7 @@ parts:
       - libpulse-dev
       - libwrap0
       - libpython3-dev
-      - libpython3.8-dev
+      - libpython3.10-dev
       - libseccomp-dev
       - libseccomp2
       - libsqlite3-0
@@ -1019,7 +1019,7 @@ parts:
       - libudev1
       - libunity-dev
       - libvorbisfile3
-      - libwacom2
+      - libwacom9
       - libwebkit2gtk-4.0-dev
       - libx11-xcb-dev
       - libxcb-render0-dev
@@ -1045,8 +1045,8 @@ parts:
       - python3-setuptools
       - python3-venv
       - python3-wheel
-      - python3.8-minimal
-      - python3.8-venv
+      - python3.10-minimal
+      - python3.10-venv
       - shared-mime-info
       - zlib1g-dev
     override-build: |
