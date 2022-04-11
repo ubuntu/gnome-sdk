@@ -78,17 +78,8 @@ parts:
       - clang
       - libffi-dev
 
-  libportal:
-    after: [glib, meson ]
-    plugin: meson
-    source: https://github.com/flatpak/libportal.git
-    source-tag: '0.6'
-    meson-parameters:
-      - --prefix=/usr
-      - -Ddocs=false
-
   pixman:
-    after: [libportal, meson ]
+    after: [glib, meson ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
     source-depth: 1
@@ -101,7 +92,7 @@ parts:
   cairo:
     after: [ pixman, meson ]
     source: git://anongit.freedesktop.org/git/cairo
-    source-tag: '1.17.4'
+    source-tag: '1.17.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -111,7 +102,7 @@ parts:
       - -Dxcb=enabled
       - -Dtee=enabled
       - -Dzlib=enabled
-      - -Dgl_backend=disabled
+      - -Dgl-backend=disabled
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
@@ -128,12 +119,13 @@ parts:
   gobject-introspection:
     after: [ cairo, meson ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-branch: 'gnome-3-38'
+    source-tag: '1.72.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
+      - -Dgtk_doc=false
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -180,7 +172,7 @@ parts:
   atk:
     after: [ gee, meson ]
     source: https://gitlab.gnome.org/GNOME/atk.git
-    source-branch: 'gnome-3-36'
+    source-tag: '2.38.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -200,7 +192,7 @@ parts:
   at-spi2-core:
     after: [ atk, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: 'AT_SPI2_CORE_2_34_0' 
+    source-tag: 'AT_SPI2_CORE_2_44_0' 
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -216,12 +208,13 @@ parts:
   at-spi2-atk:
     after: [ at-spi2-core, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
-    source-tag: 'AT_SPI2_ATK_2_34_1'
+    source-tag: 'AT_SPI2_ATK_2_38_0'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
+      - -Dtests=false
     build-environment: *buildenv
 
   fribidi:
@@ -516,8 +509,18 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
+  libportal:
+    after: [gtk3, gtk4, gtk-locales, meson ]
+    plugin: meson
+    source: https://github.com/flatpak/libportal.git
+    source-tag: '0.6'
+    meson-parameters:
+      - --prefix=/usr
+      - -Ddocs=false
+      - -Dintrospection=false
+
   mm-common:
-    after: [ gtk-locales, meson ]
+    after: [ libportal, meson ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
     source-tag: '1.0.2'
     plugin: meson
