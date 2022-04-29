@@ -86,6 +86,7 @@ parts:
       - libgstreamer-plugins-base1.0-0
       - libgstreamer-plugins-good1.0-0
       - libgstreamer1.0-0
+      - libgtk3-nocsd0
       - libgvc6
       - libicu66
       - libinput10
