@@ -19,7 +19,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-3-38-2004-sdk/latest/candidate ]
+    stage-snaps: [ gnome-3-38-2004-sdk/latest/edge ]
     stage:
       - lib/*/bindtextdomain.so
       - usr
