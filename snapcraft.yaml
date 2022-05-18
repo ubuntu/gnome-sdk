@@ -520,6 +520,7 @@ parts:
       - --prefix=/usr
       - -Ddocs=false
       - -Dintrospection=false
+      - -Dbackends=['gtk3', 'gtk4']
 
   mm-common:
     after: [ libportal, meson ]
