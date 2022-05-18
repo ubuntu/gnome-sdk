@@ -254,7 +254,7 @@ parts:
   pango:
     after: [ harfbuzz, meson ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.48.0'
+    source-tag: '1.50.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
