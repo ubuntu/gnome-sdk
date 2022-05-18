@@ -497,6 +497,10 @@ parts:
       - libxi-dev
       - libxkbfile-dev
       - libxml2-utils
+    stage:
+      - -usr/bin/wayland-scanner
+      - -usr/lib/*/libwayland-client.so.0.20.0
+      - -usr/lib/*/libwayland-server.so.0.20.0
 
   gtk-locales:
     after: [ gtk3, gtk4 ]
