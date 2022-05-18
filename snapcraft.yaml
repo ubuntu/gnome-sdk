@@ -131,8 +131,10 @@ parts:
       set -eux
       craftctl default
       SCANNER=$CRAFT_PART_INSTALL/usr/bin/g-ir-scanner
-      sed -i 's#/usr/lib#$CRAFT_STAGE/usr/lib#g' $SCANNER
-      sed -i 's#/usr/share#$CRAFT_STAGE/usr/share#g' $SCANNER
+      sed -i "s#'/usr/lib#os.environ.get\('CRAFT_STAGE'\) + '/usr/lib#g" $SCANNER
+      sed -i 's#"/usr/lib#os.environ.get\("CRAFT_STAGE"\) + "/usr/lib#g' $SCANNER
+      sed -i "s#'/usr/share#os.environ.get\('CRAFT_STAGE'\) + '/usr/share#g" $SCANNER
+      sed -i 's#"/usr/share#os.environ.get\("CRAFT_STAGE"\) + "/usr/share#g' $SCANNER
     build-packages:
       - python3-dev
       - bison
