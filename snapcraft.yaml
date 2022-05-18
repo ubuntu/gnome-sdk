@@ -130,11 +130,7 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      SCANNER=$CRAFT_PART_INSTALL/usr/bin/g-ir-scanner
-      sed -i "s#'/usr/lib#os.environ.get\('CRAFT_STAGE'\) + '/usr/lib#g" $SCANNER
-      sed -i 's#"/usr/lib#os.environ.get\("CRAFT_STAGE"\) + "/usr/lib#g' $SCANNER
-      sed -i "s#'/usr/share#os.environ.get\('CRAFT_STAGE'\) + '/usr/share#g" $SCANNER
-      sed -i 's#"/usr/share#os.environ.get\("CRAFT_STAGE"\) + "/usr/share#g' $SCANNER
+      sed -i "s#\([\"\']\)/usr/\([^\"\']*\)#os.environ.get\('CRAFT_STAGE'\) + \1/usr/\2#g" $CRAFT_PART_INSTALL/usr/bin/g-ir-scanner
     build-packages:
       - python3-dev
       - bison
