@@ -404,12 +404,13 @@ parts:
   wayland:
     after: [ librest ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
-    source-tag: '1.19.0'
+    source-tag: '1.20.0'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --disable-documentation
+      - --buildtype=release
+      - -Ddocumentation=false
     build-environment: *buildenv
 
   wayland-protocols:
