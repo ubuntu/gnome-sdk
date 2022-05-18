@@ -356,7 +356,7 @@ parts:
     override-pull: |
       set -eux
       craftctl default
-      sed -i 's#!/usr/bin/env python#!/usr/bin/env python3#g' src/psl-make-dafsa
+      sed -i 's#^\#!/usr/bin/env python#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
   libsoup2:
     after: [ libpsl, meson ]
