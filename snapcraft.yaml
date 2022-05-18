@@ -335,7 +335,6 @@ parts:
       - --prefix=/usr
       - --buildtype=release
       - -Ddocs=false
-      - -Dtests=false
     build-environment: *buildenv
 
   libpsl:
