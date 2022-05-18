@@ -353,6 +353,10 @@ parts:
     build-packages:
       - libidn2-0-dev
       - libunistring-dev
+    override-pull: |
+      set -eux
+      craftctl default
+      sed -i 's#!/usr/bin/env python#!/usr/bin/env python3#g' src/psl-make-dafsa
 
   libsoup2:
     after: [ libpsl, meson ]
