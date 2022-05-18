@@ -402,7 +402,7 @@ parts:
       - gtk-doc-tools
 
   wayland:
-    after: [ librest ]
+    after: [ librest, meson ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
     source-tag: '1.20.0'
     source-depth: 1
