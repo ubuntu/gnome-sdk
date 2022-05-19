@@ -90,7 +90,7 @@ parts:
 
   cairo:
     after: [ pixman, meson ]
-    source: git://anongit.freedesktop.org/git/cairo
+    source: https://gitlab.freedesktop.org/cairo/cairo.git
     source-tag: '1.17.6'
     source-depth: 1
     plugin: meson
