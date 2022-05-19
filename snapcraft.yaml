@@ -675,8 +675,7 @@ parts:
 
   libcanberra:
     after: [ libdazzle ]
-    source: git://git.0pointer.net/libcanberra.git
-    source-depth: 1
+    source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr, --with-builtin=pulse ]
     build-environment: *buildenv
