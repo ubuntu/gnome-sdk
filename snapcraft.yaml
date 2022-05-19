@@ -583,7 +583,7 @@ parts:
   pangomm:
     after: [ cairomm, meson ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.42.2'
+    source-tag: '2.46.2'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
