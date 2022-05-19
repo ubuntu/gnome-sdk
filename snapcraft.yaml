@@ -920,14 +920,14 @@ parts:
   gjs:
     after: [ libhandy, meson ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-branch: 'gnome-3-36' # 3-38 requires libmozjs-78
+    source-branch: 'gnome-42'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
-      - -Dgtk_doc=false
-      - -Dtests=false
+      - -Dskip_gtk_tests=true
+      - -Dskip_dbus_tests=true
       - -Dinstalled_tests=false
     build-environment: *buildenv
     build-packages:
