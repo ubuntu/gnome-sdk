@@ -961,7 +961,7 @@ parts:
     after: [ libsecret, meson ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
-    source-tag: '1.8.1'
+    source-tag: '1.8.2'
     plugin: meson
     meson-parameters: [--prefix=/usr]
     build-environment: *buildenv
