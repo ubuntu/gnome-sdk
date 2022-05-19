@@ -952,7 +952,9 @@ parts:
     source: https://gitlab.gnome.org/GNOME/libsecret.git
     source-depth: 1
     plugin: meson
-    meson-parameters: [--prefix=/usr]
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgtk_doc=false
     build-packages:
       - libgcrypt20-dev
     build-environment: *buildenv
