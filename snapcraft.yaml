@@ -76,7 +76,6 @@ parts:
       - gcc
       - g++
       - clang
-      - libffi-dev
 
   pixman:
     after: [glib, meson ]
@@ -612,10 +611,10 @@ parts:
       ./autogen.sh --prefix=/usr
       make -j8
       make install DESTDIR=$CRAFT_PART_INSTALL
-    build-environment: 
+    build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
 
