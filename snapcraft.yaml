@@ -1128,6 +1128,9 @@ parts:
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/gnome-42-2204-sdk/current#g' $XML2_CONFIG
 
+      rm -f usr/lib/vala-current
+      rm -f usr/share/gettext-current
+      rm -f usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
       ln -s vala-0.56 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
