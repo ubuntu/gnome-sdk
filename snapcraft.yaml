@@ -189,7 +189,7 @@ parts:
   at-spi2-core:
     after: [ atk, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: 'AT_SPI2_CORE_2_44_1'
+    source-branch: 'gnome-42'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -643,7 +643,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-branch: 'gtksourceview-4-8'
+    source-branch: 'gtksourceview-5-4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -963,7 +963,7 @@ parts:
     after: [ libsecret, meson ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
-    source-tag: '1.8.2'
+    source-branch: 'games-1-8'
     plugin: meson
     meson-parameters: [--prefix=/usr]
     build-environment: *buildenv
