@@ -21,6 +21,7 @@ parts:
   meson:
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
+    source-branch: '0.62'
     override-build:
       # Install on the host
       pip install .
@@ -30,6 +31,7 @@ parts:
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
+    source-tag: 'v2.4.7'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -689,6 +691,7 @@ parts:
   gsound:
     after: [ libcanberra, meson ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
+    source-tag: '1.0.3'
     source-type: git
     plugin: meson
     meson-parameters:
@@ -758,6 +761,7 @@ parts:
   libinput:
     after: [ cogl, meson ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
+    source-branch: '1.20-branch'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -949,6 +953,7 @@ parts:
   libsecret:
     after: [ p11-kit, meson ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
+    source-tag: '0.20.5'
     source-depth: 1
     plugin: meson
     meson-parameters:
