@@ -58,7 +58,7 @@ parts:
   glib:
     after: [ libffi, meson ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: 'glib-2-70'
+    source-branch: 'glib-2-72'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -147,7 +147,7 @@ parts:
       - valac
       - libgraphviz-dev
 
-  gee: 
+  gee:
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
     source-tag: '0.20.5'
@@ -189,7 +189,7 @@ parts:
   at-spi2-core:
     after: [ atk, meson ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: 'AT_SPI2_CORE_2_44_0' 
+    source-tag: 'AT_SPI2_CORE_2_44_1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -217,7 +217,7 @@ parts:
   fribidi:
     after: [ at-spi2-atk, meson ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: 'v1.0.7'
+    source-tag: 'v1.0.12'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -229,7 +229,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '4.2.0'
+    source-tag: '4.2.1'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -253,7 +253,7 @@ parts:
   pango:
     after: [ harfbuzz, meson ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.6'
+    source-tag: '1.50.7'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -297,7 +297,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: 'librsvg-2.50'
+    source-branch: 'librsvg-2.52'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -312,7 +312,7 @@ parts:
   epoxy:
     after: [ librsvg, meson ]
     source: https://github.com/anholt/libepoxy.git
-    source-tag: '1.5.4'  # Note minor version of tag/branch can be even or odd and be stable
+    source-tag: '1.5.10'  # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -324,7 +324,7 @@ parts:
       - libegl1-mesa-dev
       - xutils-dev
 
-  json-glib: 
+  json-glib:
     after: [ epoxy, meson ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
     source-branch: 'json-glib-1-4'
@@ -339,7 +339,7 @@ parts:
   libpsl:
     after: [ json-glib ]
     source: https://github.com/rockdaboot/libpsl.git
-    source-tag: 'libpsl-0.21.0'
+    source-tag: '0.21.1'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -352,7 +352,7 @@ parts:
     override-pull: |
       set -eux
       craftctl default
-      sed -i 's#^\#!/usr/bin/env python#\#!/usr/bin/env python3#g' src/psl-make-dafsa
+      sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
   libsoup2:
     after: [ libpsl, meson ]
@@ -374,7 +374,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.0.3'
+    source-tag: '3.0.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -415,7 +415,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.24'
+    source-tag: '1.25'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -424,7 +424,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.33'
+    source-tag: '3.24.34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -528,7 +528,7 @@ parts:
   mm-common:
     after: [ libportal, meson ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
-    source-tag: '1.0.2'
+    source-tag: '1.0.4'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -543,11 +543,11 @@ parts:
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.64.4'
+    source-tag: '2.66.4'
     plugin: autotools
     override-build: |
       set -eux
-    
+
       # Make sure all of the *.am files from mm-common are found
       mkdir -p /usr/bin
       mkdir -p /usr/share/mm-common/build/
@@ -566,11 +566,11 @@ parts:
       - libsigc++-2.0-dev
       - libxml-parser-perl
     build-environment: *buildenv
-    
+
   cairomm:
     after: [ glibmm, meson ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.14.2'
+    source-tag: '1.14.3'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -603,7 +603,7 @@ parts:
   atkmm:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
-    source-tag: '2.28.0'
+    source-tag: '2.28.2'
     plugin: autotools
     override-build: |
       set -eux
@@ -621,14 +621,14 @@ parts:
   gtkmm:
     after: [ atkmm, meson ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '3.24.3'
+    source-tag: '3.24.5'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Dmaintainer-mode=true
       - -Dbuild-documentation=false
       - -Dbuild-demos=false
-    build-environment: 
+    build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
@@ -643,7 +643,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-branch: 'gtksourceview-4-6'
+    source-branch: 'gtksourceview-4-8'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -661,7 +661,7 @@ parts:
   libdazzle:
     after: [ gtksourceview, meson ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
-    source-tag: '3.38.0'
+    source-tag: '3.44.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -700,7 +700,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ gsound, meson ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-branch: 'gnome-3-38'
+    source-branch: 'gnome-41'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -716,7 +716,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-branch: 'gnome-3-38'
+    source-branch: 'gnome-42'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -733,7 +733,7 @@ parts:
 
   cogl:
     after: [ gnome-desktop ]
-    source: https://gitlab.gnome.org/GNOME/cogl.git
+    source: https://gitlab.gnome.org/Archive/cogl.git
     source-branch: 'cogl-1.22'
     source-depth: 1
     plugin: autotools
@@ -851,7 +851,7 @@ parts:
 
   clutter-gtk:
     after: [ clutter, meson ]
-    source: https://gitlab.gnome.org/GNOME/clutter-gtk.git
+    source: https://gitlab.gnome.org/Archive/clutter-gtk.git
     source-tag: '1.8.4'  # ancient tag. should just build from master since it gets updates (like clutter)
     source-depth: 1
     plugin: meson
@@ -863,7 +863,7 @@ parts:
   libpeas:
     after: [ clutter-gtk, meson ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.28.0'
+    source-tag: 'libpeas-1.32.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -883,7 +883,7 @@ parts:
   pycairo:
     after: [ libpeas, meson ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.18.1'
+    source-tag: 'v1.20.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -894,7 +894,7 @@ parts:
   pygobject:
     after: [ pycairo, meson ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-branch: 'pygobject-3-36'
+    source-branch: 'pygobject-3-42'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -905,7 +905,7 @@ parts:
   libhandy:
     after: [ pygobject, meson ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-branch: 'libhandy-1-2'
+    source-branch: 'libhandy-1-6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -937,7 +937,7 @@ parts:
   p11-kit:
     after: [ gjs, meson ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: 0.23.22
+    source-tag: 0.24.1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -1102,7 +1102,7 @@ parts:
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
         sed -i 's#sysconfdir=/etc#sysconfdir=/snap/gnome-42-2204-sdk/current/etc#' $PC
-        
+
         sed -i 's#/usr/#/snap/gnome-42-2204-sdk/current/usr/#g' $PC
         sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
       done
