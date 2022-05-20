@@ -1,25 +1,24 @@
-name: gnome-3-38-2004
+name: gnome-42-2204
 version: git
-summary: Shared GNOME 3.38 Ubuntu stack
+summary: Shared GNOME 42 Ubuntu stack
 description: |
- This snap includes a GNOME 3.38 stack (the base libraries and desktop 
+ This snap includes a GNOME 42 stack (the base libraries and desktop 
  integration components) and shares it through the content interface. 
 confinement: strict
 grade: stable
 icon: icon.png
-base: core20
+base: core22
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-3-38-2004:
+    gnome-42-2204:
       interface: content
-      read:
-        - /
+      read: "/"
 
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-3-38-2004-sdk/latest/candidate ]
+    stage-snaps: [ gnome-42-2204-sdk/latest/edge ]
     stage:
       - lib/*/bindtextdomain.so
       - usr
@@ -88,7 +87,7 @@ parts:
       - libgstreamer1.0-0
       - libgtk3-nocsd0
       - libgvc6
-      - libicu66
+      - libicu70
       - libinput10
       - libjbig0
       - libjpeg-turbo8
@@ -107,7 +106,7 @@ parts:
       - libtiff5
       - libvorbis0a
       - libvorbisenc2
-      - libwacom2
+      - libwacom9
       - libwayland-client0
       - libwayland-cursor0
       - libwayland-egl1
@@ -139,28 +138,28 @@ parts:
       - unity-gtk3-module
       - xdg-user-dirs
       - libgtksourceview-3.0-1
-      - libmozjs-68-0
+      - libmozjs-91-0
       - libsigc++-2.0-0v5
-      - libpython3.8
+      - libpython3.10
       # VA-API drivers for HW-accelerated video decoding
       - mesa-va-drivers
       - on amd64:
         - i965-va-driver
         - intel-media-va-driver
     stage:
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libLLVM*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
     override-build: |
       set -eux
-      snapcraftctl build
-      cd $SNAPCRAFT_STAGE/usr
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/{}*" \;
-      cd $SNAPCRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/{}*" \;
-      cd $SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
-      find . -type f,l -exec rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $SNAPCRAFT_PART_INSTALL/usr/lib/{}*" \;
+      craftctl default
+      cd $CRAFT_STAGE/usr
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
+      cd $CRAFT_STAGE/usr/lib
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
+      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
   caches:
     after: [ debs ]
@@ -171,10 +170,10 @@ parts:
       - shared-mime-info
     override-build: |
       set -eux
-      snapcraftctl build
-      glib-compile-schemas $SNAPCRAFT_STAGE/usr/share/glib-2.0/schemas
-      update-mime-database $SNAPCRAFT_STAGE/usr/share/mime
-      for dir in $SNAPCRAFT_STAGE/usr/share/icons/*; do
+      craftctl default
+      glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
+      update-mime-database $CRAFT_STAGE/usr/share/mime
+      for dir in $CRAFT_STAGE/usr/share/icons/*; do
         if [ -f "$dir/index.theme" ]; then
           gtk-update-icon-cache --force "$dir"
         fi
@@ -189,13 +188,10 @@ parts:
       set -eux
 
       cd /snap/gtk-common-themes/current
-      find . -type f,l -exec rm -f $SNAPCRAFT_PRIME/usr/{} \;
-      cd $SNAPCRAFT_PRIME
+      find . -type f,l -exec rm -f $CRAFT_PRIME/usr/{} \;
+      cd $CRAFT_PRIME
 
       rm -rf usr/share/doc
       rm -rf usr/share/man
 
       find . -type d -empty -delete
-
-      # Needed to work around a packaging bug in libmozjs from focal
-      ln -sfr usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmozjs-68.so.68.6.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmozjs-68.so.0
