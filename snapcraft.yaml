@@ -13,7 +13,8 @@ base: core22
 slots:
     gnome-42-2204:
       interface: content
-      read: "/"
+      read:
+        - /
 
 parts:
   gnome-sdk:
