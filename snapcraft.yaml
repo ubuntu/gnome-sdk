@@ -18,12 +18,12 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-  meson:
+
+  meson-deps:
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
     source-branch: '0.62'
     override-build:
-      # Install on the host
       pip install .
     build-packages:
       - python3-pip
@@ -47,7 +47,7 @@ parts:
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
 
   libffi:
-    after: [ meson, libtool ]
+    after: [ libtool, meson-deps ]
     source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
     source-branch: 'meson'
     source-depth: 1
@@ -58,7 +58,7 @@ parts:
     build-environment: *buildenv
 
   glib:
-    after: [ libffi, meson ]
+    after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
     source-branch: 'glib-2-72'
     source-depth: 1
@@ -80,7 +80,7 @@ parts:
       - clang
 
   pixman:
-    after: [glib, meson ]
+    after: [glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
     source-depth: 1
@@ -91,7 +91,7 @@ parts:
     build-environment: *buildenv
 
   cairo:
-    after: [ pixman, meson ]
+    after: [ pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
     source-tag: '1.17.6'
     source-depth: 1
@@ -118,7 +118,7 @@ parts:
       - liblzo2-dev
 
   gobject-introspection:
-    after: [ cairo, meson ]
+    after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
     source-tag: '1.72.0'
     source-depth: 1
@@ -169,7 +169,7 @@ parts:
       #rm -r $CRAFT_PART_INSTALL/$(echo $CRAFT_STAGE | cut -d/ -f2)
 
   atk:
-    after: [ gee, meson ]
+    after: [ gee, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/atk.git
     source-tag: '2.38.0'
     source-depth: 1
@@ -189,7 +189,7 @@ parts:
       sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
 
   at-spi2-core:
-    after: [ atk, meson ]
+    after: [ atk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
     source-branch: 'gnome-42'
     source-depth: 1
@@ -205,7 +205,7 @@ parts:
       - libxtst-dev
 
   at-spi2-atk:
-    after: [ at-spi2-core, meson ]
+    after: [ at-spi2-core, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
     source-tag: 'AT_SPI2_ATK_2_38_0'
     source-depth: 1
@@ -217,7 +217,7 @@ parts:
     build-environment: *buildenv
 
   fribidi:
-    after: [ at-spi2-atk, meson ]
+    after: [ at-spi2-atk, meson-deps ]
     source: https://github.com/fribidi/fribidi.git
     source-tag: 'v1.0.12'
     source-depth: 1
@@ -253,7 +253,7 @@ parts:
       - libgraphite2-dev
 
   pango:
-    after: [ harfbuzz, meson ]
+    after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
     source-tag: '1.50.7'
     source-depth: 1
@@ -273,7 +273,7 @@ parts:
       - cmake
 
   gdk-pixbuf:
-    after: [ pango, meson ]
+    after: [ pango, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
     source-branch: 'gdk-pixbuf-2-40'
     source-depth: 1
@@ -312,7 +312,7 @@ parts:
       #- libcroco3-dev
 
   epoxy:
-    after: [ librsvg, meson ]
+    after: [ librsvg, meson-deps ]
     source: https://github.com/anholt/libepoxy.git
     source-tag: '1.5.10'  # Note minor version of tag/branch can be even or odd and be stable
     source-depth: 1
@@ -327,7 +327,7 @@ parts:
       - xutils-dev
 
   json-glib:
-    after: [ epoxy, meson ]
+    after: [ epoxy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
     source-branch: 'json-glib-1-4'
     source-depth: 1
@@ -357,7 +357,7 @@ parts:
       sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
   libsoup2:
-    after: [ libpsl, meson ]
+    after: [ libpsl, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-branch: gnome-3-38
     source-depth: 1
@@ -374,7 +374,7 @@ parts:
       - libbrotli-dev
 
   libsoup3:
-    after: [ libsoup2, meson ]
+    after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-tag: '3.0.6'
     source-depth: 1
@@ -403,7 +403,7 @@ parts:
       - gtk-doc-tools
 
   wayland:
-    after: [ librest, meson ]
+    after: [ librest, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
     source-tag: '1.20.0'
     source-depth: 1
@@ -415,7 +415,7 @@ parts:
     build-environment: *buildenv
 
   wayland-protocols:
-    after: [ wayland, meson ]
+    after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
     source-tag: '1.25'
     source-depth: 1
@@ -424,7 +424,7 @@ parts:
     build-environment: *buildenv
 
   gtk3:
-    after: [ wayland-protocols, wayland, meson ]
+    after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.34'
     source-depth: 1
@@ -463,7 +463,7 @@ parts:
 
 
   gtk4:
-    after: [ wayland-protocols, wayland, meson ]
+    after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-branch: gtk-4-6
     source-depth: 1
@@ -517,7 +517,7 @@ parts:
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
   libportal:
-    after: [gtk3, gtk4, gtk-locales, meson ]
+    after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
     source: https://github.com/flatpak/libportal.git
     source-tag: '0.6'
@@ -528,7 +528,7 @@ parts:
       - -Dbackends=['gtk3', 'gtk4']
 
   mm-common:
-    after: [ libportal, meson ]
+    after: [ libportal, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
     source-tag: '1.0.4'
     plugin: meson
@@ -570,7 +570,7 @@ parts:
     build-environment: *buildenv
 
   cairomm:
-    after: [ glibmm, meson ]
+    after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
     source-tag: '1.14.3'
     plugin: meson
@@ -582,7 +582,7 @@ parts:
     build-environment: *buildenv
 
   pangomm:
-    after: [ cairomm, meson ]
+    after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.46.2'
     plugin: meson
@@ -621,7 +621,7 @@ parts:
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
 
   gtkmm:
-    after: [ atkmm, meson ]
+    after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
     source-tag: '3.24.5'
     plugin: meson
@@ -643,7 +643,7 @@ parts:
       craftctl default
 
   gtksourceview:
-    after: [ gtkmm, meson ]
+    after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
     source-branch: 'gtksourceview-5-4'
     source-depth: 1
@@ -661,7 +661,7 @@ parts:
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libdazzle:
-    after: [ gtksourceview, meson ]
+    after: [ gtksourceview, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libdazzle.git
     source-tag: '3.44.0'
     source-depth: 1
@@ -689,7 +689,7 @@ parts:
       - libgstreamer1.0-dev
 
   gsound:
-    after: [ libcanberra, meson ]
+    after: [ libcanberra, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
     source-tag: '1.0.3'
     source-type: git
@@ -700,7 +700,7 @@ parts:
     build-environment: *buildenv
 
   gsettings-desktop-schemas:
-    after: [ gsound, meson ]
+    after: [ gsound, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-branch: 'gnome-41'
     source-depth: 1
@@ -716,7 +716,7 @@ parts:
       sed -i 's#-I/usr#-I${prefix}#' $PC
 
   gnome-desktop:
-    after: [ gsettings-desktop-schemas, meson ]
+    after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
     source-branch: 'gnome-42'
     source-depth: 1
@@ -759,7 +759,7 @@ parts:
       - libgstreamer-plugins-base1.0-dev
 
   libinput:
-    after: [ cogl, meson ]
+    after: [ cogl, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
     source-branch: '1.20-branch'
     source-depth: 1
@@ -777,7 +777,7 @@ parts:
       - libwacom-dev
 
   clutter:
-    after: [ cogl, libinput, meson ]
+    after: [ cogl, libinput, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/clutter.git
     source-tag: '1.26.4'
     plugin: meson
@@ -853,7 +853,7 @@ parts:
       - -usr/share/wayland/wayland.xml
 
   clutter-gtk:
-    after: [ clutter, meson ]
+    after: [ clutter, meson-deps ]
     source: https://gitlab.gnome.org/Archive/clutter-gtk.git
     source-tag: '1.8.4'  # ancient tag. should just build from master since it gets updates (like clutter)
     source-depth: 1
@@ -864,7 +864,7 @@ parts:
     build-environment: *buildenv
 
   libpeas:
-    after: [ clutter-gtk, meson ]
+    after: [ clutter-gtk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
     source-tag: 'libpeas-1.32.0'
     source-depth: 1
@@ -884,7 +884,7 @@ parts:
       - python-gi-dev
 
   pycairo:
-    after: [ libpeas, meson ]
+    after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
     source-tag: 'v1.20.1'
     source-depth: 1
@@ -895,7 +895,7 @@ parts:
     build-environment: *buildenv
 
   pygobject:
-    after: [ pycairo, meson ]
+    after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
     source-branch: 'pygobject-3-42'
     source-depth: 1
@@ -906,7 +906,7 @@ parts:
     build-environment: *buildenv
 
   libhandy:
-    after: [ pygobject, meson ]
+    after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
     source-branch: 'libhandy-1-6'
     source-depth: 1
@@ -921,7 +921,7 @@ parts:
     build-environment: *buildenv
 
   gjs:
-    after: [ libhandy, meson ]
+    after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
     source-branch: 'gnome-42'
     source-depth: 1
@@ -938,7 +938,7 @@ parts:
       - libmozjs-91-dev
 
   p11-kit:
-    after: [ gjs, meson ]
+    after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
     source-tag: 0.24.1
     plugin: meson
@@ -951,7 +951,7 @@ parts:
     build-environment: *buildenv
 
   libsecret:
-    after: [ p11-kit, meson ]
+    after: [ p11-kit, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
     source-tag: '0.20.5'
     source-depth: 1
@@ -964,7 +964,7 @@ parts:
     build-environment: *buildenv
 
   libgnome-games-support:
-    after: [ libsecret, meson ]
+    after: [ libsecret, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
     source-branch: 'games-1-8'
