@@ -23,7 +23,7 @@ parts:
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
     source-branch: '0.62'
-    override-build:
+    override-build: |
       pip install .
     build-packages:
       - python3-pip
