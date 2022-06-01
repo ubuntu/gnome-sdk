@@ -64,6 +64,7 @@ parts:
       - libavahi-common3
       - libbrotli1
       - libc-bin
+      - libcanberra-gtk3-module
       - libcdt5
       - libcgraph6
       - libcolord2
