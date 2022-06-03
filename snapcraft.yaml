@@ -181,6 +181,14 @@ parts:
         fi
       done
 
+  command-chain:
+    source: https://github.com/snapcore/snapcraft-desktop-integration.git
+    source-type: git
+    source-subdir: gnome
+    plugin: make
+    make-parameters:
+      - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
+
   cleanup:
     after: [ caches ]
     plugin: nil
