@@ -6,7 +6,7 @@ description: |
  GNOME applications.
 
 confinement: strict
-grade: devel
+grade: stable
 base: core22
 
 parts:
