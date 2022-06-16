@@ -231,7 +231,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '4.2.1'
+    source-tag: '4.3.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -275,7 +275,7 @@ parts:
   gdk-pixbuf:
     after: [ pango, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-branch: 'gdk-pixbuf-2-40'
+    source-tag: '2.42.8'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -299,7 +299,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: 'librsvg-2.52'
+    source-branch: 'librsvg-2.54'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -329,13 +329,13 @@ parts:
   json-glib:
     after: [ epoxy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-branch: 'json-glib-1-4'
+    source-tag: '1.6.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - --buildtype=release
-      - -Ddocs=false
+      - -Dgtk_doc=disabled
     build-environment: *buildenv
 
   libpsl:
@@ -359,7 +359,7 @@ parts:
   libsoup2:
     after: [ libpsl, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-branch: gnome-3-38
+    source-tag: 2.74.2
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -558,6 +558,8 @@ parts:
       cp $CRAFT_STAGE/usr/bin/mm-common-get /usr/bin/mm-common-get
       cp $CRAFT_STAGE/usr/share/mm-common/build/*.am /usr/share/mm-common/build/
       cp $CRAFT_STAGE/usr/share/mm-common/doctool/* /usr/share/mm-common/doctool/
+      # needed for cairomm
+      cp $CRAFT_STAGE/usr/share/mm-common/build/*.py /usr/share/mm-common/build/
 
       # Manual build of glibmm
       cd $CRAFT_PART_BUILD
@@ -572,7 +574,7 @@ parts:
   cairomm:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.14.3'
+    source-tag: '1.16.1'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -580,11 +582,14 @@ parts:
       - -Dbuild-documentation=false
       - -Dbuild-examples=false
     build-environment: *buildenv
+    build-packages:
+      - doxygen
+      - graphviz
 
   pangomm:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.46.2'
+    source-tag: '2.50.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -623,7 +628,7 @@ parts:
   gtkmm:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '3.24.5'
+    source-tag: '3.24.6'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -702,7 +707,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-branch: 'gnome-41'
+    source-tag: '42.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -761,7 +766,7 @@ parts:
   libinput:
     after: [ cogl, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-branch: '1.20-branch'
+    source-tag: '1.21.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -886,7 +891,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.20.1'
+    source-tag: 'v1.21.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
