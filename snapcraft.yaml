@@ -22,7 +22,7 @@ parts:
   meson-deps:
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-branch: '0.62'
+    source-tag: '0.62.2'
     override-build: |
       pip install .
     build-packages:
@@ -49,7 +49,7 @@ parts:
   libffi:
     after: [ libtool, meson-deps ]
     source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
-    source-branch: 'meson'
+    source-tag: 'meson-3.2.9999.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -60,7 +60,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-branch: 'glib-2-72'
+    source-tag: '2.72.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -140,7 +140,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-branch: '0.56'
+    source-tag: '0.56.1'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -191,7 +191,7 @@ parts:
   at-spi2-core:
     after: [ atk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-branch: 'gnome-42'
+    source-tag: 'AT_SPI2_CORE_2_44_1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -299,7 +299,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-branch: 'librsvg-2.54'
+    source-tag: '2.54.4'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -394,7 +394,7 @@ parts:
   librest:
     after: [ libsoup3 ]
     source: https://gitlab.gnome.org/GNOME/librest.git
-    source-branch: 'librest-0-7'  # looks like this branch has been updated more recently than the 0.8 tags - weird
+    source-tag: '0.8.1'  # looks like this branch has been updated more recently than the 0.8 tags - weird
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
@@ -465,7 +465,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-branch: gtk-4-6
+    source-tag: '4.6.5'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -650,7 +650,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-branch: 'gtksourceview-5-4'
+    source-tag: '5.4.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -723,7 +723,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-branch: 'gnome-42'
+    source-tag: '42.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -741,7 +741,7 @@ parts:
   cogl:
     after: [ gnome-desktop ]
     source: https://gitlab.gnome.org/Archive/cogl.git
-    source-branch: 'cogl-1.22'
+    source-tag: '1.22.8'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -902,7 +902,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-branch: 'pygobject-3-42'
+    source-tag: '3.42.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -913,7 +913,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-branch: 'libhandy-1-6'
+    source-tag: '1.6.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -928,7 +928,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-branch: 'gnome-42'
+    source-tag: '1.72.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -945,7 +945,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: 0.24.1
+    source-tag: '0.24.1'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -972,7 +972,7 @@ parts:
     after: [ libsecret, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
-    source-branch: 'games-1-8'
+    source-tag: '1.8.2'
     plugin: meson
     meson-parameters: [--prefix=/usr]
     build-environment: *buildenv
