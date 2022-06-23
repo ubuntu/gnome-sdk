@@ -8,6 +8,7 @@ confinement: strict
 grade: stable
 icon: icon.png
 base: core20
+compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
