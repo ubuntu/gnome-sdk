@@ -532,6 +532,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - sassc
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
