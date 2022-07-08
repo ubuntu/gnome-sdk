@@ -304,12 +304,18 @@ parts:
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
-      - --enable-introspection
-      - --enable-vala
+      - --enable-introspection=yes
+      - --enable-vala=yes
+      - --enable-pixbuf-loader
     build-environment: *buildenv
     build-packages:
       - cargo
       #- libcroco3-dev
+    override-stage: |
+      set -eux
+      craftctl default
+      # snapcraft is adding twice $CRAFT_STAGE
+      cp -a $CRAFT_STAGE/$CRAFT_STAGE/* $CRAFT_STAGE/
 
   epoxy:
     after: [ librsvg, meson-deps ]
@@ -480,6 +486,7 @@ parts:
       - -Dgtk_doc=false
       - -Ddemos=false
       - -Dbuild-examples=false
+      - -Dbuild-tests=false
       - -Dmedia-gstreamer=disabled
       - -Dinstall-tests=false
     build-environment: *buildenv
@@ -1130,7 +1137,10 @@ parts:
       sed -i 's#/usr/local/share#/snap/gnome-42-2204-sdk/current/usr/local/share#g' $ITSTOOL
       sed -i 's#/usr/share#/snap/gnome-42-2204-sdk/current/usr/share#g' $ITSTOOL
 
-      LOADERS=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0
+      LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
+      cp -a src/stage/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so ./$GDK_PIXBUF_PATH/2.10.0/loaders/
+      $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders ./$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $LOADERS
       sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
       sed -i 's#/build/gnome-42-2204-sdk/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
 
