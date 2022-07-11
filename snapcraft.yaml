@@ -516,6 +516,26 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
+
+  libadwaita:
+    source: https://gitlab.gnome.org/GNOME/libadwaita.git
+    source-tag: '1.1.2'
+    after: [ meson-deps, gtk4 ]
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - --buildtype=release
+      - -Dintrospection=enabled
+      - -Dvapi=true
+      - -Dtests=false
+      - -Dexamples=false
+    build-environment: *buildenv
+    build-packages:
+      - sassc
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
+
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
@@ -978,7 +998,7 @@ parts:
     build-environment: *buildenv
 
   debs:
-    after: [ libgnome-games-support ]
+    after: [ libgnome-games-support, libadwaita ]
     plugin: nil
     stage-packages:
       - appstream
