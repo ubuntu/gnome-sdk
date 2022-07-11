@@ -21,13 +21,11 @@ parts:
 
   meson-deps:
     plugin: nil
-    source: https://github.com/mesonbuild/meson.git
-    source-tag: '0.62.2'
     override-build: |
-      pip install .
+      python3 -m pip install ninja==1.10.2.3
+      python3 -m pip install meson==0.62.2
     build-packages:
       - python3-pip
-      - ninja-build
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
