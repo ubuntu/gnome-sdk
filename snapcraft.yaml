@@ -43,7 +43,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
     build-environment: *buildenv
 
   glib:
@@ -54,7 +55,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
     build-environment: *buildenv
     build-environment:
       - CFLAGS: -Wno-nonnull
@@ -128,7 +130,8 @@ parts:
     meson-version: "0.60.3"
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
     build-environment: *buildenv
     build-environment:
       - LD_LIBRARY_PATH: $SNAPCRAFT_STAGE/usr/lib/vala-0.48:$SNAPCRAFT_STAGE/usr/lib:$SNAPCRAFT_STAGE/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
@@ -183,7 +186,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dintrospection=true
       - -Ddocs=false
     build-environment: *buildenv
@@ -203,7 +207,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dintrospection=yes
       - -Ddocs=false
     build-environment: *buildenv
@@ -219,7 +224,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
     build-environment: *buildenv
 
   fribidi:
@@ -230,7 +236,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Ddocs=false
     build-environment: *buildenv
 
@@ -267,7 +274,8 @@ parts:
     meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dinstall-tests=false
       - -Dgtk_doc=false
       - -Dintrospection=enabled
@@ -287,7 +295,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
      - -Dinstalled_tests=false
     build-environment: *buildenv
     override-build: |
@@ -326,7 +335,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
     build-packages:
       - libgl1-mesa-dev
@@ -342,7 +352,8 @@ parts:
     meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Ddocs=false
       - -Dtests=false
     build-environment: *buildenv
@@ -369,7 +380,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dvapi=enabled
       - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
     build-environment: *buildenv
@@ -425,7 +437,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dbroadway_backend=true
       - -Dx11_backend=true
       - -Dwayland_backend=true
@@ -594,7 +607,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
     build-environment:
       - XDG_DATA_DIRS: $SNAPCRAFT_STAGE/usr/share:/usr/share:$XDG_DATA_DIRS
@@ -616,7 +630,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
     override-pull: |
       set -eux
@@ -644,7 +659,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
 
   gsettings-desktop-schemas:
@@ -655,7 +671,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -671,7 +688,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
     build-packages:
       - iso-codes
@@ -717,7 +735,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Ddocumentation=false
     build-environment: *buildenv
     build-packages:
@@ -734,7 +753,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dbuild_examples=false
       - -Ddocumentation=false
       - -Dbuild_tests=false
@@ -811,7 +831,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
 
   libpeas:
@@ -845,7 +866,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
 
   pygobject:
@@ -856,7 +878,8 @@ parts:
     plugin: meson
     meson-parameters:
      - --prefix=/usr
-     - --buildtype=release
+     - -Ddebug=true
+     - -Doptimization=3
     build-environment: *buildenv
 
   libhandy:
@@ -867,7 +890,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - -Dgtk_doc=false
       - -Dtests=false
       - -Dexamples=false
@@ -883,7 +907,8 @@ parts:
     meson-version: "0.54.0"
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Ddebug=true
+      - -Doptimization=3
       - --libdir=lib
       - -Dgtk_doc=false
       - -Dtests=false
@@ -1061,6 +1086,11 @@ parts:
     after: [ debs ]
     plugin: nil
     build-environment: *buildenv
+    build-packages:
+      - zip
+      - python3-distutils-extra
+      - python3-pip
+      - python3-apt
     override-prime: |
       set -eux
       snapcraftctl prime
@@ -1112,9 +1142,24 @@ parts:
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/$SNAPCRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
 
+      DEBUG_BUILDID=usr/lib/debug/.build-id
+      mkdir -p $DEBUG_BUILDID
+      find . -type f \( -executable -or -name "*.so*" \) -print0 | xargs -0 -n 1 $SNAPCRAFT_PROJECT_DIR/debug-symbols.sh $DEBUG_BUILDID
+
+      # this should be picked by launchpad build system
+      _VERSION=$SNAPCRAFT_PROJECT_VERSION
+      if [ "${_VERSION}" = "git" ]; then
+        pip3 install craft-parts
+        _VERSION=$(python3 -c "from craft_parts.sources.git_source import GitSource; print(GitSource.generate_version(part_src_dir='$SNAPCRAFT_PROJECT_DIR'))")
+      fi
+      SYMBOLS_ARCHIVE=$SNAPCRAFT_PROJECT_NAME_${_VERSION}_$SNAP_ARCH.debug
+      zip -r9 $SNAPCRAFT_PROJECT_DIR/$SYMBOLS_ARCHIVE $DEBUG_BUILDID
+      rm -fr $DEBUG_BUILDID/
+
       ln -s vala-0.48 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$SNAPCRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
