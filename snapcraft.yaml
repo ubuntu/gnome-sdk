@@ -244,10 +244,12 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      PC=$CRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz.pc
-      sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-      sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-      sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+      for PC in $CRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz*.pc;
+      do
+        sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+        sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+        sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+      done
     build-packages:
       - ragel
       - libgraphite2-dev
