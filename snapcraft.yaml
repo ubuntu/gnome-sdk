@@ -1186,10 +1186,11 @@ parts:
 
       GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0
       LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
-      cp -a src/stage/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so ./$GDK_PIXBUF_PATH/2.10.0/loaders/
-      $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders ./$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $LOADERS
-      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
-      sed -i 's#/build/gnome-42-2204-sdk/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $LOADERS
+      rm -f $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so
+      cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
+      $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $CRAFT_PRIME/$LOADERS
+      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $CRAFT_PRIME/$LOADERS
+      sed -i 's#/build/gnome-42-2204-sdk/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $CRAFT_PRIME/$LOADERS
 
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/gnome-42-2204-sdk/current#g' $XML2_CONFIG
