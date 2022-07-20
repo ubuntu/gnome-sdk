@@ -85,7 +85,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.72.2'
+    source-tag: '2.72.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -165,7 +165,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.1'
+    source-tag: '0.56.2'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -256,7 +256,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '4.3.0'
+    source-tag: '4.4.1'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -286,7 +286,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.7'
+    source-tag: '1.50.8'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -413,7 +413,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.0.6'
+    source-tag: '3.0.7'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -442,7 +442,7 @@ parts:
   wayland:
     after: [ librest, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
-    source-tag: '1.20.0'
+    source-tag: '1.21.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -454,7 +454,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.25'
+    source-tag: '1.26'
     source-depth: 1
     plugin: meson
     meson-parameters: [ --prefix=/usr ]
@@ -502,7 +502,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.6.5'
+    source-tag: '4.6.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -557,7 +557,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.1.2'
+    source-tag: '1.1.3'
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -711,7 +711,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.4.2'
+    source-tag: '5.5.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -784,7 +784,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '42.2'
+    source-tag: '42.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -963,7 +963,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.42.1'
+    source-tag: '3.42.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -974,7 +974,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-tag: '1.6.2'
+    source-tag: '1.6.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -989,7 +989,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.72.0'
+    source-tag: '1.72.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
