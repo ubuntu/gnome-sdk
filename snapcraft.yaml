@@ -23,7 +23,9 @@ parts:
     stage:
       - lib/*/bindtextdomain.so
       - usr
-      
+      - lib/$CRAFT_ARCH_TRIPLET/*
+      - etc/gnome/*
+
       - -usr/**/*.a
       - -usr/**/*.c
       - -usr/**/*.cpp
