@@ -275,6 +275,10 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+      for f in `find $CRAFT_PART_INSTALL/usr/lib |grep \\.la`; do
+        sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
+      done
+
     build-packages:
       - ragel
       - libgraphite2-dev
@@ -620,6 +624,9 @@ parts:
       ./autogen.sh --prefix=/usr
       make -j8
       make install DESTDIR=$CRAFT_PART_INSTALL
+      for f in `find $CRAFT_PART_INSTALL/usr/lib |grep \\.la`; do
+        sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
+      done
     build-packages:
       - libsigc++-2.0-dev
       - libxml-parser-perl
