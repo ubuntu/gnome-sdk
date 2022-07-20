@@ -1073,6 +1073,8 @@ parts:
       - libmozjs-91-dev
       - libmtdev1
       - libnettle8
+      - libnghttp2-14
+      - libnghttp2-dev
       - libnotify-dev
       - libpcre2-8-0
       - libpcre3
