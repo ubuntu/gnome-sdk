@@ -1064,6 +1064,8 @@ parts:
       - libgnutls30
       - libgspell-1-dev
       - libgudev-1.0-dev
+      - libgvc6
+      - libgraphviz-dev
       - libhogweed6
       - libidn2-0
       - libjpeg-dev
@@ -1086,6 +1088,8 @@ parts:
       - libpython3.10-dev
       - libseccomp-dev
       - libseccomp2
+      - libsigc++-2.0-0v5
+      - libsigc++-2.0-dev
       - libsqlite3-0
       - libsqlite3-dev
       - libtasn1-6
