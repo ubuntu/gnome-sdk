@@ -1069,6 +1069,7 @@ parts:
       - libhogweed6
       - libidn2-0
       - libjpeg-dev
+      - libkrb5-3
       - liblcms2-dev
       - liblzo2-dev
       - libmount-dev
