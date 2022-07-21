@@ -51,6 +51,11 @@ parts:
       - -usr/share/vala*
       - -usr/share/gir*
 
+      - -usr/bin/meson
+      - -usr/bin/ninja
+      - -usr/lib/python3/dist-packages/meson*
+      - -usr/share/devhelp/books
+
   debs:
     after: [ gnome-sdk ]
     plugin: nil
@@ -210,3 +215,4 @@ parts:
       rm -rf usr/share/man
 
       find . -type d -empty -delete
+      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME
