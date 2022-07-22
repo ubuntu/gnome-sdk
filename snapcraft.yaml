@@ -1049,6 +1049,7 @@ parts:
       - gettext
       - itstool
       - libappindicator3-dev
+      - libblkid1
       - libbrotli-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
@@ -1080,12 +1081,14 @@ parts:
       - liblcms2-dev
       - liblzo2-dev
       - libmount-dev
+      - libmount1
       - libmozjs-91-dev
       - libmtdev1
       - libnettle8
       - libnghttp2-14
       - libnghttp2-dev
       - libnotify-dev
+      - libnsl2
       - libpcre2-8-0
       - libpcre3
       - libpcre3-dev
@@ -1100,12 +1103,14 @@ parts:
       - libsigc++-2.0-dev
       - libsqlite3-0
       - libsqlite3-dev
+      - libstdc++6
       - libtasn1-6
       - libtdb1
       - libthai-dev
       - libudev-dev
       - libudev1
       - libunity-dev
+      - libuuid1
       - libvorbisfile3
       - libwacom9
       - libwebkit2gtk-4.0-dev
@@ -1217,7 +1222,7 @@ parts:
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
       # Fix dangling symlink by overwriting it
-      ln -sf lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
+      ln -sf /lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
