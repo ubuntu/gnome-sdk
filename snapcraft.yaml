@@ -600,10 +600,13 @@ parts:
     build-packages:
       - wget
 
+  # Since the objective is to build Gtkmm 3.24.x, 2.66.x is the maximum GLibmm version
+  # that works for that. 2.68 or newer aren't accepted by the MESON builder and triggers
+  # the download of an old GLibmm version. Thus this one should be used.
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.66.4'
+    source-tag: '2.66.4' # maximum version useful for gtkmm-3.24.
     plugin: autotools
     override-build: |
       set -eux
@@ -632,10 +635,14 @@ parts:
       - libxml-parser-perl
     build-environment: *buildenv
 
+  # Again, cairomm is needed to build pangomm, but 1.14.x is the maximum version recognized
+  # by the valid pangomm version needed for Gtkmm 3.24. Setting 1.16 or newer won't be
+  # recognized by pangomm and the builder will download a compatible old version, thus
+  # defeating the objective of having recent code.
   cairomm:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.16.1'
+    source-tag: '1.14.3' # maximum version useful for gtkmm-3.24
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -650,7 +657,7 @@ parts:
   pangomm:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.50.0'
+    source-tag: '2.46.2' # maximum version useful for gtkmm-3.24
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -671,7 +678,7 @@ parts:
   atkmm:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
-    source-tag: '2.28.2'
+    source-tag: '2.28.2' # maximum version useful for gtkmm-3.24
     plugin: autotools
     override-build: |
       set -eux
