@@ -652,7 +652,6 @@ parts:
     build-environment: *buildenv
     build-packages:
       - doxygen
-      - graphviz
 
   pangomm:
     after: [ cairomm, meson-deps ]
