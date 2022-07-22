@@ -1222,7 +1222,9 @@ parts:
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
       # Fix dangling symlink by overwriting it
-      ln -sf /lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
+      ln -sf lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
+      # CHECK THIS When changing the core base, this line must be update
+      cp /snap/core22/current/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET/
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
