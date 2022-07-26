@@ -259,6 +259,9 @@ parts:
     plugin: nil
     build-snaps:
       - gtk-common-themes
+    build-packages:
+      - python3-pip
+      - zip
     override-prime: |
       set -eux
 
@@ -270,4 +273,11 @@ parts:
       rm -rf usr/share/man
 
       find . -type d -empty -delete
-      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME
+
+      DEBUG_BUILDID=usr/lib/debug/.build-id
+      mkdir -p $DEBUG_BUILDID
+
+      python3 -m pip install pyelftools craft-parts
+      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
+      echo Symbols compressed
+      rm -fr $DEBUG_BUILDID
