@@ -562,7 +562,8 @@ parts:
     source-depth: 1
     plugin: cmake
     cmake-parameters:
-      - -DCNAKE_INSTALL_RREFIX=/usr
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
       - -DBUILD_GTK_TESTS=OFF
       - -DBUILD_QT5_TESTS=OFF
       - -DBUILD_QT6_TESTS=OFF
