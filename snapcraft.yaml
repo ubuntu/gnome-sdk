@@ -26,6 +26,7 @@ parts:
       - usr
       - lib/$CRAFT_ARCH_TRIPLET/*
       - etc/gnome/*
+      - usr/share/libdrm/amdgpu.ids
 
       - -usr/**/*.a
       - -usr/**/*.c
