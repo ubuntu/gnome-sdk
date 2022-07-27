@@ -1069,7 +1069,7 @@ parts:
     build-environment: *buildenv
 
   debs:
-    after: [ libgnome-games-support, libadwaita ]
+    after: [ libgnome-games-support, libadwaita, poppler ]
     plugin: nil
     stage-packages:
       - appstream
