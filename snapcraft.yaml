@@ -28,6 +28,60 @@ parts:
       - etc/gnome/*
       - usr/share/libdrm/amdgpu.ids
 
+      - -etc/emacs
+      - -etc/X11/Xreset.d/README
+      - -etc/fonts/conf.d/README
+      - -var/lib/aspell/README
+      - -var/lib/ispell/README
+      - -usr/share/dict/README.select-wordlist
+      - -usr/share/emacs
+      - -usr/share/gdb
+      - -usr/share/glade
+      - -usr/share/gobject-introspection-1.0
+      - -usr/share/gst-plugins-base
+      - -usr/share/gtk-doc
+      - -usr/share/help
+      - -usr/share/installed-tests
+      - -usr/share/maven-repo
+      - -usr/bin/dpkg*
+      - -usr/bin/$CRAFT_ARCH_TRIPLET-*
+      - -usr/bin/g-ir-*
+      - -usr/bin/glib-compile-*
+      - -usr/bin/glib-gettextize
+      - -usr/bin/glib-genmarshal
+      - -usr/bin/glib-mkenums
+      - -usr/bin/gtester*
+      - -usr/bin/gtk-builder-tool
+      - -usr/bin/gtk4-builder-tool
+      - -usr/bin/gtk-update-icon-cache
+      - -usr/bin/gtk4-update-icon-cache
+      - -usr/bin/h2ph
+      - -usr/bin/h2xs
+      - -usr/bin/make
+      - -usr/bin/make-first-existing-target
+      - -usr/bin/mm-common-get
+      - -usr/bin/mm-common-prepare
+      - -usr/bin/nm
+      - -usr/bin/objcopy
+      - -usr/bin/objdump
+      - -usr/bin/patch
+      - -usr/bin/peas-demo
+      - -usr/bin/pkg-config
+      - -usr/bin/pl2pm
+      - -usr/bin/pldd
+      - -usr/bin/prove
+      - -usr/bin/py3clean
+      - -usr/bin/ranlib
+      - -usr/bin/readelf
+      - -usr/bin/rpcgen
+      - -usr/bin/size
+      - -usr/bin/strings
+      - -usr/bin/strip
+      - -usr/bin/wayland-scanner
+      - -usr/bin/x86_64-pc-linux-gnu-pkg-config
+      - -usr/bin/xgettext
+      - -usr/bin/xsubpp
+
       - -usr/**/*.a
       - -usr/**/*.c
       - -usr/**/*.cpp
