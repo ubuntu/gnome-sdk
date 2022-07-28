@@ -1103,6 +1103,7 @@ parts:
       - libwrap0
       - libpython3-dev
       - libpython3.10-dev
+      - libpython3.10-minimal
       - libseccomp-dev
       - libseccomp2
       - libsigc++-2.0-0v5
