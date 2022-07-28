@@ -7,7 +7,7 @@ description: |
 
 confinement: strict
 grade: stable
-base: core22
+base: core22 # if the base is changed, the BUILDENV part must be updated
 
 parts:
   buildenv:
@@ -18,6 +18,7 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - CRAFT_EXT_CORE_LEVEL: core22
 
   ninja:
     plugin: nil
@@ -79,7 +80,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   glib:
@@ -90,7 +92,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -112,6 +115,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dgtk=disabled
     build-environment: *buildenv
 
@@ -123,6 +128,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dxlib=enabled
       - -Dpng=enabled
       - -Dxcb=enabled
@@ -150,7 +157,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dgtk_doc=false
     build-environment: *buildenv
     override-build: |
@@ -201,7 +209,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dintrospection=true
       - -Ddocs=false
     build-environment: *buildenv
@@ -221,7 +230,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dintrospection=yes
       - -Ddocs=false
     build-environment: *buildenv
@@ -237,7 +247,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dtests=false
     build-environment: *buildenv
 
@@ -249,7 +260,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Ddocs=false
     build-environment: *buildenv
 
@@ -291,7 +303,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dinstall-tests=false
       - -Dgtk_doc=false
       - -Dintrospection=enabled
@@ -310,9 +323,10 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
-     - -Dinstalled_tests=false
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dinstalled_tests=false
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -355,8 +369,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     build-packages:
       - libgl1-mesa-dev
@@ -371,7 +386,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dgtk_doc=disabled
     build-environment: *buildenv
 
@@ -401,7 +417,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dvapi=enabled
       - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
     build-environment: *buildenv
@@ -418,7 +435,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dvapi=enabled
       - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
     build-environment: *buildenv
@@ -447,7 +465,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Ddocumentation=false
     build-environment: *buildenv
 
@@ -457,7 +476,10 @@ parts:
     source-tag: '1.26'
     source-depth: 1
     plugin: meson
-    meson-parameters: [ --prefix=/usr ]
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   gtk3:
@@ -468,7 +490,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dbroadway_backend=true
       - -Dx11_backend=true
       - -Dwayland_backend=true
@@ -507,7 +530,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dbroadway-backend=false
       - -Dx11-backend=true
       - -Dwayland-backend=true
@@ -562,7 +586,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dintrospection=enabled
       - -Dvapi=true
       - -Dtests=false
@@ -581,6 +606,8 @@ parts:
     source-tag: '0.6'
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Ddocs=false
       - -Dintrospection=false
       - -Dbackends=['gtk3', 'gtk4']
@@ -592,6 +619,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Duse-network=true
     override-build: |
       set -eux
@@ -646,6 +675,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dmaintainer-mode=false
       - -Dbuild-documentation=false
       - -Dbuild-examples=false
@@ -660,6 +691,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dmaintainer-mode=true
       - -Dbuild-documentation=false
     build-environment:
@@ -699,6 +732,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dmaintainer-mode=true
       - -Dbuild-documentation=false
       - -Dbuild-demos=false
@@ -721,8 +756,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     build-packages:
       - gettext
@@ -739,8 +775,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     override-pull: |
       set -eux
@@ -767,8 +804,9 @@ parts:
     source-type: git
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   gsettings-desktop-schemas:
@@ -778,8 +816,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -794,8 +833,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     build-packages:
       - iso-codes
@@ -838,7 +878,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Ddocumentation=false
     build-environment: *buildenv
     build-packages:
@@ -855,7 +896,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dbuild_examples=false
       - -Ddocumentation=false
       - -Dbuild_tests=false
@@ -931,8 +973,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   libpeas:
@@ -943,6 +986,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dpython2=true
       - -Dpython3=true
       - -Dintrospection=true
@@ -962,8 +1007,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   pygobject:
@@ -973,8 +1019,9 @@ parts:
     source-depth: 1
     plugin: meson
     meson-parameters:
-     - --prefix=/usr
-     - --buildtype=release
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   libhandy:
@@ -985,7 +1032,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dgtk_doc=false
       - -Dtests=false
       - -Dexamples=false
@@ -1000,7 +1048,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dskip_gtk_tests=true
       - -Dskip_dbus_tests=true
       - -Dinstalled_tests=false
@@ -1016,6 +1065,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dhash_impl=internal
       - -Dtrust_paths=/etc/ssl/certs/ca-certificates.crt
     build-packages:
@@ -1030,6 +1081,8 @@ parts:
     plugin: meson
     meson-parameters:
       - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
       - -Dgtk_doc=false
     build-packages:
       - libgcrypt20-dev
@@ -1041,7 +1094,10 @@ parts:
     source-type: git
     source-tag: '1.8.2'
     plugin: meson
-    meson-parameters: [--prefix=/usr]
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
 
   debs:
@@ -1230,7 +1286,7 @@ parts:
       # Fix dangling symlink by overwriting it
       ln -sf lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
       # CHECK THIS When changing the core base, this line must be update
-      cp /snap/core22/current/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET/
+      cp /snap/$CRAFT_EXT_CORE_LEVEL/current/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET/
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
