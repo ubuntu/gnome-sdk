@@ -1,0 +1,26 @@
+diff --git a/amdgpu/amdgpu_asic_id.c b/amdgpu/amdgpu_asic_id.c
+index a5007ffc..42b8f94c 100644
+--- a/amdgpu/amdgpu_asic_id.c
++++ b/amdgpu/amdgpu_asic_id.c
+@@ -112,12 +112,18 @@ void amdgpu_parse_asic_ids(struct amdgpu_device *dev)
+ 	ssize_t n;
+ 	int line_num = 1;
+ 	int r = 0;
++	char *amdgpu_asic_id_table_path;
+ 
+ 	fp = fopen(AMDGPU_ASIC_ID_TABLE, "r");
+ 	if (!fp) {
+-		fprintf(stderr, "%s: %s\n", AMDGPU_ASIC_ID_TABLE,
+-			strerror(errno));
+-		return;
++		amdgpu_asic_id_table_path = getenv("AMDGPU_ASIC_ID_TABLE_PATH");
++		if (amdgpu_asic_id_table_path != NULL)
++			fp = fopen(amdgpu_asic_id_table_path, "r");
++		if (!fp) {
++			fprintf(stderr, "%s: %s\n", AMDGPU_ASIC_ID_TABLE,
++				strerror(errno));
++			return;
++		}
+ 	}
+ 
+ 	/* 1st valid line is file version */
