@@ -262,6 +262,7 @@ parts:
     build-packages:
       - python3-pip
       - zip
+      - python3-apt
     override-prime: |
       set -eux
 
