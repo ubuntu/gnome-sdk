@@ -1,0 +1,12 @@
+diff --git a/data/meson.build b/data/meson.build
+index c4d6445a..9cec37cf 100644
+--- a/data/meson.build
++++ b/data/meson.build
+@@ -31,6 +31,7 @@ locations_bin = custom_target('locations-db',
+   output: '@BASENAME@.bin',
+   install: true,
+   install_dir: pkglibdir,
++  env: ['LD_LIBRARY_PATH=/usr/lib:/usr/lib/CRAFT_ARCH_TRIPLET'],
+ )
+ 
+ install_data('Locations.xml',

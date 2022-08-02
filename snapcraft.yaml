@@ -604,6 +604,7 @@ parts:
     plugin: meson
     source: https://github.com/flatpak/libportal.git
     source-tag: '0.6'
+    build-environment: *buildenv
     meson-parameters:
       - --prefix=/usr
       - -Doptimization=3
@@ -1100,8 +1101,54 @@ parts:
       - -Ddebug=true
     build-environment: *buildenv
 
+  libgeocode:
+    source: https://gitlab.gnome.org/GNOME/geocode-glib.git
+    after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup2, libffi ]
+    source-tag: '3.26.3'
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Denable-installed-tests=false
+      - -Denable-introspection=true
+      - -Denable-gtk-doc=false
+      - -Dsoup2=true
+    build-packages:
+      - libnghttp2-dev
+
+  libgweather:
+    after: [ libgeocode, meson-deps, gobject-introspection ]
+    source: https://gitlab.gnome.org/GNOME/libgweather.git
+    source-tag: '4.1.0'
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dintrospection=true
+      - -Dgtk_doc=false
+      - -Dtests=false
+      - -Dsoup2=true
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
+      sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET#' $CRAFT_PART_SRC/data/meson.build
+    build-packages:
+      - gir1.2-glib-2.0
+    override-stage: |
+      craftctl default
+      rm -f $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
+      ln -s libgweather-4 $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
+    prime:
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libgweather-4
+
+
   debs:
-    after: [ libgnome-games-support, libadwaita ]
+    after: [ libgnome-games-support, libadwaita, libgweather ]
     plugin: nil
     stage-packages:
       - appstream
