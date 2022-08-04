@@ -587,7 +587,8 @@ parts:
     plugin: cmake
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
-      - -DCMAKE_BUILD_TYPE=Release
+      - -Doptimization=3
+      - -Ddebug=true
       - -DBUILD_GTK_TESTS=OFF
       - -DBUILD_QT5_TESTS=OFF
       - -DBUILD_QT6_TESTS=OFF
