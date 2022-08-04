@@ -108,7 +108,7 @@ parts:
       - clang
 
   pixman:
-    after: [glib, meson-deps ]
+    after: [ glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
     source-depth: 1
@@ -577,6 +577,31 @@ parts:
       find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm '{}' \;
       mkdir -p $CRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
+
+
+  poppler:
+    after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
+    source: https://gitlab.freedesktop.org/poppler/poppler.git
+    source-tag: 'poppler-22.07.0'
+    source-depth: 1
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_GTK_TESTS=OFF
+      - -DBUILD_QT5_TESTS=OFF
+      - -DBUILD_QT6_TESTS=OFF
+      - -DBUILD_CPP_TESTS=OFF
+      - -DBUILD_MANUAL_TESTS=OFF
+      - -DENABLE_QT5=OFF
+      - -DENABLE_QT6=OFF
+      - -DENABLE_GOBJECT_INTROSPECTION=ON
+    build-environment: *buildenv
+    build-packages:
+      - libboost1.74-dev
+      - libcurl4-openssl-dev
+      - libopenjp2-7-dev
+      - libnss3-dev
 
 
   libadwaita:
@@ -1148,7 +1173,7 @@ parts:
 
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
     plugin: nil
     stage-packages:
       - appstream
@@ -1162,6 +1187,8 @@ parts:
       - libbrotli-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
+      - libcurl4
+      - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
       - libdrm-dev
@@ -1198,6 +1225,10 @@ parts:
       - libnghttp2-dev
       - libnotify-dev
       - libnsl2
+      - libnss3
+      - libnss3-dev
+      - libopenjp2-7
+      - libopenjp2-7-dev
       - libpcre2-8-0
       - libpcre3
       - libpcre3-dev
@@ -1349,6 +1380,10 @@ parts:
   cleanup:
     after: [ conditioning ]
     plugin: nil
+    build-packages:
+      - python3-pip
+      - zip
+      - python3-apt
     override-prime: |
       set -eux
 
@@ -1370,3 +1405,14 @@ parts:
       rm -f usr/share/unity/client-scopes.json
 
       find . -type d -empty -delete
+
+      PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      DEBUG_BUILDID=usr/lib/debug/.build-id
+      mkdir -p $DEBUG_BUILDID
+
+      OLDPATH=$PATH
+      python3 -m pip install pyelftools craft-parts
+      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
+      PATH=$OLDPATH
+      echo Symbols compressed
+      rm -fr $DEBUG_BUILDID
