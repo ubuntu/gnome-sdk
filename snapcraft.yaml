@@ -1302,6 +1302,10 @@ parts:
   cleanup:
     after: [ conditioning ]
     plugin: nil
+    build-packages:
+      - python3-pip
+      - zip
+      - python3-apt
     override-prime: |
       set -eux
 
@@ -1323,3 +1327,14 @@ parts:
       rm -f usr/share/unity/client-scopes.json
 
       find . -type d -empty -delete
+
+      PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      DEBUG_BUILDID=usr/lib/debug/.build-id
+      mkdir -p $DEBUG_BUILDID
+
+      OLDPATH=$PATH
+      python3 -m pip install pyelftools craft-parts
+      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
+      PATH=$OLDPATH
+      echo Symbols compressed
+      rm -fr $DEBUG_BUILDID
