@@ -1164,14 +1164,6 @@ parts:
       sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET#' $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
-    override-stage: |
-      craftctl default
-      rm -f $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
-      ln -s libgweather-4 $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
-    prime:
-      - usr/lib/$CRAFT_ARCH_TRIPLET/libgweather
-      - usr/lib/$CRAFT_ARCH_TRIPLET/libgweather-4
-
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
