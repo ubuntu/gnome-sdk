@@ -544,6 +544,7 @@ parts:
       - -Dbuild-tests=false
       - -Dmedia-gstreamer=disabled
       - -Dinstall-tests=false
+      - -Dprint-cups=enabled
     build-environment: *buildenv
     organize:
       usr/lib/gtk-4.0: usr/lib/$CRAFT_ARCH_TRIPLET/gtk-4.0
@@ -636,8 +637,10 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
       - -Ddocs=false
-      - -Dintrospection=false
+      - -Dintrospection=true
+      - -Dvapi=true
       - -Dbackends=['gtk3', 'gtk4']
+      - -Dtests=false
 
   mm-common:
     after: [ libportal, meson-deps ]
@@ -1018,7 +1021,7 @@ parts:
       - -Dpython2=true
       - -Dpython3=true
       - -Dintrospection=true
-      - -Dvapi=false
+      - -Dvapi=true
       - -Ddemos=true
       - -Dglade_catalog=false
       - -Dgtk_doc=false
