@@ -1010,8 +1010,26 @@ parts:
       - xvfb
       - libgstreamer-plugins-base1.0-dev
 
-  libinput:
+  libwacom:
     after: [ cogl, meson-deps ]
+    source: https://github.com/linuxwacom/libwacom
+    source-type: git
+    source-tag: 'libwacom-2.6.0'
+# ext:updatesnap
+#   version-format:
+#     format: 'libwacom-%M.%m.%R'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dtests=disabled
+      - -Ddocumentation=disabled
+    build-environment: *buildenv
+
+  libinput:
+    after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
     source-tag: '1.22.1'
     source-depth: 1
@@ -1027,7 +1045,6 @@ parts:
       - libmtdev-dev
       - libudev-dev
       - libevdev-dev
-      - libwacom-dev
 
   clutter:
     after: [ cogl, libinput, meson-deps ]
@@ -1473,7 +1490,6 @@ parts:
       - libunity-dev
       - libuuid1
       - libvorbisfile3
-      - libwacom9
       - libwebkit2gtk-4.0-dev
       - libwebkit2gtk-4.1-dev
       - libx11-xcb-dev
