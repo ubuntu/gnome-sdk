@@ -298,7 +298,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.8'
+    source-tag: '1.50.9'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -319,13 +319,19 @@ parts:
   gdk-pixbuf:
     after: [ pango, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: '2.42.8'
+    source-tag: '2.42.9'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
+      - -Dinstalled_tests=false
+      - -Dgtk_doc=false
+      - -Ddocs=false
+      - -Dintrospection=enabled
+      - -Dman=false
+      - -Dtests=false
       - -Dinstalled_tests=false
     build-environment: *buildenv
     override-build: |
@@ -607,7 +613,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.1.3'
+    source-tag: '1.1.4'
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -737,7 +743,7 @@ parts:
   atkmm:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
-    source-tag: '2.28.2' # maximum version useful for gtkmm-3.24
+    source-tag: '2.28.3' # maximum version useful for gtkmm-3.24
     plugin: autotools
     override-build: |
       set -eux
@@ -779,7 +785,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.5.0'
+    source-tag: '5.5.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -856,7 +862,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '42.3'
+    source-tag: '42.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1070,7 +1076,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.72.1'
+    source-tag: '1.72.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1130,7 +1136,7 @@ parts:
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
     after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup2, libffi ]
-    source-tag: '3.26.3'
+    source-tag: '3.26.4'
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
