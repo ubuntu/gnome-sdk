@@ -268,7 +268,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '4.4.1'
+    source-tag: '5.2.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -350,7 +350,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.54.5'
+    source-tag: '2.55.1'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
