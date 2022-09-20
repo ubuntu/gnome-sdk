@@ -23,7 +23,7 @@ parts:
   ninja:
     plugin: nil
     source: https://github.com/ninja-build/ninja.git
-    source-tag: 'v1.11.0'
+    source-tag: 'v1.11.1'
     override-build: |
       rm -rf build
       rm -f ninja
@@ -43,7 +43,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '0.62.2'
+    source-tag: '0.63.2'
     override-build: |
       python3 -m pip install .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
@@ -152,7 +152,7 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-tag: '1.72.0'
+    source-tag: '1.74.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -173,7 +173,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.2'
+    source-tag: '0.56.3'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -185,7 +185,7 @@ parts:
   gee:
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
-    source-tag: '0.20.5'
+    source-tag: '0.20.6'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
@@ -298,7 +298,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.9'
+    source-tag: '1.50.10'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -436,7 +436,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.0.7'
+    source-tag: '3.0.8'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -589,7 +589,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-22.07.0'
+    source-tag: 'poppler-22.09.0'
     source-depth: 1
     plugin: cmake
     cmake-parameters:
@@ -1063,7 +1063,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-tag: '1.6.3'
+    source-tag: '1.8.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1156,7 +1156,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.1.0'
+    source-tag: '4.2.0'
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
