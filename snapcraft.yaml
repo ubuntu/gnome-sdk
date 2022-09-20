@@ -87,7 +87,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.72.3'
+    source-tag: '2.74.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -531,7 +531,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.6.6'
+    source-tag: '4.8.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -614,7 +614,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.1.4'
+    source-tag: '1.2.0'
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -788,7 +788,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.5.1'
+    source-tag: '5.6.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
