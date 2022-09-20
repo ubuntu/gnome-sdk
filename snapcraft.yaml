@@ -1181,6 +1181,7 @@ parts:
       - appstream
       - appstream-util
       - desktop-file-utils
+      - freeglut3
       - freeglut3-dev
       - gcc
       - gettext
@@ -1206,6 +1207,7 @@ parts:
       - libgcrypt20
       - libgcrypt20-dev
       - libgl1-mesa-dev
+      - libglu1-mesa
       - libglu1-mesa-dev
       - libgmp10
       - libgnutls28-dev
