@@ -1156,7 +1156,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.1.0'
+    source-tag: '4.2.0'
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
