@@ -19,10 +19,12 @@ Forwarded: not-needed
  src/stylesheet/_defaults.scss                    |   7 +-
  src/stylesheet/_palette-yaru.scss                |  97 +++++++++++
  src/stylesheet/adwaita-stylesheet.gresources.xml |   1 +
- src/stylesheet/meson.build                       |  82 ++++++++-
- src/stylesheet/yaru_accent_colors.scss           |  39 +++++
- 9 files changed, 476 insertions(+), 11 deletions(-)
+ src/stylesheet/meson.build                       |  86 ++++++++-
+ src/stylesheet/sass-utils.scss                   | 212 +++++++++++++++++++++++
+ src/stylesheet/yaru_accent_colors.scss           |  48 +++++
+ 10 files changed, 701 insertions(+), 11 deletions(-)
  create mode 100644 src/stylesheet/_palette-yaru.scss
+ create mode 100644 src/stylesheet/sass-utils.scss
  create mode 100644 src/stylesheet/yaru_accent_colors.scss
 
 diff --git a/meson_options.txt b/meson_options.txt
@@ -49,7 +51,7 @@ index bab0962..87ebea6 100644
 +
  G_END_DECLS
 diff --git a/src/adw-settings.c b/src/adw-settings.c
-index 12e908d..067ba0f 100644
+index f2bb4d4..3ce2486 100644
 --- a/src/adw-settings.c
 +++ b/src/adw-settings.c
 @@ -35,6 +35,7 @@ struct _AdwSettings
@@ -60,7 +62,7 @@ index 12e908d..067ba0f 100644
  
    gboolean has_high_contrast;
    gboolean has_color_scheme;
-@@ -53,6 +54,7 @@ enum {
+@@ -62,6 +63,7 @@ enum {
    PROP_SYSTEM_SUPPORTS_COLOR_SCHEMES,
    PROP_COLOR_SCHEME,
    PROP_HIGH_CONTRAST,
@@ -68,7 +70,7 @@ index 12e908d..067ba0f 100644
    LAST_PROP,
  };
  
-@@ -499,6 +501,194 @@ init_legacy (AdwSettings *self)
+@@ -549,6 +551,194 @@ init_legacy (AdwSettings *self)
                              self);
  }
  
@@ -263,7 +265,7 @@ index 12e908d..067ba0f 100644
  static void
  adw_settings_constructed (GObject *object)
  {
-@@ -517,6 +707,8 @@ adw_settings_constructed (GObject *object)
+@@ -570,6 +760,8 @@ adw_settings_constructed (GObject *object)
  
    if (!self->has_high_contrast)
      init_legacy (self);
@@ -272,7 +274,7 @@ index 12e908d..067ba0f 100644
  }
  
  static void
-@@ -527,6 +719,7 @@ adw_settings_dispose (GObject *object)
+@@ -580,6 +772,7 @@ adw_settings_dispose (GObject *object)
    g_clear_object (&self->settings_portal);
    g_clear_object (&self->interface_settings);
    g_clear_object (&self->a11y_settings);
@@ -280,7 +282,7 @@ index 12e908d..067ba0f 100644
  
    G_OBJECT_CLASS (adw_settings_parent_class)->dispose (object);
  }
-@@ -552,6 +745,10 @@ adw_settings_get_property (GObject    *object,
+@@ -605,6 +798,10 @@ adw_settings_get_property (GObject    *object,
      g_value_set_boolean (value, adw_settings_get_high_contrast (self));
      break;
  
@@ -291,21 +293,21 @@ index 12e908d..067ba0f 100644
    default:
      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
    }
-@@ -588,6 +785,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
+@@ -635,6 +832,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
                            FALSE,
-                           G_PARAM_READABLE);
+                           G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
  
 +  props[PROP_YARU_ACCENT] =
 +    g_param_spec_string ("yaru-accent",
 +                         "Yaru Accent",
 +                         "Yaru Accent",
 +                         NULL,
-+                         G_PARAM_READABLE);
++                         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 +
    g_object_class_install_properties (object_class, LAST_PROP, props);
  }
  
-@@ -678,6 +882,8 @@ adw_settings_end_override (AdwSettings *self)
+@@ -727,6 +931,8 @@ adw_settings_end_override (AdwSettings *self)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_COLOR_SCHEME]);
    if (notify_hc)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
@@ -314,7 +316,7 @@ index 12e908d..067ba0f 100644
  }
  
  void
-@@ -732,3 +938,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
+@@ -781,3 +987,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
  
    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
  }
@@ -325,7 +327,7 @@ index 12e908d..067ba0f 100644
 +  return self->yaru_accent;
 +}
 diff --git a/src/adw-style-manager.c b/src/adw-style-manager.c
-index ae1a858..c83d84b 100644
+index 1c896c0..803c073 100644
 --- a/src/adw-style-manager.c
 +++ b/src/adw-style-manager.c
 @@ -161,18 +161,48 @@ update_stylesheet (AdwStyleManager *self)
@@ -394,7 +396,7 @@ index ae1a858..c83d84b 100644
    update_dark (self);
    update_stylesheet (self);
 diff --git a/src/stylesheet/_defaults.scss b/src/stylesheet/_defaults.scss
-index 1435566..6593f0e 100644
+index e313d5f..22719e8 100644
 --- a/src/stylesheet/_defaults.scss
 +++ b/src/stylesheet/_defaults.scss
 @@ -8,10 +8,13 @@
@@ -529,10 +531,10 @@ index 98a07ac..0d86a06 100644
      <file>assets/bullet-symbolic.symbolic.png</file>
      <file>assets/bullet@2-symbolic.symbolic.png</file>
 diff --git a/src/stylesheet/meson.build b/src/stylesheet/meson.build
-index 2c0fa82..41d9e14 100644
+index 2c0fa82..9f00c78 100644
 --- a/src/stylesheet/meson.build
 +++ b/src/stylesheet/meson.build
-@@ -2,14 +2,60 @@ fs = import('fs')
+@@ -2,17 +2,67 @@ fs = import('fs')
  
  stylesheet_deps = []
  
@@ -594,7 +596,14 @@ index 2c0fa82..41d9e14 100644
    if sassc.found()
      sassc_opts = [ '-a', '-M', '-t', 'compact' ]
  
-@@ -72,10 +118,21 @@ if not fs.exists('base.css')
++    if build_yaru_accent_colors
++      sassc_opts += [ '-I', meson.current_source_dir() ]
++    endif
++
+     scss_deps = files([
+       '_colors.scss',
+       '_common.scss',
+@@ -72,10 +122,21 @@ if not fs.exists('base.css')
        'defaults-dark',
      ]
  
@@ -619,7 +628,7 @@ index 2c0fa82..41d9e14 100644
          command: [
            sassc, sassc_opts, '@INPUT@', '@OUTPUT@',
          ],
-@@ -85,9 +142,24 @@ if not fs.exists('base.css')
+@@ -85,9 +146,24 @@ if not fs.exists('base.css')
    endif
  endif
  
@@ -645,12 +654,230 @@ index 2c0fa82..41d9e14 100644
  
    source_dir: [
      # List in order of preference
+diff --git a/src/stylesheet/sass-utils.scss b/src/stylesheet/sass-utils.scss
+new file mode 100644
+index 0000000..f7ea2c9
+--- /dev/null
++++ b/src/stylesheet/sass-utils.scss
+@@ -0,0 +1,212 @@
++// Copyright © 2022, Canonical Ltd
++//
++// This program is free software; you can redistribute it and/or
++// modify it under the terms of the GNU Lesser General Public
++// License as published by the Free Software Foundation; either
++// version 2.1 of the License, or (at your option) any later version.
++//
++// This program is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++// Lesser General Public License for more details.
++//
++// You should have received a copy of the GNU Lesser General Public
++// License along with this library. If not, see <http://www.gnu.org/licenses/>.
++// Authors:
++//       Marco Trevisan <marco.trevisan@canonical.com>
++
++@function str-contains($str, $substring) {
++    @return str-index($str, $substring) != null;
++}
++
++@function str-starts-with($str, $substring) {
++    @return str-index($str, $substring) == 1;
++}
++
++@function str-ends-with($str, $substring) {
++    $index: str-index($str, $substring);
++    @if ($index == null) {
++        @return false;
++    }
++
++    @return ($index + str-length($substring) - 1) == str-length($str);
++}
++
++@function str-basename($str, $divider: '/') {
++    $index: str-index($str, $divider);
++
++    @while $index != null {
++        $str: str-slice($str, $index + 1);
++        $index: str-index($str, $divider);
++    }
++
++    @return $str;
++}
++
++@function str-extension($str) {
++    $extension: str-basename($str, '.');
++    @return if($extension == $str, null, $extension);
++}
++
++@function str-dirname($str, $divider: '/') {
++    $str_copy: $str;
++    $index: str-index($str, $divider);
++    $last_index: null;
++
++    @while $index != null {
++        $str: str-slice($str, $index + 1);
++        $last_index: if($last_index, $last_index, 0) + $index;
++        $index: str-index($str, $divider);
++    }
++
++    @return if($last_index, str-slice($str_copy, 1, $last_index - 1), '.');
++}
++
++@function list-length($list) {
++    @return length($list);
++}
++
++@function list-nth($list, $nth) {
++    $length: length($list);
++    @if ($length == 0 or abs($nth) > $length) {
++        @return null;
++    }
++
++    @if ($nth >= 0) {
++        $nth: $nth + 1;
++    }
++
++    @return nth($list, $nth);
++}
++
++@function list-index($list, $item) {
++    $i: 0;
++    @each $e in $list {
++        @if ($e == $item) {
++            @return $i;
++        }
++
++        $i: $i + 1;
++    }
++
++    @return null;
++}
++
++@function pow($base, $exponent, $root: 1) {
++    @if ($exponent == 0) {
++        @return 1;
++    }
++
++    @if ($base == 0) {
++        @return 0;
++    }
++
++    @if ($root != 1) {
++        @if ($exponent == $root) {
++            @return $base;
++        }
++        $base: nth-root($base, $root);
++    }
++
++    @if $exponent < 0 {
++        $base: 1 / $base;
++        $exponent: -$exponent;
++    } @else if ($exponent % 2 == 0) {
++        $half-pow: pow($base, $exponent / 2);
++        @return $half-pow * $half-pow;
++    }
++
++    $i: 1;
++    $val: $base;
++    @while ($i < $exponent) {
++        $val: $val * $base;
++        $i: $i + 1;
++    }
++
++    @return $val;
++}
++
++@function nth-root($value, $n, $max_iterations: 100) {
++    @if ($n <= 0) {
++        @error "Not supported"
++    }
++
++    @if ($n == 1 or $value == 0) {
++        @return $value;
++    }
++
++    $i: 1;
++    $pre-val: 1;
++    @while ($i < $max_iterations) {
++        $val: (1.0 / $n) * ((($n - 1) * $pre-val) + $value / pow($pre-val, $n - 1));
++
++        @if ($pre-val == $val) {
++            @return $val;
++        }
++
++        $pre-val: $val;
++        $i: $i + 1;
++    }
++
++    @error ("Failed to compute " + $n + "th root of " + $value + " in " +
++            $max_iterations + " iterations");
++}
++
++@function truncate($value, $decimals: 10) {
++    @if ($decimals < 0) {
++        @error "Not supported"
++    }
++
++    $multiplier: pow(10, $decimals);
++    @return floor($value * $multiplier) / $multiplier;
++}
++
++// Credits to https://css-tricks.com/snippets/sass/luminance-color-function/
++@function luminance($color) {
++    $colors: (
++        'red': red($color),
++        'green': green($color),
++        'blue': blue($color)
++    );
++
++    @each $name, $value in $colors {
++        $adjusted: 0;
++        $value: $value / 255;
++
++        @if $value < 0.03928 {
++            $value: $value / 12.92;
++        } @else {
++            $value: ($value + .055) / 1.055;
++            $value: pow($value, 12, 5);
++        }
++
++        $colors: map-merge($colors, ($name: $value));
++    }
++
++    @return ((map-get($colors, 'red') * .2126) +
++             (map-get($colors, 'green') * .7152) +
++             (map-get($colors, 'blue') * .0722));
++}
++
++@function color-contrast($color1, $color2) {
++    $c1-luminance: luminance($color1);
++    $c2-luminance: luminance($color2);
++
++    $lighter-luminance: max($c1-luminance, $c2-luminance);
++    $darker-luminance: min($c1-luminance, $c2-luminance);
++
++    @return ($lighter-luminance + 0.05) / ($darker-luminance + 0.05);
++}
++
++@function optimize-contrast($bg, $fg, $large-text: false, $target: 4.5) {
++    @if ($large-text and $target == 4.5) {
++        $target: 3;
++    }
++
++    $dark-bg: luminance($bg) < luminance($fg);
++    @while (color-contrast($bg, $fg) < $target) {
++        $fg: if($dark-bg, lighten($fg, 0.1), darken($fg, 0.1));
++    }
++
++    @return $fg;
++}
 diff --git a/src/stylesheet/yaru_accent_colors.scss b/src/stylesheet/yaru_accent_colors.scss
 new file mode 100644
-index 0000000..d826acf
+index 0000000..0b662af
 --- /dev/null
 +++ b/src/stylesheet/yaru_accent_colors.scss
-@@ -0,0 +1,39 @@
+@@ -0,0 +1,48 @@
 +// Keep this in sync with
 +//   https://github.com/ubuntu/yaru/blob/master/common/accent-colors.scss.in
 +
@@ -689,4 +916,13 @@ index 0000000..d826acf
 +$accent_color: $yaru_accent_bg_color;
 +@debug("Accent color is " + $yaru_accent_bg_color);
 +
-+@import '@yaru_theme_entry_point@'
++@import '@yaru_theme_entry_point@';
++
++// Optimize accent-color definition for default background colors
++@import 'sass-utils';
++
++@if str-contains('@yaru_theme_entry_point@', 'stylesheet/defaults') {
++    $yaru-view-bg-color: if($variant == 'light', #ffffff, #1e1e1e);
++    $yaru-accent-color: optimize-contrast($yaru-view-bg-color, $yaru_accent_bg_color);
++    @define-color accent_color #{$yaru-accent-color};
++}
