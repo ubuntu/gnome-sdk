@@ -122,7 +122,7 @@ parts:
       - gir1.2-vte-2.91
       - ibus-gtk3
       - libappindicator3-1
-      - libindicator3-7
+      - libayatana-appindicator3-1
       - libasound2
       - libasyncns0
       - libavahi-client3
