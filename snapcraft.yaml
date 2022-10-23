@@ -1186,7 +1186,6 @@ parts:
       - gcc
       - gettext
       - itstool
-      - libappindicator3-dev
       - libayatana-appindicator3-dev
       - libblkid1
       - libbrotli-dev
