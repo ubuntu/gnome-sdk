@@ -26,8 +26,6 @@ parts:
       - usr
       - lib/$CRAFT_ARCH_TRIPLET/*
       - etc/gnome/*
-      - usr/share/libdrm/amdgpu.ids
-
       - -etc/emacs
       - -etc/X11/Xreset.d/README
       - -etc/fonts/conf.d/README
