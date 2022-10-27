@@ -60,6 +60,10 @@ parts:
     build-environment: *buildenv
     build-environment:
       - CFLAGS: -Wno-nonnull
+    override-pull: |
+      set -eux
+      snapcraftctl pull
+      patch -p1 < $SNAPCRAFT_PROJECT_DIR/patches/check-for-snap-plugs-before-accessing-portals.patch
     override-build: |
       set -eux
       snapcraftctl build
