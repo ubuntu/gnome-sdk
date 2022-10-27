@@ -87,7 +87,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.74.1'
+    source-tag: '2.74.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -95,6 +95,10 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
+    override-pull: |
+      set -eux
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/check-for-snap-plugs-before-accessing-portals.patch
     override-build: |
       set -eux
       craftctl default
@@ -1198,6 +1202,7 @@ parts:
       - libdbus-1-dev
       - libdrm2
       - libdrm-dev
+      - libdrm-common
       - libegl-mesa0
       - libegl1-mesa-dev
       - libexpat1
