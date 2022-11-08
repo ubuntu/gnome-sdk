@@ -268,7 +268,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '5.3.0' # developers declared that they won't break ABI
+    source-tag: '5.2.0'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
