@@ -1188,6 +1188,7 @@ parts:
       - itstool
       - libayatana-appindicator3-dev
       - libblkid1
+      - libbrotli1
       - libbrotli-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
@@ -1195,12 +1196,14 @@ parts:
       - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
+      - libdrm2
       - libdrm-dev
       - libegl-mesa0
       - libegl1-mesa-dev
       - libexpat1
       - libevdev2
       - libfontconfig1-dev
+      - libfreetype6
       - libgbm-dev
       - libgraphene-1.0-dev
       - libgcr-3-dev
@@ -1238,6 +1241,7 @@ parts:
       - libpcre2-8-0
       - libpcre3
       - libpcre3-dev
+      - libpng16-16
       - libpulse0
       - libpulse-dev
       - libwrap0
