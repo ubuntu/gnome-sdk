@@ -76,6 +76,9 @@ parts:
     after: [ libtool, meson-deps ]
     source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
     source-tag: 'meson-3.2.9999.4'
+# ext:updatesnap
+#   version-format:
+#     format: 'meson-%M.%m.%R'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -88,6 +91,9 @@ parts:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
     source-tag: '2.74.3'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -115,6 +121,9 @@ parts:
     after: [ glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
     source-tag: 'pixman-0.40.0'
+# ext:updatesnap
+#   version-format:
+#     format: 'pixman-%M.%m.%R'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -230,6 +239,10 @@ parts:
     after: [ atk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
     source-tag: 'AT_SPI2_CORE_2_44_1'
+# ext:updatesnap
+#   version-format:
+#     format: 'AT_SPI2_CORE_%M_%m_%R'
+#     lower-than: 2.45
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -247,6 +260,10 @@ parts:
     after: [ at-spi2-core, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
     source-tag: 'AT_SPI2_ATK_2_38_0'
+# ext:updatesnap
+#   version-format:
+#     format: 'AT_SPI2_ATK_%M_%m_%R'
+#     lower-than: 2.39
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -423,6 +440,9 @@ parts:
     after: [ libpsl, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-tag: '2.74.3'
+# ext:updatesnap
+#   version-format:
+#     lower-than: 3
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -460,6 +480,10 @@ parts:
     after: [ libsoup3 ]
     source: https://gitlab.gnome.org/GNOME/librest.git
     source-tag: '0.8.1'  # looks like this branch has been updated more recently than the 0.8 tags - weird
+# ext:updatesnap
+#   version-format:
+#     same-major: true
+#     same-minor: true
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
@@ -496,6 +520,10 @@ parts:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.35'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
+#     lower-than: 4
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -536,6 +564,9 @@ parts:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '4.8.2'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -594,6 +625,9 @@ parts:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
     source-tag: 'poppler-22.10.0'
+# ext:updatesnap
+#   version-format:
+#     format: 'poppler-%M.%m.%R'
     source-depth: 1
     plugin: cmake
     cmake-parameters:
@@ -676,6 +710,9 @@ parts:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
     source-tag: '2.66.5' # maximum version useful for gtkmm-3.24.
+# ext:updatesnap
+#   version-format:
+#     lower-than: '2.67.0'
     plugin: autotools
     override-build: |
       set -eux
@@ -712,6 +749,9 @@ parts:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
     source-tag: '1.14.4' # maximum version useful for gtkmm-3.24
+# ext:updatesnap
+#   version-format:
+#     lower-than: '1.15.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -728,6 +768,9 @@ parts:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.46.3' # maximum version useful for gtkmm-3.24
+# ext:updatesnap
+#   version-format:
+#     lower-than: '2.47.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -751,6 +794,9 @@ parts:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
     source-tag: '2.28.3' # maximum version useful for gtkmm-3.24
+# ext:updatesnap
+#   version-format:
+#     lower-than: '2.29.0'
     plugin: autotools
     override-build: |
       set -eux
@@ -853,6 +899,9 @@ parts:
     after: [ gsound, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
     source-tag: '42.0'
+# ext:updatesnap
+#   version-format:
+#     same-major: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -870,6 +919,9 @@ parts:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
     source-tag: '42.6'
+# ext:updatesnap
+#   version-format:
+#     same-major: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1022,6 +1074,9 @@ parts:
     after: [ clutter-gtk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
     source-tag: 'libpeas-1.34.0' # developers say that they don't want to break ABI, so it should be safe to always update
+# ext:updatesnap
+#   version-format:
+#     format: 'libpeas-%M.%m.%R'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1133,6 +1188,10 @@ parts:
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
     source-tag: '1.8.2'
+# ext:updatesnap
+#   version-format:
+#     same-major: true
+#     ignore-odd-minor: true
     plugin: meson
     meson-parameters:
       - --prefix=/usr
