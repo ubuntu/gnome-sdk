@@ -1,9 +1,23 @@
 name: gnome-42-2204-sdk
 version: git
-summary: Shared GNOME 42 Ubuntu stack
+summary: Shared GNOME 42 Ubuntu stack SDK
 description: |
- This snap contains only the necessary libraries required by
- GNOME applications.
+  This snap contains the GNOME 42 development files. These are used during the build process of snaps that depend on the GNOME 42 stack. This helps developers to make sure their application is built against the correct verson of GNOME and GTK libraries.  
+  
+  **For users**
+
+  This snap is automatically installed and removed when needed. **Manually adding or removing this snap is not recommended** and might break things.
+
+  * If you are having issues with **snaps** using GNOME, please contact the experts on the Snapcraft forum: https://forum.snapcraft.io/
+  * If you want to install the GNOME Desktop Environment, then you are in the wrong place. Please take a look at https://www.gnome.org/ for more information on how to get it.
+
+  **For developers**
+
+  * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
+  * You can report issues with this SDK snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
+  * The source code of this snap is available on GitHub in the `gnome-42-2204-sdk` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-42-2204-sdk
+  * This snap is used for building snaps of applications using GNOME or GTK. If you are looking for instructions on how to build GNOME applications instead, take a look at https://developer.gnome.org/
+contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
 grade: stable
