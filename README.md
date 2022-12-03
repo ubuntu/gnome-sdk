@@ -1,1 +1,1 @@
-git clone -b gnome-3-34-1804 https://gitlab.gnome.org/Community/Ubuntu/gnome-sdk.git gnome-3-34-1804
+git clone -b gnome-42-2204 https://github.com/ubuntu/gnome-sdk.git gnome-42-2204
