@@ -2,8 +2,22 @@ name: gnome-42-2204
 version: git
 summary: Shared GNOME 42 Ubuntu stack
 description: |
- This snap includes a GNOME 42 stack (the base libraries and desktop 
- integration components) and shares it through the content interface. 
+  This snap provides the GNOME 42 stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
+
+  **For users**
+
+  This snap is automatically installed and removed when needed. **Manually adding or removing this snap is not recommended** and might break things.
+
+  * If you are having issues with **snaps** using GNOME, please contact the experts on the Snapcraft forum: https://forum.snapcraft.io/
+  * If you want to install the GNOME Desktop Environment, then you are in the wrong place. Please take a look at https://www.gnome.org/ for more information on how to get it.
+
+  **For developers**
+
+  * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
+  * You can report issues with this content snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
+  * The source code of this snap is available on GitHub in the `gnome-42-2204` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-42-2204
+contact: https://github.com/ubuntu/gnome-sdk/issues
+
 confinement: strict
 grade: stable
 icon: icon.png
