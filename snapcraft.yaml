@@ -133,7 +133,6 @@ parts:
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
       - ibus-gtk3
-      - libappindicator3-1
       - libayatana-appindicator3-1
       - libasound2
       - libasyncns0
