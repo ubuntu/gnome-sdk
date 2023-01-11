@@ -57,7 +57,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '0.64.1'
+    source-tag: '1.0.0'
     override-build: |
       python3 -m pip install .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
@@ -104,7 +104,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.74.3'
+    source-tag: '2.74.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -180,6 +180,9 @@ parts:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
     source-tag: '1.74.0'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -435,7 +438,7 @@ parts:
   libpsl:
     after: [ json-glib ]
     source: https://github.com/rockdaboot/libpsl.git
-    source-tag: '0.21.1'
+    source-tag: '0.21.2'
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -521,7 +524,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.30'
+    source-tag: '1.31'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -533,7 +536,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.35'
+    source-tag: '3.24.36'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -577,7 +580,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.8.2'
+    source-tag: '4.8.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -666,7 +669,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.2.0'
+    source-tag: '1.2.1'
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -703,7 +706,7 @@ parts:
   mm-common:
     after: [ libportal, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
-    source-tag: '1.0.4'
+    source-tag: '1.0.5'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -852,7 +855,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.6.1'
+    source-tag: '5.6.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -932,7 +935,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '42.6'
+    source-tag: '42.8'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
