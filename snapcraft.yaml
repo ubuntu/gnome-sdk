@@ -104,7 +104,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.74.4'
+    source-tag: '2.74.5'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -134,7 +134,7 @@ parts:
   pixman:
     after: [ glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
-    source-tag: 'pixman-0.40.0'
+    source-tag: 'pixman-0.42.2'
 # ext:updatesnap
 #   version-format:
 #     format: 'pixman-%M.%m.%R'
@@ -641,7 +641,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-22.10.0'
+    source-tag: 'poppler-22.12.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -856,6 +856,9 @@ parts:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
     source-tag: '5.6.2'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -982,7 +985,7 @@ parts:
   libinput:
     after: [ cogl, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.21.0'
+    source-tag: '1.22.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1115,7 +1118,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.21.0'
+    source-tag: 'v1.23.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
