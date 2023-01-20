@@ -73,7 +73,10 @@ parts:
     source: https://git.savannah.gnu.org/git/libtool.git
     source-tag: 'v2.4.7'
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - help2man
@@ -205,7 +208,10 @@ parts:
     source: https://gitlab.gnome.org/GNOME/vala.git
     source-tag: '0.56.3'
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - autoconf-archive
@@ -218,7 +224,10 @@ parts:
     source-tag: '0.20.6'
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -315,6 +324,8 @@ parts:
       - --enable-introspection
       - --with-gobject
       - --enable-static
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -396,6 +407,8 @@ parts:
       - --enable-introspection=yes
       - --enable-vala=yes
       - --enable-pixbuf-loader
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - cargo
@@ -444,6 +457,8 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --enable-runtime=libidn2
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - libidn2-0-dev
@@ -503,7 +518,10 @@ parts:
 #     same-minor: true
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
@@ -747,7 +765,7 @@ parts:
 
       # Manual build of glibmm
       cd $CRAFT_PART_BUILD
-      ./autogen.sh --prefix=/usr
+      ./autogen.sh --prefix=/usr CFLAGS="-O3 -g" CCFLAGS="-O3 -g"
       make -j8
       make install DESTDIR=$CRAFT_PART_INSTALL
       for f in `find $CRAFT_PART_INSTALL/usr/lib |grep \\.la`; do
@@ -818,7 +836,7 @@ parts:
     override-build: |
       set -eux
       cd $CRAFT_PART_BUILD
-      ./autogen.sh --prefix=/usr
+      ./autogen.sh --prefix=/usr CFLAGS="-O3 -g" CCFLAGS="-O3 -g"
       make -j8
       make install DESTDIR=$CRAFT_PART_INSTALL
     build-environment:
@@ -894,7 +912,11 @@ parts:
     after: [ libdazzle ]
     source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr, --with-builtin=pulse ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --with-builtin=pulse
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - libasound2-dev
@@ -974,6 +996,8 @@ parts:
       - --enable-xlib-egl-platform
       - --enable-gles2
       - --with-gles2-libname=libGLESv2.so.2
+      - CFLAGS="-O3 -g"
+      - CCFLAGS="-O3 -g"
     build-environment: *buildenv
     build-packages:
       - libgbm-dev
