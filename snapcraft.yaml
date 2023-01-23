@@ -1257,6 +1257,19 @@ parts:
     build-packages:
       - gir1.2-glib-2.0
 
+  webp-pixbuf-loader:
+    after: [meson-deps, gdk-pixbuf]
+    source: https://github.com/aruiz/webp-pixbuf-loader.git
+    source-tag: '0.0.7'
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+    build-packages:
+      - libwebp-dev
+
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
     plugin: nil
@@ -1379,6 +1392,7 @@ parts:
       - python3.10-venv
       - shared-mime-info
       - zlib1g-dev
+      - libwebp-dev
     override-build: |
       set -eux
       craftctl default
