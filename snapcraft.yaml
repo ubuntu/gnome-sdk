@@ -304,28 +304,30 @@ parts:
     build-environment: *buildenv
 
   harfbuzz:
-    after: [ fribidi ]
+    after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
     source-tag: '5.3.1' # developers declared that they won't break ABI
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --with-graphite2=yes
-      - --enable-introspection
-      - --with-gobject
-      - --enable-static
+      - -Dgraphite2=enabled
+      - -Dintrospection=enabled
+      - -Dgobject=enabled
+      - -Doptimization=3
+      - -Ddebug=true
+      - --default-library=both
     build-environment: *buildenv
     override-build: |
       set -eux
       craftctl default
-      for PC in $CRAFT_PART_INSTALL/usr/lib/pkgconfig/harfbuzz*.pc;
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/harfbuzz*.pc;
       do
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
-      for f in `find $CRAFT_PART_INSTALL/usr/lib |grep \\.la`; do
+      for f in `find $CRAFT_PART_INSTALL/usr/$CRAFT_ARCH_TRIPLETlib |grep \\.la`; do
         sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
       done
 
@@ -436,14 +438,17 @@ parts:
     build-environment: *buildenv
 
   libpsl:
-    after: [ json-glib ]
+    after: [ json-glib, meson-deps ]
     source: https://github.com/rockdaboot/libpsl.git
     source-tag: '0.21.2'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --enable-runtime=libidn2
+      - -Druntime=libidn2
+      #- -Dtests=false # available in master, not in 0.21.2
+      - -Doptimization=3
+      - -Ddebug=true
     build-environment: *buildenv
     build-packages:
       - libidn2-0-dev
@@ -894,7 +899,9 @@ parts:
     after: [ libdazzle ]
     source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr, --with-builtin=pulse ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --with-builtin=pulse
     build-environment: *buildenv
     build-packages:
       - libasound2-dev
