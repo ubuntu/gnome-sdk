@@ -327,7 +327,7 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
-      for f in `find $CRAFT_PART_INSTALL/usr/$CRAFT_ARCH_TRIPLETlib |grep \\.la`; do
+      for f in `find $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET |grep \\.la`; do
         sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
       done
 
