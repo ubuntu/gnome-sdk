@@ -306,7 +306,7 @@ parts:
   harfbuzz:
     after: [ fribidi ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '5.3.1' # developers declared that they won't break ABI
+    source-tag: '6.0.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -477,7 +477,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.0.8'
+    source-tag: '3.2.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -641,7 +641,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-22.12.0'
+    source-tag: 'poppler-23.01.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
