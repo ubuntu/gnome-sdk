@@ -164,6 +164,7 @@ parts:
       - libgstreamer-plugins-good1.0-0
       - libgstreamer1.0-0
       - libgtk3-nocsd0
+      - libgtksourceview-3.0-1
       - libgvc6
       - libicu70
       - libinput10
@@ -171,6 +172,7 @@ parts:
       - libjpeg-turbo8
       - liblcms2-2
       - libllvm11
+      - libmozjs-91-0
       - libmpc3
       - libmpfr6
       - libmtdev1
@@ -178,7 +180,9 @@ parts:
       - libpathplan4
       - libpng16-16
       - libpulse0
+      - libpython3.10
       - librsvg2-2
+      - libsigc++-2.0-0v5
       - libsndfile1
       - libthai0
       - libtiff5
@@ -211,14 +215,11 @@ parts:
       - locales-all
       - python3-dbus
       - python3-gi
+      - python3.10-minimal
       - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
       - xdg-user-dirs
-      - libgtksourceview-3.0-1
-      - libmozjs-91-0
-      - libsigc++-2.0-0v5
-      - libpython3.10
       # VA-API drivers for HW-accelerated video decoding
       - mesa-va-drivers
       - on amd64:
