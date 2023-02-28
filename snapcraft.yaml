@@ -57,7 +57,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.0.0'
+    source-tag: '1.0.1'
     override-build: |
       python3 -m pip install .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
@@ -104,7 +104,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.74.5'
+    source-tag: '2.74.6'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -150,7 +150,7 @@ parts:
   cairo:
     after: [ pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
-    source-tag: '1.17.6'
+    source-tag: '1.17.6' # 1.17.8 fails to build, so... maybe in core24, or 1.17.9
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -203,7 +203,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.3'
+    source-tag: '0.56.4'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -338,7 +338,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.12'
+    source-tag: '1.50.13'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -646,7 +646,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.01.0'
+    source-tag: 'poppler-23.02.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -674,7 +674,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.2.1'
+    source-tag: '1.2.2'
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -837,6 +837,9 @@ parts:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
     source-tag: '3.24.7'
+# ext:updatesnap
+#   version-format:
+#     lower-than: 4
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -945,7 +948,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '42.8'
+    source-tag: '42.9'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -1149,7 +1152,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-tag: '1.8.0'
+    source-tag: '1.8.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1166,6 +1169,9 @@ parts:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
     source-tag: '1.72.3'
+# ext:updatesnap
+#   version-format:
+#     same-minor
     source-depth: 1
     plugin: meson
     meson-parameters:
