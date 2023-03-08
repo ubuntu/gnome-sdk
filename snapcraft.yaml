@@ -163,7 +163,7 @@ parts:
       - valac
       - libgraphviz-dev
 
-  gee: 
+  gee:
     after: [ vala ]
     source: https://gitlab.gnome.org/GNOME/libgee.git
     source-tag: '0.20.4'
@@ -510,7 +510,7 @@ parts:
     plugin: autotools
     override-build: |
       set -eux
-    
+
       # Make sure all of the *.am files from mm-common are found
       mkdir -p /usr/bin
       mkdir -p /usr/share/mm-common/build/
@@ -732,8 +732,17 @@ parts:
       - xvfb
       - libgstreamer-plugins-base1.0-dev
 
-  libinput:
+  libcheck:
     after: [ cogl ]
+    source: https://github.com/libcheck/check.git
+    source-depth: 1
+    plugin: autotools
+    autotools-configure-parameters:
+      - --prefix=/usr
+    build-environment: *buildenv
+
+  libinput:
+    after: [ cogl, libcheck ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
     source-depth: 1
     plugin: meson
@@ -744,7 +753,6 @@ parts:
       - -Ddocumentation=false
     build-environment: *buildenv
     build-packages:
-      - check
       - libmtdev-dev
       - libudev-dev
       - libevdev-dev
