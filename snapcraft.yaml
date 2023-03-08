@@ -742,6 +742,7 @@ parts:
       - -Ddebug=true
       - -Doptimization=3
       - -Ddocumentation=false
+      - -Dtests=false
     build-environment: *buildenv
     build-packages:
       - check
