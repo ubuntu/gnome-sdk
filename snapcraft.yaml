@@ -1171,7 +1171,7 @@ parts:
     source-tag: '1.72.3'
 # ext:updatesnap
 #   version-format:
-#     same-minor
+#     same-minor: true
     source-depth: 1
     plugin: meson
     meson-parameters:
