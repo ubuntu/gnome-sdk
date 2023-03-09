@@ -1158,7 +1158,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.42.2'
+    source-tag: '3.43.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
