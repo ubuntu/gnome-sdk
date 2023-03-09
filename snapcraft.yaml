@@ -615,7 +615,10 @@ parts:
       - -Dbuild-examples=false
       - -Dbuild-tests=false
       - -Dmedia-gstreamer=disabled
-      - -Dinstall-tests=false
+      - -Ddemos=false
+      - -Dbuild-testsuite=false
+      - -Dbuild-examples=false
+      - -Dbuild-tests=false
       - -Dprint-cups=enabled
     build-environment: *buildenv
     organize:
