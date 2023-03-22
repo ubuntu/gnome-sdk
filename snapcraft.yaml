@@ -250,11 +250,11 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
-      update-mime-database $CRAFT_STAGE/usr/share/mime
+      /usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
+      /usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
       for dir in $CRAFT_STAGE/usr/share/icons/*; do
         if [ -f "$dir/index.theme" ]; then
-          gtk-update-icon-cache --force "$dir"
+          /usr/bin/gtk-update-icon-cache --force "$dir"
         fi
       done
 
