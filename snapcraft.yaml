@@ -247,14 +247,16 @@ parts:
       - gtk-update-icon-cache
       - libglib2.0-bin
       - shared-mime-info
+    build-environment:
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     override-build: |
       set -eux
       craftctl default
-      /usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
-      /usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
+      $CRAFT_STAGE/usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
+      $CRAFT_STAGE/usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
       for dir in $CRAFT_STAGE/usr/share/icons/*; do
         if [ -f "$dir/index.theme" ]; then
-          /usr/bin/gtk-update-icon-cache --force "$dir"
+          $CRAFT_STAGE/usr/bin/gtk-update-icon-cache --force "$dir"
         fi
       done
 
