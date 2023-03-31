@@ -24,6 +24,13 @@ icon: icon.png
 base: core22
 compression: lzo
 
+package-repositories:
+  - type: apt
+    ppa: ubuntu-concept/x13s
+
+architectures:
+  - arm64
+
 # the recommended mountpoint for that content is /gnome-platform
 slots:
     gnome-42-2204:
@@ -32,259 +39,25 @@ slots:
         - /
 
 parts:
-  gnome-sdk:
+  gnome:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/edge ]
+    stage-snaps: [ gnome-42-2204/latest/edge ]
     stage:
-      - lib/*/bindtextdomain.so
-      - usr
-      - lib/$CRAFT_ARCH_TRIPLET/*
-      - etc/gnome/*
-      - -etc/emacs
-      - -etc/X11/Xreset.d/README
-      - -etc/fonts/conf.d/README
-      - -var/lib/aspell/README
-      - -var/lib/ispell/README
-      - -usr/share/dict/README.select-wordlist
-      - -usr/share/emacs
-      - -usr/share/gdb
-      - -usr/share/glade
-      - -usr/share/gobject-introspection-1.0
-      - -usr/share/gst-plugins-base
-      - -usr/share/gtk-doc
-      - -usr/share/help
-      - -usr/share/installed-tests
-      - -usr/share/maven-repo
-      - -usr/bin/dpkg*
-      - -usr/bin/$CRAFT_ARCH_TRIPLET-*
-      - -usr/bin/g-ir-*
-      - -usr/bin/glib-compile-*
-      - -usr/bin/glib-gettextize
-      - -usr/bin/glib-genmarshal
-      - -usr/bin/glib-mkenums
-      - -usr/bin/gtester*
-      - -usr/bin/gtk-builder-tool
-      - -usr/bin/gtk4-builder-tool
-      - -usr/bin/gtk-update-icon-cache
-      - -usr/bin/gtk4-update-icon-cache
-      - -usr/bin/h2ph
-      - -usr/bin/h2xs
-      - -usr/bin/make
-      - -usr/bin/make-first-existing-target
-      - -usr/bin/mm-common-get
-      - -usr/bin/mm-common-prepare
-      - -usr/bin/nm
-      - -usr/bin/objcopy
-      - -usr/bin/objdump
-      - -usr/bin/patch
-      - -usr/bin/peas-demo
-      - -usr/bin/pkg-config
-      - -usr/bin/pl2pm
-      - -usr/bin/pldd
-      - -usr/bin/prove
-      - -usr/bin/py3clean
-      - -usr/bin/ranlib
-      - -usr/bin/readelf
-      - -usr/bin/rpcgen
-      - -usr/bin/size
-      - -usr/bin/strings
-      - -usr/bin/strip
-      - -usr/bin/wayland-scanner
-      - -usr/bin/x86_64-pc-linux-gnu-pkg-config
-      - -usr/bin/xgettext
-      - -usr/bin/xsubpp
-
-      - -usr/**/*.a
-      - -usr/**/*.c
-      - -usr/**/*.cpp
-      - -usr/**/*.o
-      - -usr/**/*.h
-      - -usr/**/*.hpp
-      - -usr/**/*.pc
-
-      - -usr/bin/g++*
-      - -usr/bin/*-linux-gnu-g++*
-      - -usr/bin/gcc*
-      - -usr/bin/*-linux-gnu-gcc*
-      - -usr/bin/python*
-      - -usr/bin/vala*
-      - -usr/bin/vapi*
-
-      - -usr/include
-
-      - -usr/lib/*vala*
-
-      - -usr/share/perl
-      - -usr/share/vala*
-      - -usr/share/gir*
-
-      - -usr/bin/meson
-      - -usr/bin/ninja
-      - -usr/lib/python3/dist-packages/meson*
-      - -usr/share/devhelp/books
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/dri
+      - -usr/lib/aarch64-linux-gnu/libEGL_mesa.so.0.0.0
+      - -usr/lib/aarch64-linux-gnu/libgbm.so.1.0.0
+      - -usr/lib/aarch64-linux-gnu/libglapi.so.0.0.0
+      - -usr/lib/aarch64-linux-gnu/libwayland-client.so.0
+      - -usr/lib/aarch64-linux-gnu/libwayland-server.so.0
 
   debs:
-    after: [ gnome-sdk ]
+    after: [ gnome ]
     plugin: nil
     stage-packages:
-      - fcitx-frontend-gtk3
-      - fonts-noto-color-emoji
-      - gir1.2-ggit-1.0
-      - gir1.2-gucharmap-2.90
-      - gir1.2-vte-2.91
-      - ibus-gtk3
-      - libayatana-appindicator3-1
-      - libasound2
-      - libasyncns0
-      - libavahi-client3
-      - libavahi-common3
-      - libbrotli1
-      - libc-bin
-      - libcanberra-gtk3-module
-      - libcdt5
-      - libcgraph6
-      - libcolord2
-      - libcups2
-      - libdatrie1
-      - libdbus-glib-1-2
-      - libdb5.3
-      - libevdev2
-      - libflac8
-      - libfontconfig1
-      - libfreetype6
-      - libgck-1-0
-      - libgcr-base-3-1
-      - libgcr-ui-3-1
-      - libgl1
+      - libgbm1
+      - libegl-mesa0
+      - libglu1-mesa
       - libgl1-mesa-dri
-      - libgoa-1.0-0b
-      - libgraphite2-3
-      - libgspell-1-2
-      - libgstreamer-plugins-base1.0-0
-      - libgstreamer-plugins-good1.0-0
-      - libgstreamer1.0-0
-      - libgtk3-nocsd0
-      - libgtksourceview-3.0-1
-      - libgvc6
-      - libicu70
-      - libinput10
-      - libjbig0
-      - libjpeg-turbo8
-      - liblcms2-2
-      - libllvm11
-      - libmozjs-91-0
-      - libmpc3
-      - libmpfr6
-      - libmtdev1
-      - libogg0
-      - libpathplan4
-      - libpng16-16
-      - libpulse0
-      - libpython3.10
-      - librsvg2-2
-      - libsigc++-2.0-0v5
-      - libsndfile1
-      - libthai0
-      - libtiff5
-      - libvorbis0a
-      - libvorbisenc2
-      - libwacom9
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwayland-egl1
-      - libwebkit2gtk-4.0-37
-      - libx11-6
-      - libxau6
-      - libxcb-render0
-      - libxcb-shm0
-      - libxcb1
-      - libxcomposite1
-      - libxcursor1
-      - libxdamage1
-      - libxdmcp6
-      - libxext6
-      - libxfixes3
-      - libxft2
-      - libxi6
-      - libxinerama1
-      - libxkbcommon0
-      - libxml2
-      - libxrandr2
-      - libxrender1
-      - libxtst6
-      - locales-all
-      - python3-dbus
-      - python3-gi
-      - python3.10-minimal
-      - shared-mime-info
-      - ubuntu-settings
-      - unity-gtk3-module
-      - xdg-user-dirs
-      # VA-API drivers for HW-accelerated video decoding
       - mesa-va-drivers
-      - on amd64:
-        - i965-va-driver
-        - intel-media-va-driver
     stage:
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
-    override-build: |
-      set -eux
-      craftctl default
-      cd $CRAFT_STAGE/usr
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
-      cd $CRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
-      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
-
-  caches:
-    after: [ debs ]
-    plugin: nil
-    build-packages:
-      - gtk-update-icon-cache
-      - libglib2.0-bin
-      - shared-mime-info
-    build-environment:
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-    override-build: |
-      set -eux
-      craftctl default
-      $CRAFT_STAGE/usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
-      $CRAFT_STAGE/usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
-      for dir in $CRAFT_STAGE/usr/share/icons/*; do
-        if [ -f "$dir/index.theme" ]; then
-          $CRAFT_STAGE/usr/bin/gtk-update-icon-cache --force "$dir"
-        fi
-      done
-
-  command-chain:
-    source: https://github.com/snapcore/snapcraft-desktop-integration.git
-    source-type: git
-    source-subdir: gnome
-    plugin: make
-    make-parameters:
-      - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
-
-  cleanup:
-    after: [ caches ]
-    plugin: nil
-    build-snaps:
-      - gtk-common-themes
-    build-packages:
-      - python3-pip
-      - zip
-      - python3-apt
-    override-prime: |
-      set -eux
-
-      cd /snap/gtk-common-themes/current
-      find . -type f,l -exec rm -f $CRAFT_PRIME/usr/{} \;
-      cd $CRAFT_PRIME
-
-      rm -rf usr/share/doc
-      rm -rf usr/share/man
-
-      find . -type d -empty -delete
+      - usr/lib/$CRAFT_ARCH_TRIPLET
