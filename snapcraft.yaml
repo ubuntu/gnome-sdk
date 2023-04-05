@@ -1297,6 +1297,66 @@ parts:
     build-packages:
       - libwebp-dev
 
+  libayatana-ido:
+    after: [glib, gtk3]
+    source: https://github.com/AyatanaIndicators/ayatana-ido.git
+    source-tag: '0.9.3'
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -DENABLE_TESTS=OFF
+    build-packages:
+      - cmake
+    stage:
+      - usr/share/gir-1.0/Aya*
+      - usr/share/vala/aya*
+      - usr/include/ayata*
+      - usr/lib/*/pkgconfig
+      - usr/lib/*/*ido*
+      - usr/lib/*/girepository-1.0/Ayatana*
+
+  libayatana-appindicator:
+    after: [libayatana-ido, glib, gtk3]
+    source: https://github.com/AyatanaIndicators/libayatana-appindicator.git
+    source-tag: '0.5.92'
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -DENABLE_TESTS=OFF
+      - -DENABLE_GTKDOC=OFF
+      - -DENABLE_BINDINGS_MONO=OFF
+      - -DCMAKE_SHARED_LINKER_FLAGS="-lpcre"
+    build-packages:
+      - libdbus-1-dev
+      - libdbus-glib-1-dev
+      - libayatana-indicator-dev
+      - libayatana-indicator3-dev
+      - libdbusmenu-glib-dev
+      - libdbusmenu-gtk3-dev
+      - libpcre2-dev
+      - cmake
+    stage-packages:
+      - libayatana-indicator-dev
+      - libayatana-indicator3-dev
+      - libdbusmenu-glib-dev
+      - libdbusmenu-gtk3-dev
+      - libayatana-indicator3-7
+      - libdbusmenu-gtk3-4
+    stage:
+      - usr/share/gir-1.0/AyatanaAppIndicator*
+      - usr/share/vala/aya*
+      - usr/include/ayata*
+      - usr/lib/*/pkgconfig/*indica*
+      - usr/lib/*/*indica*
+      - usr/lib/*/*dbusmenu*
+      - usr/lib/*/girepository-1.0/AyatanaAppIndicator*
+
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
     plugin: nil
@@ -1309,7 +1369,6 @@ parts:
       - gcc
       - gettext
       - itstool
-      - libayatana-appindicator3-dev
       - libblkid1
       - libbrotli1
       - libbrotli-dev
