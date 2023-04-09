@@ -107,7 +107,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.0'
+    source-tag: '2.76.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
