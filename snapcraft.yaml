@@ -107,7 +107,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.0'
+    source-tag: '2.74.6'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -118,6 +118,10 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
+    override-pull: |
+      set -eux
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/check-for-snap-plugs-before-accessing-portals.patch
     override-build: |
       set -eux
       craftctl default
@@ -178,7 +182,7 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-tag: '1.76.0'
+    source-tag: '1.74.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
