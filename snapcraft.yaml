@@ -34,7 +34,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/stable/appindicator ]
+    stage-snaps: [ gnome-42-2204-sdk/latest/stable ]
     stage:
       - lib/*/bindtextdomain.so
       - usr
