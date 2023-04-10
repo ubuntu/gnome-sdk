@@ -1333,8 +1333,6 @@ parts:
       - -DENABLE_BINDINGS_MONO=OFF
       - -DCMAKE_SHARED_LINKER_FLAGS="-lpcre"
     build-packages:
-      - libdbus-1-dev
-      - libdbus-glib-1-dev
       - libayatana-indicator-dev
       - libayatana-indicator3-dev
       - libdbusmenu-glib-dev
@@ -1346,16 +1344,19 @@ parts:
       - libayatana-indicator3-dev
       - libdbusmenu-glib-dev
       - libdbusmenu-gtk3-dev
-      - libayatana-indicator3-7
-      - libdbusmenu-gtk3-4
     stage:
       - usr/share/gir-1.0/AyatanaAppIndicator*
-      - usr/share/vala/aya*
-      - usr/include/ayata*
+      - usr/share/gir-1.0/Dbusmenu*
+      - usr/share/vala/vapi/Ayatana*
+      - usr/share/vala/vapi/Dbusmenu*
+      - usr/include/*ayata*
+      - usr/include/*dbusmenu*
       - usr/lib/*/pkgconfig/*indica*
+      - usr/lib/*/pkgconfig/*dbusmenu*
       - usr/lib/*/*indica*
       - usr/lib/*/*dbusmenu*
       - usr/lib/*/girepository-1.0/AyatanaAppIndicator*
+      - usr/lib/*/girepository-1.0/Dbusmenu*
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
