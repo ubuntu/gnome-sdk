@@ -34,7 +34,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/edge ]
+    stage-snaps: [ gnome-42-2204-sdk/latest/stable/appindicator ]
     stage:
       - lib/*/bindtextdomain.so
       - usr
@@ -133,7 +133,6 @@ parts:
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
       - ibus-gtk3
-      - libayatana-appindicator3-1
       - libasound2
       - libasyncns0
       - libavahi-client3
