@@ -41,7 +41,7 @@ slots:
 parts:
   gnome:
     plugin: nil
-    stage-snaps: [ gnome-42-2204/latest/edge ]
+    stage-snaps: [ gnome-42-2204/latest/stable ]
     stage:
       - -usr/lib/$CRAFT_ARCH_TRIPLET/dri
       - -usr/lib/aarch64-linux-gnu/libEGL_mesa.so.0.0.0
