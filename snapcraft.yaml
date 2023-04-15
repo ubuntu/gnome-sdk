@@ -1318,9 +1318,18 @@ parts:
       - usr/share/gir-1.0/Aya*
       - usr/share/vala/aya*
       - usr/include/ayata*
-      - usr/lib/*/pkgconfig
+      - usr/lib/*/pkgconfig/*.pc
       - usr/lib/*/*ido*
       - usr/lib/*/girepository-1.0/Ayatana*
+    override-build: |
+      set -eux
+      craftctl default
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/*.pc;
+      do
+        sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+        sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+        sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+      done
 
   libayatana-appindicator:
     after: [libayatana-ido, glib, gtk3]
@@ -1355,15 +1364,24 @@ parts:
       - usr/share/vala/vapi/Dbusmenu*
       - usr/include/*ayata*
       - usr/include/*dbusmenu*
-      - usr/lib/*/pkgconfig/*indica*
-      - usr/lib/*/pkgconfig/*dbusmenu*
+      - usr/lib/*/pkgconfig/*indica*.pc
+      - usr/lib/*/pkgconfig/*dbusmenu*.pc
       - usr/lib/*/*indica*
       - usr/lib/*/*dbusmenu*
       - usr/lib/*/girepository-1.0/AyatanaAppIndicator*
       - usr/lib/*/girepository-1.0/Dbusmenu*
+    override-build: |
+      set -eux
+      craftctl default
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/*.pc;
+      do
+        sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
+        sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
+        sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
+      done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
     plugin: nil
     stage-packages:
       - appstream
