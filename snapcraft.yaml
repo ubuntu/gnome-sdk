@@ -206,7 +206,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.4'
+    source-tag: '0.56.6'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -522,7 +522,7 @@ parts:
   wayland:
     after: [ librest, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland.git
-    source-tag: '1.21.0'
+    source-tag: '1.22.0'
     source-depth: 1
     plugin: meson
 # ext:updatesnap
@@ -658,7 +658,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.03.0'
+    source-tag: 'poppler-23.04.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -1158,7 +1158,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.44.0'
+    source-tag: '3.44.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1291,7 +1291,7 @@ parts:
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
     source: https://github.com/aruiz/webp-pixbuf-loader.git
-    source-tag: '0.2.2'
+    source-tag: '0.2.4'
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
