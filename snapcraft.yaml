@@ -57,7 +57,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.0.1'
+    source-tag: '1.1.0'
     override-build: |
       python3 -m pip install .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
@@ -107,10 +107,11 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.74.6'
+    source-tag: '2.74.7'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
+#     lower-than: 2.76.0
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -186,6 +187,7 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
+#     lower-than: 1.76.0
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -206,7 +208,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.6'
+    source-tag: '0.56.7'
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -488,7 +490,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.4.0'
+    source-tag: '3.4.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -852,6 +854,7 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     lower-than: 4
+#     no-9x-minors: true
     plugin: meson
     meson-parameters:
       - --prefix=/usr
