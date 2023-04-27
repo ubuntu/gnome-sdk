@@ -705,7 +705,7 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
-
+      patch -p1 < $CRAFT_PROJECT_DIR/style-manager-Support-Yaru-accent-colors.patch
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
@@ -1287,6 +1287,7 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
+      patch -p1 < $CRAFT_PROJECT_DIR/libgweather.diff
       sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET#' $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
@@ -1382,9 +1383,20 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
-
+  libicuc:
+    source: https://github.com/unicode-org/icu.git
+    source-tag: release-73-1
+    source-subdir: icu4c/source
+    plugin: autotools
+    autotools-configure-parameters:
+      # WORKAROUND: Install to /usr instead of /usr/local because it's not in search paths
+      - --prefix=/usr
+      - --disable-renaming
+    build-packages:
+      - doxygen
+  
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, libicuc ]
     plugin: nil
     stage-packages:
       - appstream
