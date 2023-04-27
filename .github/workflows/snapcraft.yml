@@ -1,7 +1,7 @@
 name: 🧪 Test snap can be built on x86_64
 
 on:
-  pull_request:
+  push:
     branches: [ gnome-42-2204-sdk, gnome-42-2204 ]
 
 jobs:
