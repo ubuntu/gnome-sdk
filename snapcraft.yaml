@@ -705,7 +705,6 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/style-manager-Support-Yaru-accent-colors.patch
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
@@ -1287,7 +1286,6 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
-      patch -p1 < $CRAFT_PROJECT_DIR/libgweather.diff
       sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET#' $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
