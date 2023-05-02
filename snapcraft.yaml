@@ -1637,3 +1637,4 @@ parts:
       PATH=$OLDPATH
       echo Symbols compressed
       rm -fr $DEBUG_BUILDID
+      $CRAFT_PROJECT_DIR/extract_parts_files.py
