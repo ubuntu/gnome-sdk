@@ -2,6 +2,7 @@
 
 import os
 import yaml
+import sys
 
 """
     This script extracts API/ABI data from each part and stores it into
@@ -13,6 +14,11 @@ import yaml
 
     This allows to isolate the specific files installed by each part and
     analyze them more easily.
+
+    By default, it stores the data at $CRAFT_PRIME/extra_data folder,
+    but a different folder can be passed as the first parameter.
+
+    The data is stored in YAML format in a file named "parts_data.yaml".
 """
 
 def _resolve_link(path: str) -> str:
@@ -45,11 +51,15 @@ for part_name in os.listdir(base_path):
             elif filename.endswith(".pc"):
                 parts[part_name]["pkgconfig"].append(relative_file_path)
 
-output_path = os.path.join(os.environ['CRAFT_PRIME'], 'extra_data')
+if len(sys.argv) == 1:
+    output_path = os.path.join(os.environ['CRAFT_PRIME'], 'extra_data')
+else:
+    output_path = sys.argv[1]
+
 try:
     os.makedirs(output_path)
 except:
     pass
-output_path = os.path.join(output_path, 'source_data.yaml')
+output_path = os.path.join(output_path, 'parts_data.yaml')
 with open(output_path, "w", encoding='utf-8') as yaml_data:
     yaml.dump(parts, yaml_data, default_flow_style=False)
