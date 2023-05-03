@@ -3,6 +3,18 @@
 import os
 import yaml
 
+"""
+    This script extracts API/ABI data from each part and stores it into
+    a YAML file to allow to detect API/ABI breakage between versions.
+
+    The YAML file comprises a list of parts, each one with three elements
+    (headers, libraries and pkgconfig), and each element contains a list
+    of the files for that part.
+
+    This allows to isolate the specific files installed by each part and
+    analyze them more easily.
+"""
+
 def _resolve_link(path: str) -> str:
     """ given a path, if it is a symlink, will resolve recursively
         until obtaining the final file. """
