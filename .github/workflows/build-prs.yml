@@ -1,0 +1,28 @@
+name: Build Pull Requests
+
+on:
+- pull_request
+- push
+
+jobs:
+  snapcraft-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture:
+        - amd64
+        # - armhf
+        - arm64
+    steps:
+    - uses: actions/checkout@v2
+    - uses: docker/setup-qemu-action@v1
+      with:
+        image: tonistiigi/binfmt@sha256:df15403e06a03c2f461c1f7938b171fda34a5849eb63a70e2a2109ed5a778bde
+    - uses: diddlesnaps/snapcraft-multiarch-action@v1
+      id: build
+      with:
+        architecture: ${{ matrix.architecture }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: share-preview-snap
+        path: ${{ steps.build.outputs.snap }}    
