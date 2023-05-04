@@ -1596,7 +1596,7 @@ parts:
     override-build: |
       set -eux
       mkdir -p $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET
-      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/bindtextdomain.c -ldl
+      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/tools/bindtextdomain.c -ldl
 
   cleanup:
     after: [ conditioning ]
@@ -1633,7 +1633,7 @@ parts:
 
       OLDPATH=$PATH
       python3 -m pip install pyelftools craft-parts==1.14.0
-      $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
+      $CRAFT_PROJECT_DIR/tools/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
       rm -fr $DEBUG_BUILDID
