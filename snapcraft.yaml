@@ -1384,12 +1384,16 @@ parts:
   libicuc:
     source: https://github.com/unicode-org/icu.git
     source-tag: release-73-1
+    # ext:updatesnap
+#   version-format:
+#     format: 'release-%M-%m'
     source-subdir: icu4c/source
     plugin: autotools
     autotools-configure-parameters:
       # WORKAROUND: Install to /usr instead of /usr/local because it's not in search paths
       - --prefix=/usr
       - --disable-renaming
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-packages:
       - doxygen
   
