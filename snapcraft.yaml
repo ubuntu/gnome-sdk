@@ -1647,7 +1647,6 @@ parts:
 
       OLDPATH=$PATH
       python3 -m pip install pyelftools craft-parts==1.14.0
-      git config --global --add safe.directory /data
       $CRAFT_PROJECT_DIR/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
