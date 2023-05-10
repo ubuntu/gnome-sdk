@@ -33,6 +33,7 @@ parts:
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
       - CRAFT_EXT_CORE_LEVEL: core22
+      - PYTHONPATH: $PYTHONPATH:$CRAFT_STAGE/lib/python3.10/site-packages
 
   ninja:
     plugin: nil
@@ -1384,7 +1385,7 @@ parts:
   libicuc:
     source: https://github.com/unicode-org/icu.git
     source-tag: release-73-1
-    # ext:updatesnap
+#   ext:updatesnap
 #   version-format:
 #     format: 'release-%M-%m'
     source-subdir: icu4c/source
@@ -1396,6 +1397,87 @@ parts:
       - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-packages:
       - doxygen
+  gi-docgen:
+    source: https://gitlab.gnome.org/GNOME/gi-docgen.git
+    source-tag: '2023.1'
+    plugin: python
+    build-environment:
+      # WORKAROUND: The python plugin is broken with gnome extension
+      - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
+      - PYTHONPATH: ""
+    stage:
+      # WORKAROUND: Skip venv from python plugin
+      - -bin/activate
+      - -bin/activate.csh
+      - -bin/activate.fish
+      - -bin/Activate.ps1
+      - -bin/python
+      - -bin/python3
+      - -bin/python3.10
+      - -bin/pip
+      - -bin/pip3
+      - -bin/pip3.10
+      - -pyvenv.cfg  
+  webkitgtk:
+    after: [gi-docgen, libicu]
+    source: https://salsa.debian.org/webkit-team/webkit.git
+    source-tag: upstream/2.40.1
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DPORT=GTK
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_INSTALL_LIBDIR=lib
+      - -DCMAKE_INSTALL_LIBEXECDIR=lib
+      - -DCMAKE_SKIP_RPATH=ON
+      - -DUSE_AVIF=ON
+      - -DUSE_GTK4=ON
+      - -DENABLE_DOCUMENTATION=ON
+      - -DENABLE_MINIBROWSER=ON
+    build-packages:
+      - ruby-all-dev
+      - libfreetype-dev
+      - libgcrypt20-dev
+      - unifdef
+      - libmanette-0.2-dev
+      - libpng-dev
+      - libxslt1-dev
+      - libsqlite3-dev
+      - libcurl4-gnutls-dev
+      - libenchant-2-dev
+      - libwpe-1.0-dev
+      - libwpebackend-fdo-1.0-dev
+      - libxcomposite-dev
+      - libxdamage-dev
+      - libxrender-dev
+      - libxt-dev
+      - libhyphen-dev
+      - libwoff-dev
+      - libavif-dev
+      - libsystemd-dev
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - libgstreamer-plugins-good1.0-dev
+      - gperf
+    stage-packages:
+      - bubblewrap
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - libatomic1
+      - libenchant-2-2
+      - libglx0
+      - libgstreamer-gl1.0-0
+      - libgstreamer-plugins-base1.0-0
+      - libgstreamer1.0-0
+      - libhyphen0
+      - libmanette-0.2-0
+      - libopengl0
+      - libsystemd0
+      - libwpe-1.0-1
+      - libwpebackend-fdo-1.0-1
+      - libwoff1  
   
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, libicuc ]
