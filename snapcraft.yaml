@@ -1480,7 +1480,7 @@ parts:
       - libwoff1  
   
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, libicuc, webkitgtk, gi-docgen ]
     plugin: nil
     stage-packages:
       - appstream
