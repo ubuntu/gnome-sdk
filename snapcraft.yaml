@@ -1419,7 +1419,7 @@ parts:
       - -bin/pip3.10
       - -pyvenv.cfg  
   webkitgtk:
-    after: [gi-docgen, libicu]
+    after: [gi-docgen, libicuc]
     source: https://salsa.debian.org/webkit-team/webkit.git
     source-tag: upstream/2.40.1
     plugin: cmake
