@@ -38,6 +38,7 @@ parts:
     plugin: nil
     source: https://github.com/ninja-build/ninja.git
     source-tag: 'v1.11.1'
+    source-depth: 1
     override-build: |
       rm -rf build
       rm -f ninja
@@ -58,6 +59,7 @@ parts:
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
     source-tag: '1.1.0'
+    source-depth: 1
     override-build: |
       python3 -m pip install .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
@@ -209,6 +211,10 @@ parts:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
     source-tag: '0.56.7'
+    source-depth: 1
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -222,6 +228,9 @@ parts:
     source: https://gitlab.gnome.org/GNOME/libgee.git
     source-tag: '0.20.6'
     source-depth: 1
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
     plugin: autotools
     autotools-configure-parameters: [ --prefix=/usr ]
     build-environment: *buildenv
@@ -311,7 +320,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '7.1.0' # developers declared that they won't break ABI
+    source-tag: '7.3.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -490,7 +499,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.4.1'
+    source-tag: '3.4.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -596,7 +605,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.10.1'
+    source-tag: '4.10.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -660,7 +669,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.04.0'
+    source-tag: 'poppler-23.05.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -688,7 +697,8 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.3.1'
+    source-tag: '1.3.2'
+    source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
     meson-parameters:
@@ -711,6 +721,7 @@ parts:
     plugin: meson
     source: https://github.com/flatpak/libportal.git
     source-tag: '0.6'
+    source-depth: 1
     build-environment: *buildenv
     meson-parameters:
       - --prefix=/usr
@@ -726,6 +737,7 @@ parts:
     after: [ libportal, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
     source-tag: '1.0.5'
+    source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -746,6 +758,7 @@ parts:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
     source-tag: '2.66.6' # maximum version useful for gtkmm-3.24.
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     lower-than: '2.67.0'
@@ -785,6 +798,7 @@ parts:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
     source-tag: '1.14.4' # maximum version useful for gtkmm-3.24
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     lower-than: '1.15.0'
@@ -804,6 +818,7 @@ parts:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
     source-tag: '2.46.3' # maximum version useful for gtkmm-3.24
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     lower-than: '2.47.0'
@@ -830,6 +845,7 @@ parts:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
     source-tag: '2.28.3' # maximum version useful for gtkmm-3.24
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     lower-than: '2.29.0'
@@ -851,6 +867,7 @@ parts:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
     source-tag: '3.24.7'
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     lower-than: 4
@@ -935,6 +952,7 @@ parts:
     after: [ libcanberra, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
     source-tag: '1.0.3'
+    source-depth: 1
     source-type: git
     plugin: meson
     meson-parameters:
@@ -1031,7 +1049,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.22.1'
+    source-tag: '1.23.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1228,6 +1246,7 @@ parts:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
     source-tag: '0.24.1'
+    source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -1259,6 +1278,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
     source-tag: '1.8.2'
+    source-depth: 1
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -1274,6 +1294,7 @@ parts:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
     after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup2, libffi ]
     source-tag: '3.26.4'
+    source-depth: 1
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
@@ -1291,6 +1312,7 @@ parts:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
     source-tag: '4.2.0'
+    source-depth: 1
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
@@ -1312,6 +1334,7 @@ parts:
     after: [meson-deps, gdk-pixbuf]
     source: https://github.com/aruiz/webp-pixbuf-loader.git
     source-tag: '0.2.4'
+    source-depth: 1
     plugin: meson
     build-environment: *buildenv
     meson-parameters:
@@ -1325,6 +1348,7 @@ parts:
     after: [glib, gtk3]
     source: https://github.com/AyatanaIndicators/ayatana-ido.git
     source-tag: '0.9.3'
+    source-depth: 1
     plugin: cmake
     build-environment: *buildenv
     cmake-parameters:
@@ -1355,6 +1379,7 @@ parts:
     after: [libayatana-ido, glib, gtk3]
     source: https://github.com/AyatanaIndicators/libayatana-appindicator.git
     source-tag: '0.5.92'
+    source-depth: 1
     plugin: cmake
     build-environment: *buildenv
     cmake-parameters:
