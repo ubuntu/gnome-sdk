@@ -1427,8 +1427,62 @@ parts:
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
 
+  libva:
+    after: [ libtool, meson-deps, libayatana-appindicator ]
+    source: https://github.com/intel/libva.git
+    source-tag: '2.18.0'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dwith_x11=yes
+      - -Dwith_glx=yes
+      - -Dwith_wayland=yes
+    build-environment: *buildenv
+    build-packages:
+      - libxcb-dri3-dev
+
+  intel-gmm:
+    after: [ libva ]
+    source: https://github.com/intel/gmmlib.git
+    source-tag: 'intel-gmmlib-22.3.5'
+# ext:updatesnap
+#   version-format:
+#     format: 'intel-gmmlib-%M.%m.%R'
+    source-depth: 1
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+    override-stage: |
+      craftctl default
+      sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+      sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+
+  intel-media-driver:
+    after: [ intel-gmm ]
+    source: https://github.com/intel/media-driver.git
+    source-tag: 'intel-media-23.2.2'
+# ext:updatesnap
+#   version-format:
+#     format: 'intel-media-%M.%m.%R'
+    source-depth: 1
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+    build-packages:
+      - pkg-config
+      - cmake
+
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
     plugin: nil
     stage-packages:
       - appstream
@@ -1448,6 +1502,7 @@ parts:
       - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
+      - libxcb-dri3-0
       - libdrm2
       - libdrm-dev
       - libdrm-common
@@ -1594,6 +1649,7 @@ parts:
         sed -i 's#/usr/#/snap/gnome-42-2204-sdk/current/usr/#g' $PC
         sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
       done
+      sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
 
