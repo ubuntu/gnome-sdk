@@ -306,7 +306,7 @@ parts:
   fribidi:
     after: [ at-spi2-atk, meson-deps ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: 'v1.0.12'
+    source-tag: 'v1.0.13'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1033,7 +1033,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.6.0'
+    source-tag: 'libwacom-2.7.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
