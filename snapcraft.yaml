@@ -109,7 +109,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.2'
+    source-tag: '2.76.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -558,7 +558,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.37'
+    source-tag: '3.24.38'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
