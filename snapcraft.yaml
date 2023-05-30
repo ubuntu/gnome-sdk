@@ -1454,9 +1454,15 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     override-stage: |
-      craftctl default
-      sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
-      sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+        craftctl default
+        sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+        sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+      fi
+    override-build: |
+      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+        craftctl default
+      fi
 
   intel-media-driver:
     after: [ intel-gmm ]
@@ -1475,6 +1481,10 @@ parts:
     build-packages:
       - pkg-config
       - cmake
+    override-build: |
+      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+        craftctl default
+      fi
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
