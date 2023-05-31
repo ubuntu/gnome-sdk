@@ -1462,6 +1462,8 @@ parts:
     override-build: |
       if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
         craftctl default
+      else
+        echo 'Disabled for this architecture'
       fi
 
   intel-media-driver:
@@ -1484,6 +1486,8 @@ parts:
     override-build: |
       if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
         craftctl default
+      else
+        echo 'Disabled for this architecture'
       fi
 
   debs:
