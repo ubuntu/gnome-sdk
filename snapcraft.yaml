@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.1.0'
+    source-tag: '1.1.1'
     source-depth: 1
     override-build: |
       python3 -m pip install .
@@ -109,7 +109,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.2'
+    source-tag: '2.76.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -205,7 +205,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.7'
+    source-tag: '0.56.8'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -401,7 +401,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.56.0' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.56.1' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -558,7 +558,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.37'
+    source-tag: '3.24.38'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1461,7 +1461,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.2.2'
+    source-tag: 'intel-media-23.2.3'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
