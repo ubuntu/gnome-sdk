@@ -1658,7 +1658,10 @@ parts:
         sed -i 's#/usr/#/snap/gnome-42-2204-sdk/current/usr/#g' $PC
         sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
       done
-      sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+
+      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+        sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+      fi
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
 
