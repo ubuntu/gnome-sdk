@@ -152,6 +152,9 @@ parts:
     after: [ pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
     source-tag: '1.17.6' # 1.17.8 fails to build, so... maybe in core24, or 1.17.9
+# ext:updatesnap
+#   version-format:
+#     ignore-version: '1.17.8'
     source-depth: 1
     plugin: meson
     meson-parameters:
