@@ -942,6 +942,9 @@ parts:
       - --prefix=/usr
       - --with-builtin=pulse
     build-environment: *buildenv
+    override-build: |
+      ./autogen.sh
+      craftctl default
     build-packages:
       - libasound2-dev
       - libvorbis-dev
