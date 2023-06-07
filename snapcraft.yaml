@@ -605,7 +605,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.10.3'
+    source-tag: '4.10.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -669,7 +669,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.05.0'
+    source-tag: 'poppler-23.06.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -1445,7 +1445,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.5'
+    source-tag: 'intel-gmmlib-22.3.6'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
