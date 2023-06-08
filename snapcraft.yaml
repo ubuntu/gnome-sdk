@@ -647,6 +647,7 @@ parts:
       - libxi-dev
       - libxkbfile-dev
       - libxml2-utils
+      - libgstreamer-plugins-bad1.0-dev
     stage:
       - -usr/bin/wayland-scanner
       - -usr/lib/*/libwayland-client.so.0.20.0
@@ -1536,6 +1537,7 @@ parts:
       - libgnutls28-dev
       - libgnutls30
       - libgspell-1-dev
+      - libgstreamer-plugins-bad1.0-0
       - libgudev-1.0-dev
       - libgvc6
       - libgraphviz-dev
