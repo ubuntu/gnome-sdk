@@ -625,7 +625,7 @@ parts:
       - -Ddemos=false
       - -Dbuild-examples=false
       - -Dbuild-tests=false
-      - -Dmedia-gstreamer=disabled
+      - -Dmedia-gstreamer=enabled
       - -Ddemos=false
       - -Dbuild-testsuite=false
       - -Dbuild-examples=false
