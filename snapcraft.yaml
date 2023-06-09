@@ -1241,7 +1241,7 @@ parts:
     build-environment: *buildenv
     build-packages:
       - dbus
-      - libmozjs-91-dev
+      - libmozjs-102-dev
 
   p11-kit:
     after: [ gjs, meson-deps ]
@@ -1549,7 +1549,7 @@ parts:
       - liblzo2-dev
       - libmount-dev
       - libmount1
-      - libmozjs-91-dev
+      - libmozjs-102-dev
       - libmtdev1
       - libnettle8
       - libnghttp2-14
