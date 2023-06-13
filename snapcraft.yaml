@@ -615,7 +615,7 @@ parts:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
-      - -Dbroadway-backend=false
+      - -Dbroadway-backend=true
       - -Dx11-backend=true
       - -Dwayland-backend=true
       - -Dwin32-backend=false
