@@ -698,7 +698,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.3.2'
+    source-tag: '1.3.3'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -1348,7 +1348,7 @@ parts:
   libayatana-ido:
     after: [glib, gtk3]
     source: https://github.com/AyatanaIndicators/ayatana-ido.git
-    source-tag: '0.9.3'
+    source-tag: '0.10.0'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
@@ -1446,7 +1446,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.6'
+    source-tag: 'intel-gmmlib-22.3.7'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
