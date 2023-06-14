@@ -105,6 +105,9 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libffi-enable-building-on-riscv64.patch
 
   glib:
     after: [ libffi, meson-deps ]
