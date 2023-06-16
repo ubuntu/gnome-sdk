@@ -1,11 +1,12 @@
 diff -Naur a/installed-tests/js/meson.build b/installed-tests/js/meson.build
 --- a/installed-tests/js/meson.build	2023-06-16 23:30:37.376453172 +0530
-+++ b/installed-tests/js/meson.build	2023-06-16 23:30:15.751689247 +0530
-@@ -127,7 +127,6 @@
-     'GObjectValue',
-     'GTypeClass',
-     'Importer',
--    'Importer2',
-     'Introspection',
-     'Lang',
-     'LegacyByteArray',
++++ b/installed-tests/js/meson.build	2023-06-17 01:06:16.096677284 +0530
+@@ -203,7 +203,7 @@
+ # during build should be run using dbus-run-session
+ 
+ dbus_tests = ['GDBus']
+-if have_gtk4 and not get_option('skip_gtk_tests')
++if not get_option('skip_gtk_tests')
+     # FIXME: find out why GTK4 tries to acquire a message bus
+     dbus_tests += 'Gtk4'
+ endif
