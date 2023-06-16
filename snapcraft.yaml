@@ -1223,7 +1223,7 @@ parts:
     build-environment: *buildenv
 
   gjs:
-    after: [ libhandy, meson-deps ]
+    after: [ libhandy, meson-deps, gtk4 ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
     source-tag: '1.76.2'
 # ext:updatesnap
