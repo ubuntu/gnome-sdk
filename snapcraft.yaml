@@ -1225,7 +1225,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.72.3'
+    source-tag: '1.76.2'
 # ext:updatesnap
 #   version-format:
 #     same-minor: true
@@ -1238,10 +1238,13 @@ parts:
       - -Dskip_gtk_tests=true
       - -Dskip_dbus_tests=true
       - -Dinstalled_tests=false
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/meson-Fix-GJS.patch
     build-environment: *buildenv
     build-packages:
       - dbus
-      - libmozjs-91-dev
+      - libmozjs-102-dev
 
   p11-kit:
     after: [ gjs, meson-deps ]
@@ -1549,7 +1552,7 @@ parts:
       - liblzo2-dev
       - libmount-dev
       - libmount1
-      - libmozjs-91-dev
+      - libmozjs-102-dev
       - libmtdev1
       - libnettle8
       - libnghttp2-14

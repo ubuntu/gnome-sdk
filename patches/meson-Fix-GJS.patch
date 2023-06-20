@@ -1,0 +1,28 @@
+diff -Naur a/installed-tests/js/meson.build b/installed-tests/js/meson.build
+--- a/installed-tests/js/meson.build	2023-06-16 23:30:37.376453172 +0530
++++ b/installed-tests/js/meson.build	2023-06-19 23:25:34.545372027 +0530
+@@ -164,6 +164,7 @@
+ 
+ tests_dependencies = [
+     gschemas_compiled,
++    gjs_private_typelib,
+     gjstest_tools_typelib,
+     gimarshallingtests_typelib,
+     regress_typelib,
+@@ -203,9 +204,13 @@
+ # during build should be run using dbus-run-session
+ 
+ dbus_tests = ['GDBus']
+-if have_gtk4 and not get_option('skip_gtk_tests')
+-    # FIXME: find out why GTK4 tries to acquire a message bus
+-    dbus_tests += 'Gtk4'
++if not get_option('skip_gtk_tests')
++    have_gtk4 = dependency('gtk4', required: false).found()
++
++    if have_gtk4 
++        # FIXME: find out why GTK4 tries to acquire a message bus
++        dbus_tests += 'Gtk4'
++    endif
+ endif
+ 
+ bus_config = files('../../test/test-bus.conf')
