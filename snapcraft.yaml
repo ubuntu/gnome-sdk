@@ -208,7 +208,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.8'
+    source-tag: '0.56.9'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -404,7 +404,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.56.1' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.56.2' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -549,7 +549,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.31'
+    source-tag: '1.32'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1185,7 +1185,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.23.0'
+    source-tag: 'v1.24.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1249,7 +1249,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.24.1'
+    source-tag: '0.25.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
