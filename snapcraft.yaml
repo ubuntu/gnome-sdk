@@ -109,7 +109,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.3'
+    source-tag: '2.76.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -318,7 +318,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '7.3.0' # developers declared that they won't break ABI
+    source-tag: '8.0.1' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -670,7 +670,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.06.0'
+    source-tag: 'poppler-23.07.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -1432,7 +1432,7 @@ parts:
   libva:
     after: [ libtool, meson-deps, libayatana-appindicator ]
     source: https://github.com/intel/libva.git
-    source-tag: '2.18.0'
+    source-tag: '2.19.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1476,7 +1476,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.2.3'
+    source-tag: 'intel-media-23.2.4'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
