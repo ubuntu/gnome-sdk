@@ -6,7 +6,6 @@ import subprocess
 from elftools.elf.elffile import ELFFile
 from elftools.elf.sections import NoteSection
 from elftools.elf.enums import ENUM_DT_FLAGS_1
-from craft_parts.sources.git_source import GitSource
 import yaml
 
 basepath = sys.argv[1]
@@ -47,6 +46,61 @@ def read_elf_type(filepath):
             return None, None
     return ftype, buildId
 
+def generate_version(part_src_dir = None) -> str:
+    """Return the latest git tag from PWD or defined part_src_dir.
+
+    The output depends on the use of annotated tags and will return
+    something like: '2.28+git.10.abcdef' where '2.28 is the
+    tag, '+git' indicates there are commits ahead of the tag, in
+    this case it is '10' and the latest commit hash begins with
+    'abcdef'. If there are no tags or the revision cannot be
+    determined, this will return 0 as the tag and only the commit
+    hash of the latest commit.
+    """
+    if not part_src_dir:
+        part_src_dir = Path.cwd()
+
+    encoding = sys.getfilesystemencoding()
+    try:
+        output = (
+            subprocess.check_output(
+                ["git", "-C", str(part_src_dir), "describe", "--dirty"],
+                stderr=subprocess.DEVNULL,
+            )
+            .decode(encoding)
+            .strip()
+        )
+    except subprocess.CalledProcessError as err:
+        # If we fall into this exception it is because the repo is not
+        # tagged at all.
+        proc = subprocess.Popen(  # pylint: disable=consider-using-with
+            ["git", "-C", str(part_src_dir), "describe", "--dirty", "--always"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        stdout, stderr = proc.communicate()
+        if proc.returncode != 0:
+            # This most likely means the project we are in is not driven
+            # by git.
+            raise errors.VCSError(message=stderr.decode(encoding).strip()) from err
+        return f"0+git.{stdout.decode(encoding).strip()}"
+
+    match = re.search(
+        r"^(?P<tag>[a-zA-Z0-9.+~-]+)-"
+        r"(?P<revs_ahead>\d+)-"
+        r"g(?P<commit>[0-9a-fA-F]+(?:-dirty)?)$",
+        output,
+    )
+
+    if not match:
+        # This means we have a pure tag
+        return output
+
+    tag = match.group("tag")
+    revs_ahead = match.group("revs_ahead")
+    commit = match.group("commit")
+
+    return f"{tag}+git{revs_ahead}.{commit}"
 
 while len(paths) != 0:
     path = paths[0]
@@ -92,7 +146,7 @@ if not os.path.exists(config_file):
 data = yaml.safe_load(open(config_file, "r"))
 version_number = data['version']
 if version_number == 'git':
-    version_number = GitSource.generate_version(part_src_dir=os.environ['CRAFT_PROJECT_DIR'])
+    version_number = generate_version(part_src_dir=os.environ['CRAFT_PROJECT_DIR'])
 
 archive_name = f"{os.environ['CRAFT_PROJECT_NAME']}_{version_number}_{os.environ['SNAP_ARCH']}.debug"
 archive_full_path = os.path.join(os.environ['CRAFT_PROJECT_DIR'], archive_name)

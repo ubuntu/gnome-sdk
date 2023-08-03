@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.1.1'
+    source-tag: '1.2.0'
     source-depth: 1
     override-build: |
       python3 -m pip install .
@@ -321,7 +321,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.0.1' # developers declared that they won't break ABI
+    source-tag: '8.1.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -407,7 +407,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.56.2' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.56.3' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -1455,7 +1455,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.7'
+    source-tag: 'intel-gmmlib-22.3.9'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1482,7 +1482,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.2.4'
+    source-tag: 'intel-media-23.3.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
@@ -1758,7 +1758,7 @@ parts:
       mkdir -p $DEBUG_BUILDID
 
       OLDPATH=$PATH
-      python3 -m pip install pyelftools craft-parts==1.14.0
+      python3 -m pip install pyyaml pyelftools
       $CRAFT_PROJECT_DIR/tools/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
