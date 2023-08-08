@@ -26,7 +26,7 @@ compression: lzo
 
 package-repositories:
   - type: apt
-    ppa: ubuntu-concept/x13s
+    ppa: tobhe/asahi
 
 architectures:
   - arm64
