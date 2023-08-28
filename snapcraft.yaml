@@ -1758,7 +1758,7 @@ parts:
       mkdir -p $DEBUG_BUILDID
 
       OLDPATH=$PATH
-      python3 -m pip install pyelftools craft-parts==1.14.0
+      python3 -m pip install pyyaml pyelftools
       $CRAFT_PROJECT_DIR/tools/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
