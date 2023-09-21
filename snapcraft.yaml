@@ -112,7 +112,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.76.4'
+    source-tag: '2.78.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -211,7 +211,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.12'
+    source-tag: '0.56.13'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -321,7 +321,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.1.1' # developers declared that they won't break ABI
+    source-tag: '8.2.1' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -345,7 +345,6 @@ parts:
       for f in `find $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET |grep \\.la`; do
         sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
       done
-
     build-packages:
       - ragel
       - libgraphite2-dev
@@ -353,7 +352,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.50.14'
+    source-tag: '1.51.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -447,7 +446,7 @@ parts:
   json-glib:
     after: [ epoxy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-tag: '1.6.6'
+    source-tag: '1.8.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -502,7 +501,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.4.2'
+    source-tag: '3.4.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -608,7 +607,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.10.5'
+    source-tag: '4.12.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -659,6 +658,7 @@ parts:
   gtk-locales:
     after: [ gtk3, gtk4 ]
     plugin: nil
+    build-environment: *buildenv
     override-pull: |
       set -eux
       apt-get download "language-pack-gnome-*-base"
@@ -673,7 +673,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.08.0'
+    source-tag: 'poppler-23.09.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -724,7 +724,7 @@ parts:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
     source: https://github.com/flatpak/libportal.git
-    source-tag: '0.6'
+    source-tag: '0.7.1'
     source-depth: 1
     build-environment: *buildenv
     meson-parameters:
@@ -734,8 +734,11 @@ parts:
       - -Ddocs=false
       - -Dintrospection=true
       - -Dvapi=true
-      - -Dbackends=['gtk3', 'gtk4']
+      - -Dbackend-gtk3=enabled
+      - -Dbackend-gtk4=enabled
+      - -Dbackend-qt5=disabled
       - -Dtests=false
+      - -Dportal-tests=false
 
   mm-common:
     after: [ libportal, meson-deps ]
@@ -899,7 +902,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.8.0'
+    source-tag: '5.10.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1039,7 +1042,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.7.0'
+    source-tag: 'libwacom-2.8.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1203,7 +1206,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.44.1'
+    source-tag: '3.46.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1271,7 +1274,7 @@ parts:
   libsecret:
     after: [ p11-kit, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
-    source-tag: '0.21.0'
+    source-tag: '0.21.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1321,7 +1324,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.2.0'
+    source-tag: '4.4.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1441,7 +1444,7 @@ parts:
   libva:
     after: [ libtool, meson-deps, libayatana-appindicator ]
     source: https://github.com/intel/libva.git
-    source-tag: '2.19.0'
+    source-tag: '2.20.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1458,7 +1461,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.10'
+    source-tag: 'intel-gmmlib-22.3.11'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1485,7 +1488,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.3.2'
+    source-tag: 'intel-media-23.3.3'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
@@ -1549,7 +1552,9 @@ parts:
       - libgnutls28-dev
       - libgnutls30
       - libgspell-1-dev
+      - libgstreamer-plugins-base1.0-0
       - libgstreamer-plugins-bad1.0-0
+      - libgstreamer-plugins-good1.0-0
       - libgudev-1.0-dev
       - libgvc6
       - libgraphviz-dev
