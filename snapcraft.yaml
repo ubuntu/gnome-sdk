@@ -1529,9 +1529,12 @@ parts:
       - gettext
       - itstool
       - libappstream4
+      - libasound2-dev
       - libblkid1
       - libbrotli1
       - libbrotli-dev
+      - libc6
+      - libc6-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
       - libcurl4
@@ -1550,6 +1553,7 @@ parts:
       - libfreetype6
       - libgbm-dev
       - libgraphene-1.0-dev
+      - libgcc-s1
       - libgcr-3-dev
       - libgcrypt20
       - libgcrypt20-dev
@@ -1605,6 +1609,7 @@ parts:
       - libstdc++6
       - libsystemd0
       - libsystemd-dev
+      - libstdc++-12-dev
       - libtasn1-6
       - libtdb1
       - libthai-dev
