@@ -701,7 +701,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.3.4'
+    source-tag: '1.4.0'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -711,11 +711,17 @@ parts:
       - -Ddebug=true
       - -Dintrospection=enabled
       - -Dvapi=true
+      - -Dgtk_doc=false
       - -Dtests=false
       - -Dexamples=false
     build-environment: *buildenv
     build-packages:
       - sassc
+      - libyaml-dev
+      - libzstd-dev
+      - libsystemd-dev
+      - gperf
+      - libappstream-dev
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
@@ -1521,6 +1527,7 @@ parts:
       - gcc
       - gettext
       - itstool
+      - libappstream4
       - libblkid1
       - libbrotli1
       - libbrotli-dev
@@ -1595,6 +1602,7 @@ parts:
       - libsqlite3-0
       - libsqlite3-dev
       - libstdc++6
+      - libsystemd0
       - libtasn1-6
       - libtdb1
       - libthai-dev
@@ -1621,6 +1629,8 @@ parts:
       - libxrandr-dev
       - libxrender-dev
       - libxtst-dev
+      - libyaml-0-2
+      - libzstd1
       - pkg-config
       - python3-dev
       - python3-distutils

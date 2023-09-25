@@ -1,7 +1,3 @@
-From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
-Date: Tue, 5 Apr 2022 16:00:46 +0200
-Subject: style-manager: Support Yaru accent colors
-
 Generate the libadwaita color schemes using Yaru accent colors.
 Then, when the Yaru theme is used in the system, use the generated
 variant instead of the default one.
@@ -11,27 +7,9 @@ No theme changes are applied, only the accent color is now matching
 the yaru ones.
 
 Forwarded: not-needed
----
- meson_options.txt                                |   4 +
- src/adw-settings-impl-portal.c                   |  25 +++
- src/adw-settings-impl-private.h                  |  12 ++
- src/adw-settings-private.h                       |   2 +
- src/adw-settings.c                               | 228 +++++++++++++++++++++--
- src/adw-style-manager.c                          |  71 ++++++-
- src/stylesheet/_colors.scss                      |   6 +
- src/stylesheet/_defaults.scss                    |   7 +-
- src/stylesheet/_palette-yaru.scss                | 118 ++++++++++++
- src/stylesheet/adwaita-stylesheet.gresources.xml |   1 +
- src/stylesheet/meson.build                       |  88 ++++++++-
- src/stylesheet/sass-utils.scss                   | 212 +++++++++++++++++++++
- src/stylesheet/yaru_accent_colors.scss           |  75 ++++++++
- 13 files changed, 827 insertions(+), 22 deletions(-)
- create mode 100644 src/stylesheet/_palette-yaru.scss
- create mode 100644 src/stylesheet/sass-utils.scss
- create mode 100644 src/stylesheet/yaru_accent_colors.scss
 
 diff --git a/meson_options.txt b/meson_options.txt
-index b95d0ae..2ef9779 100644
+index b95d0ae4..4c51f2a3 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -20,3 +20,7 @@ option('tests',
@@ -42,11 +20,12 @@ index b95d0ae..2ef9779 100644
 +option('yaru-accent-colors',
 +       type: 'boolean', value: true,
 +       description: 'Mimic Yaru accent colors')
+\ No newline at end of file
 diff --git a/src/adw-settings-impl-portal.c b/src/adw-settings-impl-portal.c
-index 7e52014..e743459 100644
+index 9f9fbf7c..be2466e2 100644
 --- a/src/adw-settings-impl-portal.c
 +++ b/src/adw-settings-impl-portal.c
-@@ -294,3 +294,28 @@ adw_settings_impl_portal_new (gboolean enable_color_scheme,
+@@ -233,3 +233,28 @@ adw_settings_impl_portal_new (gboolean enable_color_scheme,
  
    return ADW_SETTINGS_IMPL (self);
  }
@@ -76,14 +55,13 @@ index 7e52014..e743459 100644
 +  return read_setting (ADW_SETTINGS_IMPL_PORTAL (self), schema, name, type, out);
 +}
 diff --git a/src/adw-settings-impl-private.h b/src/adw-settings-impl-private.h
-index 44eade6..0c47bfd 100644
+index 54c3f6fb..4aa13854 100644
 --- a/src/adw-settings-impl-private.h
 +++ b/src/adw-settings-impl-private.h
-@@ -40,6 +40,18 @@ gboolean adw_settings_impl_get_high_contrast (AdwSettingsImpl *self);
- void     adw_settings_impl_set_high_contrast (AdwSettingsImpl *self,
-                                               gboolean         high_contrast);
+@@ -42,6 +42,17 @@ void     adw_settings_impl_set_high_contrast (AdwSettingsImpl *self,
  
-+
+ gboolean adw_get_disable_portal (void);
+ 
 +gboolean adw_settings_impl_portal_enabled (AdwSettingsImpl *self);
 +
 +#include <gio/gio.h>
@@ -99,7 +77,7 @@ index 44eade6..0c47bfd 100644
  #define ADW_TYPE_SETTINGS_IMPL_MACOS (adw_settings_impl_macos_get_type())
  
 diff --git a/src/adw-settings-private.h b/src/adw-settings-private.h
-index bab0962..87ebea6 100644
+index dc11df58..427470b9 100644
 --- a/src/adw-settings-private.h
 +++ b/src/adw-settings-private.h
 @@ -56,4 +56,6 @@ ADW_AVAILABLE_IN_ALL
@@ -110,7 +88,7 @@ index bab0962..87ebea6 100644
 +
  G_END_DECLS
 diff --git a/src/adw-settings.c b/src/adw-settings.c
-index 8a2dade..6e3ba7c 100644
+index cf0e81c0..74977791 100644
 --- a/src/adw-settings.c
 +++ b/src/adw-settings.c
 @@ -26,6 +26,9 @@ struct _AdwSettings
@@ -131,7 +109,7 @@ index 8a2dade..6e3ba7c 100644
    LAST_PROP,
  };
  
-@@ -132,6 +136,196 @@ register_impl (AdwSettings     *self,
+@@ -132,6 +136,198 @@ register_impl (AdwSettings     *self,
    }
  }
  
@@ -325,10 +303,12 @@ index 8a2dade..6e3ba7c 100644
 +    g_clear_object (&self->interface_settings);
 +}
 +
++
++
  static void
  adw_settings_constructed (GObject *object)
  {
-@@ -155,17 +349,7 @@ adw_settings_constructed (GObject *object)
+@@ -155,17 +351,7 @@ adw_settings_constructed (GObject *object)
      register_impl (self, self->platform_impl, &found_color_scheme, &found_high_contrast);
    }
  
@@ -347,17 +327,16 @@ index 8a2dade..6e3ba7c 100644
  }
  
  static void
-@@ -177,6 +361,9 @@ adw_settings_dispose (GObject *object)
+@@ -176,6 +362,8 @@ adw_settings_dispose (GObject *object)
+   g_clear_object (&self->platform_impl);
    g_clear_object (&self->gsettings_impl);
    g_clear_object (&self->legacy_impl);
- 
 +  g_clear_object (&self->interface_settings);
 +  g_clear_pointer (&self->yaru_accent, g_free);
-+
+ 
    G_OBJECT_CLASS (adw_settings_parent_class)->dispose (object);
  }
- 
-@@ -201,6 +388,10 @@ adw_settings_get_property (GObject    *object,
+@@ -201,6 +389,10 @@ adw_settings_get_property (GObject    *object,
      g_value_set_boolean (value, adw_settings_get_high_contrast (self));
      break;
  
@@ -368,7 +347,7 @@ index 8a2dade..6e3ba7c 100644
    default:
      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
    }
-@@ -231,6 +422,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
+@@ -231,6 +423,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
                            FALSE,
                            G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
  
@@ -382,7 +361,7 @@ index 8a2dade..6e3ba7c 100644
    g_object_class_install_properties (object_class, LAST_PROP, props);
  }
  
-@@ -321,6 +519,8 @@ adw_settings_end_override (AdwSettings *self)
+@@ -321,6 +520,8 @@ adw_settings_end_override (AdwSettings *self)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_COLOR_SCHEME]);
    if (notify_hc)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
@@ -391,7 +370,7 @@ index 8a2dade..6e3ba7c 100644
  }
  
  void
-@@ -375,3 +575,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
+@@ -375,3 +576,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
  
    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
  }
@@ -402,7 +381,7 @@ index 8a2dade..6e3ba7c 100644
 +  return self->yaru_accent;
 +}
 diff --git a/src/adw-style-manager.c b/src/adw-style-manager.c
-index 073e789..5ac1e5a 100644
+index d27ebda5..59da0dcb 100644
 --- a/src/adw-style-manager.c
 +++ b/src/adw-style-manager.c
 @@ -70,6 +70,7 @@ enum {
@@ -413,7 +392,7 @@ index 073e789..5ac1e5a 100644
    LAST_PROP,
  };
  
-@@ -157,18 +158,48 @@ update_stylesheet (AdwStyleManager *self)
+@@ -155,18 +156,47 @@ update_stylesheet (AdwStyleManager *self)
      if (adw_settings_get_high_contrast (self->settings))
        gtk_css_provider_load_from_resource (self->provider,
                                             "/org/gnome/Adwaita/styles/base-hc.css");
@@ -428,7 +407,6 @@ index 073e789..5ac1e5a 100644
    if (self->colors_provider) {
 +    g_autofree char *style = NULL;
 +    g_autofree char *variant = NULL;
-+
      if (self->dark)
 -      gtk_css_provider_load_from_resource (self->colors_provider,
 -                                           "/org/gnome/Adwaita/styles/defaults-dark.css");
@@ -466,7 +444,7 @@ index 073e789..5ac1e5a 100644
    }
  
    self->animation_timeout_id =
-@@ -229,6 +260,14 @@ notify_high_contrast_cb (AdwStyleManager *self)
+@@ -227,6 +257,14 @@ notify_high_contrast_cb (AdwStyleManager *self)
    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
  }
  
@@ -481,7 +459,7 @@ index 073e789..5ac1e5a 100644
  static void
  adw_style_manager_constructed (GObject *object)
  {
-@@ -292,6 +331,11 @@ adw_style_manager_constructed (GObject *object)
+@@ -289,6 +327,11 @@ adw_style_manager_constructed (GObject *object)
                             G_CALLBACK (notify_high_contrast_cb),
                             self,
                             G_CONNECT_SWAPPED);
@@ -493,7 +471,7 @@ index 073e789..5ac1e5a 100644
  
    update_dark (self);
    update_stylesheet (self);
-@@ -339,6 +383,10 @@ adw_style_manager_get_property (GObject    *object,
+@@ -336,6 +379,10 @@ adw_style_manager_get_property (GObject    *object,
      g_value_set_boolean (value, adw_style_manager_get_high_contrast (self));
      break;
  
@@ -504,7 +482,7 @@ index 073e789..5ac1e5a 100644
    default:
      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
    }
-@@ -471,6 +519,21 @@ adw_style_manager_class_init (AdwStyleManagerClass *klass)
+@@ -468,6 +515,21 @@ adw_style_manager_class_init (AdwStyleManagerClass *klass)
                            FALSE,
                            G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
  
@@ -527,10 +505,10 @@ index 073e789..5ac1e5a 100644
  }
  
 diff --git a/src/stylesheet/_colors.scss b/src/stylesheet/_colors.scss
-index edb6d46..f4225f4 100644
+index 32df08f8..118b5e5b 100644
 --- a/src/stylesheet/_colors.scss
 +++ b/src/stylesheet/_colors.scss
-@@ -115,3 +115,9 @@ $strong_disabled_opacity: 0.3;
+@@ -127,3 +127,9 @@ $strong_disabled_opacity: 0.3;
    $trough_active_color: gtkalpha(currentColor, .5);
    $window_outline_color: transparentize(white, .7);
  }
@@ -540,8 +518,9 @@ index edb6d46..f4225f4 100644
 +  $link_color: gtkcolor(yaru_link_color);
 +  $link_visited_color: gtkcolor(yaru_link_visited_color);
 +}
+\ No newline at end of file
 diff --git a/src/stylesheet/_defaults.scss b/src/stylesheet/_defaults.scss
-index d671f4a..d064221 100644
+index 76cc94d5..8a0f88cd 100644
 --- a/src/stylesheet/_defaults.scss
 +++ b/src/stylesheet/_defaults.scss
 @@ -8,10 +8,13 @@
@@ -562,7 +541,7 @@ index d671f4a..d064221 100644
  @define-color destructive_bg_color #{if($variant == 'dark', "@red_4", "@red_3")};
 diff --git a/src/stylesheet/_palette-yaru.scss b/src/stylesheet/_palette-yaru.scss
 new file mode 100644
-index 0000000..a943a2e
+index 00000000..6b335a22
 --- /dev/null
 +++ b/src/stylesheet/_palette-yaru.scss
 @@ -0,0 +1,118 @@
@@ -684,8 +663,9 @@ index 0000000..a943a2e
 +@define-color dark_3 #{$dark_3};
 +@define-color dark_4 #{$dark_4};
 +@define-color dark_5 #{$dark_5};
+\ No newline at end of file
 diff --git a/src/stylesheet/adwaita-stylesheet.gresources.xml b/src/stylesheet/adwaita-stylesheet.gresources.xml
-index 98a07ac..0d86a06 100644
+index 98a07acf..0d86a06f 100644
 --- a/src/stylesheet/adwaita-stylesheet.gresources.xml
 +++ b/src/stylesheet/adwaita-stylesheet.gresources.xml
 @@ -5,6 +5,7 @@
@@ -697,7 +677,7 @@ index 98a07ac..0d86a06 100644
      <file>assets/bullet-symbolic.symbolic.png</file>
      <file>assets/bullet@2-symbolic.symbolic.png</file>
 diff --git a/src/stylesheet/meson.build b/src/stylesheet/meson.build
-index 018cf4b..660f351 100644
+index 56466c1c..8f56cccc 100644
 --- a/src/stylesheet/meson.build
 +++ b/src/stylesheet/meson.build
 @@ -2,14 +2,66 @@ fs = import('fs')
@@ -757,7 +737,7 @@ index 018cf4b..660f351 100644
 +if not fs.exists('base.css') or build_yaru_accent_colors
    sassc = find_program('sassc', required: false)
    if not sassc.found()
-     subproject('sassc')
+     subproject('sassc', default_options: ['warning_level=0', 'werror=false'])
      sassc = find_program('sassc')
    endif
  
@@ -768,7 +748,7 @@ index 018cf4b..660f351 100644
    if sassc.found()
      sassc_opts = [ '-a', '-M', '-t', 'compact' ]
  
-@@ -73,10 +125,21 @@ if not fs.exists('base.css')
+@@ -72,10 +124,21 @@ if not fs.exists('base.css')
        'defaults-dark',
      ]
  
@@ -793,7 +773,7 @@ index 018cf4b..660f351 100644
          command: [
            sassc, sassc_opts, '@INPUT@', '@OUTPUT@',
          ],
-@@ -86,9 +149,24 @@ if not fs.exists('base.css')
+@@ -85,9 +148,24 @@ if not fs.exists('base.css')
    endif
  endif
  
@@ -821,7 +801,7 @@ index 018cf4b..660f351 100644
      # List in order of preference
 diff --git a/src/stylesheet/sass-utils.scss b/src/stylesheet/sass-utils.scss
 new file mode 100644
-index 0000000..f7ea2c9
+index 00000000..4055eb81
 --- /dev/null
 +++ b/src/stylesheet/sass-utils.scss
 @@ -0,0 +1,212 @@
@@ -1037,9 +1017,10 @@ index 0000000..f7ea2c9
 +
 +    @return $fg;
 +}
+\ No newline at end of file
 diff --git a/src/stylesheet/yaru_accent_colors.scss b/src/stylesheet/yaru_accent_colors.scss
 new file mode 100644
-index 0000000..a1aa8ee
+index 00000000..a1aa8ee7
 --- /dev/null
 +++ b/src/stylesheet/yaru_accent_colors.scss
 @@ -0,0 +1,75 @@
