@@ -26,7 +26,7 @@ compression: lzo
 
 package-repositories:
   - type: apt
-    ppa: tobhe/asahi
+    ppa: ubuntu-asahi/ubuntu-asahi-next
 
 architectures:
   - arm64
