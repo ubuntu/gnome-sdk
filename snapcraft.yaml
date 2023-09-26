@@ -1521,6 +1521,7 @@ parts:
     stage-packages:
       - appstream
       - appstream-util
+      - libappstream-dev
       - desktop-file-utils
       - freeglut3
       - freeglut3-dev
