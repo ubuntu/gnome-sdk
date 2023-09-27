@@ -1604,6 +1604,7 @@ parts:
       - libsqlite3-dev
       - libstdc++6
       - libsystemd0
+      - libsystemd-dev
       - libtasn1-6
       - libtdb1
       - libthai-dev
