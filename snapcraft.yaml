@@ -123,6 +123,33 @@ parts:
       - -usr/lib/python3/dist-packages/meson*
       - -usr/share/devhelp/books
 
+      - -usr/share/doc/libc6
+      - -usr/share/lintian/overrides/libc6
+      - -etc/ld.so.conf.d/*.conf
+      - -lib64/ld-linux-*.so*
+      - -lib/*/ld-linux-*.so*
+      - -lib/*/libBrokenLocale.so*
+      - -lib/*/libanl.so*
+      - -lib/*/libc.so*
+      - -lib/*/libc_malloc_debug.so*
+      - -lib/*/libdl.so*
+      - -lib/*/libm.so*
+      - -lib/*/libmemusage.so*
+      - -lib/*/libmvec.so*
+      - -lib/*/libnsl.so*
+      - -lib/*/libnss_compat.so*
+      - -lib/*/libnss_dns.so*
+      - -lib/*/libnss_files.so*
+      - -lib/*/libnss_hesiod.so*
+      - -lib/*/libpcprofile.so*
+      - -lib/*/libpthread.so*
+      - -lib/*/libresolv.so*
+      - -lib/*/librt.so*
+      - -lib/*/libthread_db.so*
+      - -lib/*/libutil.so*
+      - -usr/lib/*/audit/*
+      - -usr/lib/*/gconv/*
+
   debs:
     after: [ gnome-sdk ]
     plugin: nil
