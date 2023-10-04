@@ -150,6 +150,10 @@ parts:
       - -usr/lib/*/audit/*
       - -usr/lib/*/gconv/*
 
+      - -lib/*/libgcc_s.so*
+      - -usr/share/lintian/overrides/libgcc-s1
+      - -usr/share/doc/libgcc-s1
+
   debs:
     after: [ gnome-sdk ]
     plugin: nil
