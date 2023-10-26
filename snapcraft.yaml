@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.2.1'
+    source-tag: '1.2.3'
     source-depth: 1
     override-build: |
       python3 -m pip install .
@@ -154,7 +154,7 @@ parts:
   cairo:
     after: [ pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
-    source-tag: '1.17.6' # 1.17.8 fails to build, so... maybe in core24, or 1.17.9
+    source-tag: '1.18.0' # 1.17.8 fails to build, so... maybe in core24, or 1.17.9
 # ext:updatesnap
 #   version-format:
 #     ignore-version: '1.17.8'
@@ -169,7 +169,6 @@ parts:
       - -Dxcb=enabled
       - -Dtee=enabled
       - -Dzlib=enabled
-      - -Dgl-backend=disabled
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
@@ -321,7 +320,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.2.1' # developers declared that they won't break ABI
+    source-tag: '8.2.2' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -406,10 +405,11 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.56.3' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.56.4' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
+#     lower-than: 2.57 # 2.57 requires a more modern Cargo version
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -607,7 +607,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.12.2'
+    source-tag: '4.12.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -673,7 +673,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.09.0'
+    source-tag: 'poppler-23.10.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -690,6 +690,9 @@ parts:
       - -DBUILD_MANUAL_TESTS=OFF
       - -DENABLE_QT5=OFF
       - -DENABLE_QT6=OFF
+      - -DENABLE_GLIB=ON
+      - -DENABLE_GTK_DOC=OFF
+      - -DENABLE_GPGME=OFF
       - -DENABLE_GOBJECT_INTROSPECTION=ON
     build-environment: *buildenv
     build-packages:
@@ -697,6 +700,7 @@ parts:
       - libcurl4-openssl-dev
       - libopenjp2-7-dev
       - libnss3-dev
+      - liblcms2-dev
 
 
   libadwaita:
@@ -810,7 +814,7 @@ parts:
   cairomm:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.14.4' # maximum version useful for gtkmm-3.24
+    source-tag: '1.14.5' # maximum version useful for gtkmm-3.24
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -1200,7 +1204,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.24.0'
+    source-tag: 'v1.25.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1400,7 +1404,7 @@ parts:
   libayatana-appindicator:
     after: [libayatana-ido, glib, gtk3]
     source: https://github.com/AyatanaIndicators/libayatana-appindicator.git
-    source-tag: '0.5.92'
+    source-tag: '0.5.93'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
@@ -1467,7 +1471,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.11'
+    source-tag: 'intel-gmmlib-22.3.12'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1494,7 +1498,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.3.3'
+    source-tag: 'intel-media-23.3.5'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
