@@ -169,7 +169,6 @@ parts:
       - -Dxcb=enabled
       - -Dtee=enabled
       - -Dzlib=enabled
-      #- -Dgl-backend=disabled
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
