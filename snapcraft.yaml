@@ -1522,8 +1522,10 @@ parts:
       fi
 
   yaru-theme-files:
+    after: [ meson-deps ]
     plugin: meson
     source: https://github.com/ubuntu/yaru.git
+    build-environment: *buildenv
     source-tag: 'r29'
     meson-parameters:
       - --prefix=/usr
