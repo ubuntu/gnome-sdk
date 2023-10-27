@@ -1526,14 +1526,16 @@ parts:
     plugin: meson
     source: https://github.com/ubuntu/yaru.git
     build-environment: *buildenv
-    source-tag: 'r29'
+    source-branch: 'ubuntu/mantic'
     meson-parameters:
       - --prefix=/usr
       - -Dgnome-shell-gresource=true
-      - -Dgnome-shell-user-themes-support=true
+      - -Dgnome-shell-user-themes-support=false
       - -Dmetacity=false
       - -Dsounds=false
+      - -Dicons=false
       - -Dsessions=false
+      - -Dgnome-shell=false
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
