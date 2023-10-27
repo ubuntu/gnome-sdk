@@ -1530,7 +1530,7 @@ parts:
     meson-parameters:
       - --prefix=/usr
       - -Dgnome-shell-gresource=true
-      - -Dgnome-shell-user-themes-support=false
+      - -Dgnome-shell-user-themes-support=disabled
       - -Dmetacity=false
       - -Dsounds=false
       - -Dicons=false
