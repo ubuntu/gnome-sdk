@@ -1521,6 +1521,18 @@ parts:
         echo 'Disabled for this architecture'
       fi
 
+  yaru-theme-files:
+    plugin: meson
+    source: https://github.com/ubuntu/yaru.git
+    source-tag: 'r29'
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgnome-shell-gresource=true
+      - -Dgnome-shell-user-themes-support=true
+      - -Dmetacity=false
+      - -Dsounds=false
+      - -Dsessions=false
+
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
     plugin: nil
