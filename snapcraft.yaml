@@ -602,7 +602,9 @@ parts:
       - libxi-dev
       - libxkbfile-dev
       - libxml2-utils
-
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
