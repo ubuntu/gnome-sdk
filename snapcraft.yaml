@@ -112,7 +112,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.78.0'
+    source-tag: '2.78.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -210,7 +210,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.13'
+    source-tag: '0.56.14'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -320,7 +320,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.2.2' # developers declared that they won't break ABI
+    source-tag: '8.3.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -501,7 +501,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.4.3'
+    source-tag: '3.4.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -675,7 +675,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.10.0'
+    source-tag: 'poppler-23.11.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -1270,7 +1270,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.25.0'
+    source-tag: '0.25.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1500,7 +1500,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.3.5'
+    source-tag: 'intel-media-23.4.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
