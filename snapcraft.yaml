@@ -132,6 +132,9 @@ parts:
       - gir1.2-ggit-1.0
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-pipewire
       - ibus-gtk3
       - libasound2
       - libasyncns0
@@ -177,6 +180,7 @@ parts:
       - libmtdev1
       - libogg0
       - libpathplan4
+      - libpipewire-0.3-0
       - libpng16-16
       - libpulse0
       - libpython3.10
