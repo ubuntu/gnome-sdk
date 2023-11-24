@@ -132,6 +132,7 @@ parts:
       - gir1.2-ggit-1.0
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
+      - gstreamer1.0-gl
       - gstreamer1.0-plugins-base
       - gstreamer1.0-plugins-good
       - gstreamer1.0-pipewire
