@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.2.3'
+    source-tag: '1.3.1'
     source-depth: 1
     override-build: |
       python3 -m pip install .
@@ -112,7 +112,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.78.1'
+    source-tag: '2.78.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -563,7 +563,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.38'
+    source-tag: '3.24.39'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -609,7 +609,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.12.3'
+    source-tag: '4.12.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -675,7 +675,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.11.0'
+    source-tag: 'poppler-23.12.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -707,7 +707,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.4.0'
+    source-tag: '1.4.2'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -1054,7 +1054,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.8.0'
+    source-tag: 'libwacom-2.9.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1270,7 +1270,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.25.2'
+    source-tag: '0.25.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1286,7 +1286,7 @@ parts:
   libsecret:
     after: [ p11-kit, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
-    source-tag: '0.21.1'
+    source-tag: '0.21.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1473,7 +1473,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.12'
+    source-tag: 'intel-gmmlib-22.3.16'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1500,7 +1500,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.4.0'
+    source-tag: 'intel-media-24.1.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
