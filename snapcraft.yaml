@@ -1,8 +1,8 @@
-name: gnome-42-2204-sdk
+name: gnome-46-2404-sdk
 version: git
-summary: Shared GNOME 42 Ubuntu stack SDK
+summary: Shared GNOME 46 Ubuntu stack SDK
 description: |
-  This snap contains the GNOME 42 development files. These are used during the build process of snaps that depend on the GNOME 42 stack. This helps developers to make sure their application is built against the correct verson of GNOME and GTK libraries.  
+  This snap contains the GNOME 46 development files. These are used during the build process of snaps that depend on the GNOME 46 stack. This helps developers to make sure their application is built against the correct verson of GNOME and GTK libraries.  
   
   **For users**
 
@@ -15,13 +15,14 @@ description: |
 
   * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
   * You can report issues with this SDK snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
-  * The source code of this snap is available on GitHub in the `gnome-42-2204-sdk` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-42-2204-sdk
+  * The source code of this snap is available on GitHub in the `gnome-46-2404-sdk` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404-sdk
   * This snap is used for building snaps of applications using GNOME or GTK. If you are looking for instructions on how to build GNOME applications instead, take a look at https://developer.gnome.org/
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: stable
-base: core22 # if the base is changed, the BUILDENV part must be updated
+grade: devel
+base: core24 # if the base is changed, the BUILDENV part must be updated
+build-base: devel
 
 parts:
   buildenv:
@@ -32,7 +33,7 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      - CRAFT_EXT_CORE_LEVEL: core22
+      - CRAFT_EXT_CORE_LEVEL: core24
 
   ninja:
     plugin: nil
@@ -61,10 +62,10 @@ parts:
     source-tag: '1.2.3'
     source-depth: 1
     override-build: |
-      python3 -m pip install .
+      python3 -m pip install --break-system-packages .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
       rm -rf $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/meson*
-      python3 -m pip install --target=$CRAFT_PART_INSTALL/usr .
+      python3 -m pip install --target=$CRAFT_PART_INSTALL/usr --break-system-packages .
       mv $CRAFT_PART_INSTALL/usr/meson* $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/
       sed -i "s%^#!/usr/bin/python3$%#!/usr/bin/env python3%g" /usr/local/bin/meson
       sed -i "s%^#!/usr/bin/python3$%#!/usr/bin/env python3%g" $CRAFT_PART_INSTALL/usr/bin/meson
@@ -595,7 +596,6 @@ parts:
       - libcolord-dev
       - libxrandr-dev
       - libxcursor-dev
-      - libisocodes-dev
       - libxcomposite-dev
       - libxdamage-dev
       - libxfixes-dev
@@ -644,7 +644,6 @@ parts:
       - libcolord-dev
       - libxrandr-dev
       - libxcursor-dev
-      - libisocodes-dev
       - libxcomposite-dev
       - libxdamage-dev
       - libxfixes-dev
@@ -707,7 +706,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.4.0'
+    source-tag: '1.4.2'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -1419,14 +1418,12 @@ parts:
       - -DENABLE_BINDINGS_MONO=OFF
       - -DCMAKE_SHARED_LINKER_FLAGS="-lpcre"
     build-packages:
-      - libayatana-indicator-dev
       - libayatana-indicator3-dev
       - libdbusmenu-glib-dev
       - libdbusmenu-gtk3-dev
-      - libpcre2-dev
+      - libpcre3-dev
       - cmake
     stage-packages:
-      - libayatana-indicator-dev
       - libayatana-indicator3-dev
       - libdbusmenu-glib-dev
       - libdbusmenu-gtk3-dev
@@ -1529,12 +1526,12 @@ parts:
       - appstream-util
       - libappstream-dev
       - desktop-file-utils
-      - freeglut3
-      - freeglut3-dev
+      - libglut3.12
+      - libglut-dev
       - gcc
       - gettext
       - itstool
-      - libappstream4
+      - libappstream5
       - libblkid1
       - libbrotli1
       - libbrotli-dev
@@ -1599,9 +1596,9 @@ parts:
       - libpulse-dev
       - libwrap0
       - libpython3-dev
-      - libpython3.10-dev
-      - libpython3.10-minimal
-      - libpython3.10-stdlib
+      - libpython3.11-dev
+      - libpython3.11-minimal
+      - libpython3.11-stdlib
       - libseccomp-dev
       - libseccomp2
       - libsigc++-2.0-0v5
@@ -1648,8 +1645,8 @@ parts:
       - python3-setuptools
       - python3-venv
       - python3-wheel
-      - python3.10-minimal
-      - python3.10-venv
+      - python3.11-minimal
+      - python3.11-venv
       - shared-mime-info
       - zlib1g-dev
       - libwebp-dev
@@ -1684,50 +1681,50 @@ parts:
 
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
-        sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/gnome-42-2204-sdk/current#' $PC
-        sed -i 's#prefix = /usr#prefix=/snap/gnome-42-2204-sdk/current/usr#' $PC
-        sed -i 's#prefix=/usr#prefix=/snap/gnome-42-2204-sdk/current/usr#' $PC
-        sed -i 's#original_prefix=/snap/gnome-42-2204-sdk/current/usr#original_prefix=/usr#' $PC
+        sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/gnome-46-2404-sdk/current#' $PC
+        sed -i 's#prefix = /usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
+        sed -i 's#prefix=/usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
+        sed -i 's#original_prefix=/snap/gnome-46-2404-sdk/current/usr#original_prefix=/usr#' $PC
 
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-        sed -i 's#libdir=/lib#libdir=/snap/gnome-42-2204-sdk/current/lib#' $PC
+        sed -i 's#libdir=/lib#libdir=/snap/gnome-46-2404-sdk/current/lib#' $PC
 
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
-        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/gnome-42-2204-sdk/current/etc#' $PC
+        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/gnome-46-2404-sdk/current/etc#' $PC
 
-        sed -i 's#/usr/#/snap/gnome-42-2204-sdk/current/usr/#g' $PC
-        sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
+        sed -i 's#/usr/#/snap/gnome-46-2404-sdk/current/usr/#g' $PC
+        sed -i 's#/etc/#/snap/gnome-46-2404-sdk/current/etc/#g' $PC
       done
 
       if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
-        sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+        sed -i 's#includedir=${prefix}/snap/gnome-46-2404-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
       fi
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
 
       LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/gnome-42-2204-sdk/current#' $LIBTOOLIZE
+      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
 
       SCANNER=usr/bin/g-ir-scanner
-      sed -i 's#$CRAFT_STAGE#/snap/gnome-42-2204-sdk/current#g' $SCANNER
+      sed -i 's#$CRAFT_STAGE#/snap/gnome-46-2404-sdk/current#g' $SCANNER
 
       ITSTOOL=usr/bin/itstool
-      sed -i 's#/usr/local/share#/snap/gnome-42-2204-sdk/current/usr/local/share#g' $ITSTOOL
-      sed -i 's#/usr/share#/snap/gnome-42-2204-sdk/current/usr/share#g' $ITSTOOL
+      sed -i 's#/usr/local/share#/snap/gnome-46-2404-sdk/current/usr/local/share#g' $ITSTOOL
+      sed -i 's#/usr/share#/snap/gnome-46-2404-sdk/current/usr/share#g' $ITSTOOL
 
       GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0
       LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
       rm -f $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so
       cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
       $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $CRAFT_PRIME/$LOADERS
-      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $CRAFT_PRIME/$LOADERS
-      sed -i 's#/build/gnome-42-2204-sdk/parts/gdk-pixbuf/install#/snap/gnome-42-2204-sdk/current#g' $CRAFT_PRIME/$LOADERS
+      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-46-2404-sdk/current#g' $CRAFT_PRIME/$LOADERS
+      sed -i 's#/build/gnome-46-2404-sdk/parts/gdk-pixbuf/install#/snap/gnome-46-2404-sdk/current#g' $CRAFT_PRIME/$LOADERS
 
       XML2_CONFIG=usr/bin/xml2-config
-      sed -i 's#/root/parts/debs/install#/snap/gnome-42-2204-sdk/current#g' $XML2_CONFIG
+      sed -i 's#/root/parts/debs/install#/snap/gnome-46-2404-sdk/current#g' $XML2_CONFIG
 
       rm -f usr/lib/vala-current
       rm -f usr/share/gettext-current
@@ -1784,7 +1781,7 @@ parts:
       mkdir -p $DEBUG_BUILDID
 
       OLDPATH=$PATH
-      python3 -m pip install pyyaml pyelftools
+      python3 -m pip install --break-system-packages pyyaml pyelftools
       $CRAFT_PROJECT_DIR/tools/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
