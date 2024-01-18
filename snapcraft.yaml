@@ -1596,9 +1596,9 @@ parts:
       - libpulse-dev
       - libwrap0
       - libpython3-dev
-      - libpython3.11-dev
-      - libpython3.11-minimal
-      - libpython3.11-stdlib
+      - libpython3.12-dev
+      - libpython3.12-minimal
+      - libpython3.12-stdlib
       - libseccomp-dev
       - libseccomp2
       - libsigc++-2.0-0v5
@@ -1645,8 +1645,8 @@ parts:
       - python3-setuptools
       - python3-venv
       - python3-wheel
-      - python3.11-minimal
-      - python3.11-venv
+      - python3.12-minimal
+      - python3.12-venv
       - shared-mime-info
       - zlib1g-dev
       - libwebp-dev
