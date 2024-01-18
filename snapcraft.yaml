@@ -1,8 +1,8 @@
-name: gnome-42-2204
+name: gnome-46-2404
 version: git
-summary: Shared GNOME 42 Ubuntu stack
+summary: Shared GNOME 46 Ubuntu stack
 description: |
-  This snap provides the GNOME 42 stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
+  This snap provides the GNOME 46 stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
 
   **For users**
 
@@ -15,18 +15,19 @@ description: |
 
   * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
   * You can report issues with this content snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
-  * The source code of this snap is available on GitHub in the `gnome-42-2204` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-42-2204
+  * The source code of this snap is available on GitHub in the `gnome-46-2404` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: stable
+grade: devel
 icon: icon.png
-base: core22
+base: core24
+build-base: devel
 compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-42-2204:
+    gnome-46-2404:
       interface: content
       read:
         - /
@@ -34,7 +35,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/stable ]
+    stage-snaps: [ gnome-46-2404-sdk/latest/edge ]
     stage:
       - lib/*/bindtextdomain.so
       - usr
@@ -152,7 +153,7 @@ parts:
       - libdbus-glib-1-2
       - libdb5.3
       - libevdev2
-      - libflac8
+      - libflac12
       - libfontconfig1
       - libfreetype6
       - libgck-1-0
@@ -169,13 +170,13 @@ parts:
       - libgtk3-nocsd0
       - libgtksourceview-3.0-1
       - libgvc6
-      - libicu70
+      - libicu74
       - libinput10
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
-      - libllvm11
-      - libmozjs-91-0
+      - libllvm17
+      - libmozjs-115-0
       - libmpc3
       - libmpfr6
       - libmtdev1
@@ -184,12 +185,12 @@ parts:
       - libpipewire-0.3-0
       - libpng16-16
       - libpulse0
-      - libpython3.10
+      - libpython3.11
       - librsvg2-2
       - libsigc++-2.0-0v5
       - libsndfile1
       - libthai0
-      - libtiff5
+      - libtiff6
       - libvorbis0a
       - libvorbisenc2
       - libwacom9
@@ -198,6 +199,7 @@ parts:
       - libwayland-egl1
       - libnvidia-egl-wayland1
       - libwebkit2gtk-4.0-37
+      - libwebkit2gtk-4.1-0
       - libx11-6
       - libxau6
       - libxcb-render0
@@ -220,7 +222,7 @@ parts:
       - locales-all
       - python3-dbus
       - python3-gi
-      - python3.10-minimal
+      - python3.11-minimal
       - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
@@ -236,6 +238,8 @@ parts:
       set -eux
       craftctl default
       cd $CRAFT_STAGE/usr
+      # We need to explicitly remove this recursively
+      rm -rf $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/PyGObject-3.*.egg-info
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
       cd $CRAFT_STAGE/usr/lib
