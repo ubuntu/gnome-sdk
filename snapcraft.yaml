@@ -185,7 +185,7 @@ parts:
       - libpipewire-0.3-0
       - libpng16-16
       - libpulse0
-      - libpython3.11
+      - libpython3.12
       - librsvg2-2
       - libsigc++-2.0-0v5
       - libsndfile1
@@ -222,7 +222,7 @@ parts:
       - locales-all
       - python3-dbus
       - python3-gi
-      - python3.11-minimal
+      - python3.12-minimal
       - shared-mime-info
       - ubuntu-settings
       - unity-gtk3-module
