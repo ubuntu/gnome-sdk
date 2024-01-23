@@ -1527,6 +1527,10 @@ parts:
     source: https://github.com/ubuntu/yaru.git
     build-environment: *buildenv
     source-branch: 'ubuntu/mantic'
+    source-depth: 1
+# ext:updatesnap
+#   version-format:
+#     ignore: true
     meson-parameters:
       - --prefix=/usr
       - -Dgnome-shell-gresource=true
