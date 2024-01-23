@@ -1521,6 +1521,28 @@ parts:
         echo 'Disabled for this architecture'
       fi
 
+  yaru-theme-files:
+    after: [ meson-deps ]
+    plugin: meson
+    source: https://github.com/ubuntu/yaru.git
+    build-environment: *buildenv
+    #source-branch: 'ubuntu/mantic'
+    source-depth: 1
+# ext:updatesnap
+#   version-format:
+#     ignore: true
+    meson-parameters:
+      - --prefix=/usr
+      - -Dgnome-shell-gresource=true
+      - -Dgnome-shell-user-themes-support=disabled
+      - -Dmetacity=false
+      - -Dsounds=false
+      - -Dicons=false
+      - -Dsessions=false
+      - -Dgnome-shell=false
+    prime:
+      - -usr/share/theme
+
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
     plugin: nil
