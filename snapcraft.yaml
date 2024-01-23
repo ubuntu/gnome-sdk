@@ -1540,6 +1540,8 @@ parts:
       - -Dicons=false
       - -Dsessions=false
       - -Dgnome-shell=false
+    prime:
+      - -usr/share/theme
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
