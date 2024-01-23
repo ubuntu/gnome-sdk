@@ -1526,7 +1526,7 @@ parts:
     plugin: meson
     source: https://github.com/ubuntu/yaru.git
     build-environment: *buildenv
-    source-branch: 'ubuntu/mantic'
+    #source-branch: 'ubuntu/mantic'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
