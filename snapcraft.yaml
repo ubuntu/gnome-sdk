@@ -769,17 +769,11 @@ parts:
     build-packages:
       - wget
 
-  # Since the objective is to build Gtkmm 3.24.x, 2.66.x is the maximum GLibmm version
-  # that works for that. 2.68 or newer aren't accepted by the MESON builder and triggers
-  # the download of an old GLibmm version. Thus this one should be used.
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.66.6' # maximum version useful for gtkmm-3.24.
+    source-tag: '2.78.1'
     source-depth: 1
-# ext:updatesnap
-#   version-format:
-#     lower-than: '2.67.0'
     plugin: autotools
     override-build: |
       set -eux
@@ -804,22 +798,15 @@ parts:
         sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
       done
     build-packages:
-      - libsigc++-2.0-dev
+      - libsigc++-3.0-dev
       - libxml-parser-perl
     build-environment: *buildenv
 
-  # Again, cairomm is needed to build pangomm, but 1.14.x is the maximum version recognized
-  # by the valid pangomm version needed for Gtkmm 3.24. Setting 1.16 or newer won't be
-  # recognized by pangomm and the builder will download a compatible old version, thus
-  # defeating the objective of having recent code.
   cairomm:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.14.5' # maximum version useful for gtkmm-3.24
+    source-tag: '1.18.0'
     source-depth: 1
-# ext:updatesnap
-#   version-format:
-#     lower-than: '1.15.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -835,11 +822,8 @@ parts:
   pangomm:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.46.4' # maximum version useful for gtkmm-3.24
+    source-tag: '2.50.2'
     source-depth: 1
-# ext:updatesnap
-#   version-format:
-#     lower-than: '2.47.0'
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -852,7 +836,7 @@ parts:
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
       mkdir -p ../src/untracked/build_scripts/
@@ -862,11 +846,11 @@ parts:
   atkmm:
     after: [ pangomm ]
     source: https://gitlab.gnome.org/GNOME/atkmm.git
-    source-tag: '2.28.4' # maximum version useful for gtkmm-3.24
+    source-tag: '2.36.3'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
-#     lower-than: '2.29.0'
+#     lower-than: '2.53.3'
     plugin: autotools
     override-build: |
       set -eux
@@ -879,7 +863,7 @@ parts:
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
 
   gtkmm:
     after: [ atkmm, meson-deps ]
@@ -898,12 +882,14 @@ parts:
       - -Dmaintainer-mode=true
       - -Dbuild-documentation=false
       - -Dbuild-demos=false
+    build-packages:
+      - graphviz
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
+      - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
       mkdir -p ../src/untracked/build_scripts/
