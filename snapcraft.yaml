@@ -29,9 +29,10 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
-      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig:/usr/share/pkgconfig:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:/usr/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - CMAKE_MODULE_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/cmake:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/cmake
       - CRAFT_EXT_CORE_LEVEL: core22
 
   ninja:
@@ -58,7 +59,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.2.3'
+    source-tag: '1.4.0'
     source-depth: 1
     override-build: |
       python3 -m pip install .
@@ -73,7 +74,8 @@ parts:
 
   libtool:
     source: https://git.savannah.gnu.org/git/libtool.git
-    source-tag: 'v2.4.7'
+    source-tag: 'v2.4.6'
+    source-depth: 1
     plugin: autotools
 # ext:updatesnap
 #   version-format:
@@ -112,7 +114,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.78.1'
+    source-tag: '2.78.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -126,19 +128,20 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
-      cp $CRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/glib-2.0/
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/glib-2.0/
+      cp $CRAFT_PART_INSTALL/usr/bin/{gio-querymodules,glib-compile-schemas} $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/glib-2.0/
     build-packages:
       - pkg-config
       - libmount-dev
       - gcc
       - g++
       - clang
+      - python3-packaging
 
   pixman:
     after: [ glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
-    source-tag: 'pixman-0.42.2'
+    source-tag: 'pixman-0.43.4'
 # ext:updatesnap
 #   version-format:
 #     format: 'pixman-%M.%m.%R'
@@ -208,9 +211,9 @@ parts:
       - flex
 
   vala:
-    after: [ gobject-introspection ]
+    after: [ gobject-introspection, libtool ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.14'
+    source-tag: '0.56.16'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -261,9 +264,9 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      PC=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/atk.pc
+      PC=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/atk.pc
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-      sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET#' $PC
+      sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $PC
       sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
 
   at-spi2-core:
@@ -320,7 +323,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.3.0' # developers declared that they won't break ABI
+    source-tag: '8.3.1' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -335,13 +338,13 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/harfbuzz*.pc;
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/harfbuzz*.pc;
       do
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
-      for f in `find $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET |grep \\.la`; do
+      for f in `find $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR |grep \\.la`; do
         sed -i "s#^libdir='/usr/lib#libdir='$CRAFT_STAGE/usr/lib#g" $f
       done
     build-packages:
@@ -351,7 +354,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.51.1'
+    source-tag: '1.52.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -391,12 +394,12 @@ parts:
       set -eux
       craftctl default
       cp $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/bin/
-      LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders
+      LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders
       $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
       # workaround for thumbnailer being in a different directory in the snap env
       sed -i 's#/usr/bin/##' $CRAFT_PART_INSTALL/usr/share/thumbnailers/gdk-pixbuf-thumbnailer.thumbnailer
     organize:
-      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
+      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
     build-packages:
       - libpng-dev
       - libjpeg-dev
@@ -459,13 +462,13 @@ parts:
   libpsl:
     after: [ json-glib, meson-deps ]
     source: https://github.com/rockdaboot/libpsl.git
-    source-tag: '0.21.2'
+    source-tag: '0.21.5'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Druntime=libidn2
-      #- -Dtests=false # available in master, not in 0.21.2
+      - -Dtests=false
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
@@ -551,7 +554,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.32'
+    source-tag: '1.34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -586,8 +589,8 @@ parts:
       - -Dexamples=false
     build-environment: *buildenv
     organize:
-      usr/lib/gtk-3.0: usr/lib/$CRAFT_ARCH_TRIPLET/gtk-3.0
-      usr/bin/gtk-query-immodules-3.0: usr/lib/$CRAFT_ARCH_TRIPLET/libgtk-3-0/gtk-query-immodules-3.0
+      usr/lib/gtk-3.0: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-3.0
+      usr/bin/gtk-query-immodules-3.0: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libgtk-3-0/gtk-query-immodules-3.0
     build-packages:
       - libxkbcommon-dev
       - libxinerama-dev
@@ -606,10 +609,68 @@ parts:
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
+  shaderc:
+    source: https://github.com/google/shaderc.git
+    source-tag: 'v2024.0'
+    source-depth: 1
+    plugin: cmake
+    build-environment: *buildenv
+    override-pull: |
+      craftctl default
+      sed -i "0,/'--quiet',/s/'--quiet',/'--depth',\ '500',/" utils/git-sync-deps
+      ./utils/git-sync-deps
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DSHADERC_SKIP_TESTS=ON
+      - -DSHADERC_SKIP_EXAMPLES=ON
+      - -DSHADERC_ENABLE_WGSL_OUTPUT=OFF
+    build-packages:
+      - spirv-tools
+      - spirv-headers
+      - spirv-cross
+
+  vulkan-headers:
+    after: [ wayland-protocols ]
+    source: https://github.com/KhronosGroup/Vulkan-Headers.git
+    source-tag: 'v1.3.280'
+    source-depth: 1
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_TESTS=OFF
+    build-packages:
+      - libx11-dev
+      - libxcb1-dev
+      - libxrandr-dev
+      - pkg-config
+
+  vulkan-loaders:
+    after: [ wayland, wayland-protocols, vulkan-headers ]
+    source: https://github.com/KhronosGroup/Vulkan-Loader.git
+    source-tag: 'v1.3.280'
+    source-depth: 1
+    plugin: cmake
+    build-environment: *buildenv
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_LIBDIR=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      - -DLOADER_CODEGEN=ON
+      - -DBUILD_TESTS=OFF
+    build-packages:
+      - libx11-dev
+      - libxcb1-dev
+      - libxrandr-dev
+      - pkg-config
+
+
   gtk4:
-    after: [ wayland-protocols, wayland, meson-deps ]
+    after: [ wayland-protocols, wayland, meson-deps, vulkan-loaders, vulkan-headers, shaderc ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.12.3'
+    source-tag: '4.14.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -637,7 +698,7 @@ parts:
       - -Dprint-cups=enabled
     build-environment: *buildenv
     organize:
-      usr/lib/gtk-4.0: usr/lib/$CRAFT_ARCH_TRIPLET/gtk-4.0
+      usr/lib/gtk-4.0: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gtk-4.0
     build-packages:
       - libxkbcommon-dev
       - libcups2-dev
@@ -675,7 +736,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-23.11.0'
+    source-tag: 'poppler-24.03.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -707,7 +768,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.4.0'
+    source-tag: '1.5.0'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -755,7 +816,7 @@ parts:
   mm-common:
     after: [ libportal, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/mm-common.git
-    source-tag: '1.0.5'
+    source-tag: '1.0.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -852,7 +913,7 @@ parts:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
@@ -878,8 +939,8 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
 
   gtkmm:
@@ -902,8 +963,8 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
       set -eux
@@ -914,7 +975,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.10.0'
+    source-tag: '5.12.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1052,9 +1113,8 @@ parts:
 
   libwacom:
     after: [ cogl, meson-deps ]
-    source: https://github.com/linuxwacom/libwacom
-    source-type: git
-    source-tag: 'libwacom-2.8.0'
+    source: https://github.com/linuxwacom/libwacom.git
+    source-tag: 'libwacom-2.10.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1071,7 +1131,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.24.0'
+    source-tag: '1.25.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1206,7 +1266,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.25.1'
+    source-tag: 'v1.26.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1218,7 +1278,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.46.0'
+    source-tag: '3.48.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1230,7 +1290,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-tag: '1.8.2'
+    source-tag: '1.8.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1259,10 +1319,10 @@ parts:
       - -Dskip_gtk_tests=true
       - -Dskip_dbus_tests=true
       - -Dinstalled_tests=false
+    build-environment: *buildenv
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/meson-Fix-GJS.patch
-    build-environment: *buildenv
     build-packages:
       - dbus
       - libmozjs-102-dev
@@ -1270,7 +1330,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.25.2'
+    source-tag: '0.25.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1286,7 +1346,7 @@ parts:
   libsecret:
     after: [ p11-kit, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
-    source-tag: '0.21.1'
+    source-tag: '0.21.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1354,14 +1414,41 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
-      sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET#' $CRAFT_PART_SRC/data/meson.build
+      sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
 
+  freeglut:
+    source: https://github.com/freeglut/freeglut.git
+    source-tag: 'v3.4.0'
+    source-depth: 1
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+    build-packages:
+      - libglu1-mesa-dev
+      - libgl-dev
+
+  libwebp:
+    after: [ freeglut ]
+    source: https://chromium.googlesource.com/webm/libwebp.git
+    source-tag: 'v1.3.2'
+    source-depth: 1
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+    build-packages:
+      - libgif-dev
+      - libjpeg-dev
+      - libpng-dev
+      - libtiff-dev
+
   webp-pixbuf-loader:
-    after: [meson-deps, gdk-pixbuf]
+    after: [meson-deps, gdk-pixbuf, libwebp]
     source: https://github.com/aruiz/webp-pixbuf-loader.git
-    source-tag: '0.2.4'
+    source-tag: '0.2.7'
     source-depth: 1
     plugin: meson
     build-environment: *buildenv
@@ -1369,8 +1456,6 @@ parts:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
-    build-packages:
-      - libwebp-dev
 
   libayatana-ido:
     after: [glib, gtk3]
@@ -1396,7 +1481,7 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/*.pc;
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/*.pc;
       do
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
@@ -1446,7 +1531,7 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/*.pc;
+      for PC in $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/*.pc;
       do
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
@@ -1456,7 +1541,7 @@ parts:
   libva:
     after: [ libtool, meson-deps, libayatana-appindicator ]
     source: https://github.com/intel/libva.git
-    source-tag: '2.20.0'
+    source-tag: '2.21.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1473,7 +1558,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.12'
+    source-tag: 'intel-gmmlib-22.3.18'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1485,13 +1570,13 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     override-stage: |
-      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
         craftctl default
-        sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
-        sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+        sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
+        sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
       fi
     override-build: |
-      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
         craftctl default
       else
         echo 'Disabled for this architecture'
@@ -1500,7 +1585,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-23.4.0'
+    source-tag: 'intel-media-24.1.5'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
@@ -1515,7 +1600,7 @@ parts:
       - pkg-config
       - cmake
     override-build: |
-      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
+      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
         craftctl default
       else
         echo 'Disabled for this architecture'
@@ -1529,8 +1614,6 @@ parts:
       - appstream-util
       - libappstream-dev
       - desktop-file-utils
-      - freeglut3
-      - freeglut3-dev
       - gcc
       - gettext
       - itstool
@@ -1652,7 +1735,6 @@ parts:
       - python3.10-venv
       - shared-mime-info
       - zlib1g-dev
-      - libwebp-dev
     override-build: |
       set -eux
       craftctl default
@@ -1660,9 +1742,9 @@ parts:
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
       cd $CRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
-      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{}*" \;
+      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
@@ -1700,8 +1782,8 @@ parts:
         sed -i 's#/etc/#/snap/gnome-42-2204-sdk/current/etc/#g' $PC
       done
 
-      if [ "$CRAFT_ARCH_TRIPLET" = "x86_64-linux-gnu" ]; then
-        sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig/igdgmm.pc
+      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
+        sed -i 's#includedir=${prefix}/snap/gnome-42-2204-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
       fi
 
       sed -i 's#/usr/bin/python#python3#' usr/bin/glib-mkenums
@@ -1718,7 +1800,7 @@ parts:
       sed -i 's#/usr/local/share#/snap/gnome-42-2204-sdk/current/usr/local/share#g' $ITSTOOL
       sed -i 's#/usr/share#/snap/gnome-42-2204-sdk/current/usr/share#g' $ITSTOOL
 
-      GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0
+      GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0
       LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
       rm -f $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so
       cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
@@ -1731,15 +1813,15 @@ parts:
 
       rm -f usr/lib/vala-current
       rm -f usr/share/gettext-current
-      rm -f usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+      rm -f usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-current
       ln -s vala-0.56 usr/lib/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
-      ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
+      ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-current
 
       # Fix dangling symlink by overwriting it
-      ln -sf lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so
+      ln -sf lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so
       # CHECK THIS When changing the core base, this line must be update
-      cp /snap/$CRAFT_EXT_CORE_LEVEL/current/lib/$CRAFT_ARCH_TRIPLET/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET/
+      cp /snap/$CRAFT_EXT_CORE_LEVEL/current/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
@@ -1747,8 +1829,8 @@ parts:
     plugin: nil
     override-build: |
       set -eux
-      mkdir -p $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET
-      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/tools/bindtextdomain.c -ldl
+      mkdir -p $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/tools/bindtextdomain.c -ldl
 
   cleanup:
     after: [ conditioning ]
