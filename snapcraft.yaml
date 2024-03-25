@@ -114,7 +114,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.78.2'
+    source-tag: '2.78.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -566,7 +566,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.38'
+    source-tag: '3.24.41'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -633,7 +633,7 @@ parts:
   vulkan-headers:
     after: [ wayland-protocols ]
     source: https://github.com/KhronosGroup/Vulkan-Headers.git
-    source-tag: 'v1.3.280'
+    source-tag: 'v1.3.281'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
@@ -650,7 +650,7 @@ parts:
   vulkan-loaders:
     after: [ wayland, wayland-protocols, vulkan-headers ]
     source: https://github.com/KhronosGroup/Vulkan-Loader.git
-    source-tag: 'v1.3.280'
+    source-tag: 'v1.3.281'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
@@ -670,7 +670,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps, vulkan-loaders, vulkan-headers, shaderc ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.14.0'
+    source-tag: '4.14.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1306,7 +1306,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.76.2'
+    source-tag: '1.76.3'
 # ext:updatesnap
 #   version-format:
 #     same-minor: true
@@ -1396,7 +1396,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.4.0'
+    source-tag: '4.4.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
