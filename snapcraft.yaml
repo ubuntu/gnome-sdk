@@ -59,7 +59,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.3.1'
+    source-tag: '1.4.0'
     source-depth: 1
     override-build: |
       python3 -m pip install --break-system-packages .
@@ -113,7 +113,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.78.4'
+    source-tag: '2.80.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -139,7 +139,7 @@ parts:
   pixman:
     after: [ glib, meson-deps ]
     source: https://gitlab.freedesktop.org/pixman/pixman.git
-    source-tag: 'pixman-0.43.2'
+    source-tag: 'pixman-0.43.4'
 # ext:updatesnap
 #   version-format:
 #     format: 'pixman-%M.%m.%R'
@@ -211,7 +211,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.14'
+    source-tag: '0.56.16'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -321,7 +321,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.3.0' # developers declared that they won't break ABI
+    source-tag: '8.3.1' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -352,7 +352,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.51.1'
+    source-tag: '1.52.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -552,7 +552,7 @@ parts:
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.33'
+    source-tag: '1.34'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -609,7 +609,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, wayland, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.12.5'
+    source-tag: '4.14.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -651,6 +651,8 @@ parts:
       - libxkbfile-dev
       - libxml2-utils
       - libgstreamer-plugins-bad1.0-dev
+      - libvulkan-dev
+      - glslc
     stage:
       - -usr/bin/wayland-scanner
       - -usr/lib/*/libwayland-client.so.0.20.0
@@ -674,7 +676,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-24.02.0'
+    source-tag: 'poppler-24.03.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -706,7 +708,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.4.2'
+    source-tag: '1.5.0'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -772,7 +774,7 @@ parts:
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.78.1'
+    source-tag: '2.80.0'
     source-depth: 1
     plugin: autotools
     override-build: |
@@ -822,7 +824,7 @@ parts:
   pangomm:
     after: [ cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.50.2'
+    source-tag: '2.52.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -868,7 +870,7 @@ parts:
   gtkmm:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '3.24.8'
+    source-tag: '3.24.9'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -899,7 +901,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.10.0'
+    source-tag: '5.12.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1039,7 +1041,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.9.0'
+    source-tag: 'libwacom-2.10.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1191,7 +1193,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.25.1'
+    source-tag: 'v1.26.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1203,7 +1205,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.46.0'
+    source-tag: '3.48.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1215,7 +1217,7 @@ parts:
   libhandy:
     after: [ pygobject, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
-    source-tag: '1.8.2'
+    source-tag: '1.8.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1231,7 +1233,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.76.2'
+    source-tag: '1.76.3'
 # ext:updatesnap
 #   version-format:
 #     same-minor: true
@@ -1271,7 +1273,7 @@ parts:
   libsecret:
     after: [ p11-kit, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsecret.git
-    source-tag: '0.21.3'
+    source-tag: '0.21.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1321,7 +1323,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.4.0'
+    source-tag: '4.4.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1346,7 +1348,7 @@ parts:
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
     source: https://github.com/aruiz/webp-pixbuf-loader.git
-    source-tag: '0.2.6'
+    source-tag: '0.2.7'
     source-depth: 1
     plugin: meson
     build-environment: *buildenv
@@ -1439,7 +1441,7 @@ parts:
   libva:
     after: [ libtool, meson-deps, libayatana-appindicator ]
     source: https://github.com/intel/libva.git
-    source-tag: '2.20.0'
+    source-tag: '2.21.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1456,7 +1458,7 @@ parts:
   intel-gmm:
     after: [ libva ]
     source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.17'
+    source-tag: 'intel-gmmlib-22.3.18'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-gmmlib-%M.%m.%R'
@@ -1483,7 +1485,7 @@ parts:
   intel-media-driver:
     after: [ intel-gmm ]
     source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-24.1.3'
+    source-tag: 'intel-media-24.1.5'
 # ext:updatesnap
 #   version-format:
 #     format: 'intel-media-%M.%m.%R'
