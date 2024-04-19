@@ -158,8 +158,6 @@ parts:
       - libgck-1-0
       - libgcr-base-3-1
       - libgcr-ui-3-1
-      - libgl1
-      - libgl1-mesa-dri
       - libgoa-1.0-0b
       - libgraphite2-3
       - libgspell-1-2
@@ -194,16 +192,10 @@ parts:
       - libvorbis0a
       - libvorbisenc2
       - libwacom9
-      - libwayland-client0
-      - libwayland-cursor0
-      - libwayland-egl1
-      - libnvidia-egl-wayland1
       - libwebkit2gtk-4.1-0
       - libx11-6
       - libxau6
       - libxcb-render0
-      - libxcb-shm0
-      - libxcb1
       - libxcomposite1
       - libxcursor1
       - libxdamage1
@@ -226,12 +218,6 @@ parts:
       - ubuntu-settings
       - unity-gtk3-module
       - xdg-user-dirs
-      - xkb-data
-      # VA-API drivers for HW-accelerated video decoding
-      - mesa-va-drivers
-      - on amd64:
-        - i965-va-driver
-        - intel-media-va-driver
     stage:
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
     override-build: |
@@ -284,10 +270,12 @@ parts:
     plugin: make
     make-parameters:
       - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
+      - WITH_GRAPHICS=false
 
   cleanup:
     after: [ caches ]
     plugin: nil
+    source: https://github.com/canonical/gpu-snap.git
     build-snaps:
       - gtk-common-themes
     build-packages:
@@ -305,3 +293,5 @@ parts:
       rm -rf usr/share/man
 
       find . -type d -empty -delete
+
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
