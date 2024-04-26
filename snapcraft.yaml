@@ -47,6 +47,7 @@ parts:
       - -var/lib/ispell/README
       - -usr/share/dict/README.select-wordlist
       - -usr/share/emacs
+      - -usr/share/fontconfig
       - -usr/share/gdb
       - -usr/share/glade
       - -usr/share/gobject-introspection-1.0
