@@ -1606,6 +1606,7 @@ parts:
       - libunity-dev
       - libuuid1
       - libvorbisfile3
+      - libvulkan-dev
       - libwebkit2gtk-4.0-dev
       - libwebkit2gtk-4.1-dev
       - libx11-xcb-dev
