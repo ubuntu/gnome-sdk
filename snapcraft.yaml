@@ -1619,6 +1619,7 @@ parts:
       - libxft-dev
       - libxi-dev
       - libxinerama-dev
+      - libxkbcommon0
       - libxkbcommon-dev
       - libxml2-dev
       - libxml2-utils
