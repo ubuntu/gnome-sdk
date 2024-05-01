@@ -1629,7 +1629,7 @@ parts:
       - libzstd1
       - pkg-config
       - python3-dev
-      - python3-distutils
+      - python3-distlib
       - python3-minimal
       - python3-pip
       - python3-pkg-resources
