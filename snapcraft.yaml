@@ -22,7 +22,6 @@ confinement: strict
 grade: stable
 icon: icon.png
 base: core24
-build-base: devel
 compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
