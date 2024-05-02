@@ -20,9 +20,8 @@ description: |
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: devel
+grade: stable
 base: core24 # if the base is changed, the BUILDENV part must be updated
-build-base: devel
 
 parts:
   buildenv:
