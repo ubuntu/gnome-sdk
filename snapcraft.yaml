@@ -182,6 +182,7 @@ parts:
       - libogg0
       - libpathplan4
       - libpipewire-0.3-0
+      - libproxy1v5
       - libpng16-16
       - libpulse0
       - libpython3.12
