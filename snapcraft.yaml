@@ -197,7 +197,6 @@ parts:
       - libwayland-cursor0
       - libwayland-egl1
       - libnvidia-egl-wayland1
-      - libwebkit2gtk-4.0-37
       - libwebkit2gtk-4.1-0
       - libx11-6
       - libxau6
