@@ -148,6 +148,6 @@ version_number = data['version']
 if version_number == 'git':
     version_number = generate_version(part_src_dir=os.environ['CRAFT_PROJECT_DIR'])
 
-archive_name = f"{os.environ['CRAFT_PROJECT_NAME']}_{version_number}_{os.environ['SNAP_ARCH']}.debug"
+archive_name = f"{os.environ['SNAPCRAFT_PROJECT_NAME']}_{version_number}_{os.environ['SNAP_ARCH']}.debug"
 archive_full_path = os.path.join(os.environ['CRAFT_PROJECT_DIR'], archive_name)
 os.system(f"zip -r9 {archive_full_path} {debugroot}")
