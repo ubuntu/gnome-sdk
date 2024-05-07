@@ -226,6 +226,7 @@ parts:
       - ubuntu-settings
       - unity-gtk3-module
       - xdg-user-dirs
+      - xkb-data
       # VA-API drivers for HW-accelerated video decoding
       - mesa-va-drivers
       - on amd64:
