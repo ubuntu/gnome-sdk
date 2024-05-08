@@ -1578,7 +1578,7 @@ parts:
       - libpcre2-8-0
       - libpcre3
       - libpcre3-dev
-      - libpng16-16
+      - libpng16-16t64
       - libpulse0
       - libpulse-dev
       - libwrap0
