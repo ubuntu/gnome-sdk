@@ -1639,6 +1639,7 @@ parts:
       - python3.12-venv
       - shared-mime-info
       - zlib1g-dev
+      - zlib1g
       - libwebp-dev
     override-build: |
       set -eux
