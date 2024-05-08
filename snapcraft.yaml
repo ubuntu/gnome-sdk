@@ -1643,15 +1643,15 @@ parts:
     override-build: |
       set -eux
       craftctl default
-      cd $CRAFT_STAGE/usr
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
-      cd $CRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
-      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
+      #cd $CRAFT_STAGE/usr
+      #find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
+      #find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
+      #cd $CRAFT_STAGE/usr/lib
+      #find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
+      #find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
+      #cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      #find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
+      #find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
   conditioning:
     after: [ debs ]
