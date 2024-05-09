@@ -185,11 +185,10 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-tag: '1.74.0'
+    source-tag: '1.80.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
-#     lower-than: 1.76.0
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -223,30 +222,8 @@ parts:
       - valac
       - libgraphviz-dev
 
-  gee:
-    after: [ vala ]
-    source: https://gitlab.gnome.org/GNOME/libgee.git
-    source-tag: '0.20.6'
-    source-depth: 1
-# ext:updatesnap
-#   version-format:
-#     ignore-odd-minor: true
-    plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
-    build-environment: *buildenv
-    override-build: |
-      set -eux
-      craftctl default
-      GIREPOSITORY_PATH=$CRAFT_PART_INSTALL/usr/lib/girepository-1.0
-      mkdir -p $GIREPOSITORY_PATH
-      cp gee/Gee-0.8.typelib $GIREPOSITORY_PATH/
-      GIR_PATH=$CRAFT_PART_INSTALL/usr/share/gir-1.0
-      mkdir -p $GIR_PATH
-      cp gee/Gee-0.8.gir $GIR_PATH/
-      #rm -r $CRAFT_PART_INSTALL/$(echo $CRAFT_STAGE | cut -d/ -f2)
-
   atk:
-    after: [ gee, meson-deps ]
+    after: [ meson-deps ]
     source: https://gitlab.gnome.org/GNOME/atk.git
     source-tag: '2.38.0'
     source-depth: 1
@@ -265,47 +242,32 @@ parts:
       sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
       sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $PC
       sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
+    build-packages:
+      - libgirepository1.0-dev
 
   at-spi2-core:
     after: [ atk, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: 'AT_SPI2_CORE_2_44_1'
+    source-tag: 'AT_SPI2_CORE_2_50_2'
 # ext:updatesnap
 #   version-format:
 #     format: 'AT_SPI2_CORE_%M_%m_%R'
-#     lower-than: 2.45
+#     lower-than: 2.51
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
-      - -Dintrospection=yes
+      - -Dintrospection=enabled
       - -Ddocs=false
     build-environment: *buildenv
     build-packages:
       - libdbus-1-dev
       - libxtst-dev
 
-  at-spi2-atk:
-    after: [ at-spi2-core, meson-deps ]
-    source: https://gitlab.gnome.org/GNOME/at-spi2-atk.git
-    source-tag: 'AT_SPI2_ATK_2_38_0'
-# ext:updatesnap
-#   version-format:
-#     format: 'AT_SPI2_ATK_%M_%m_%R'
-#     lower-than: 2.39
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dtests=false
-    build-environment: *buildenv
-
   fribidi:
-    after: [ at-spi2-atk, meson-deps ]
+    after: [ meson-deps ]
     source: https://github.com/fribidi/fribidi.git
     source-tag: 'v1.0.13'
     source-depth: 1
@@ -405,11 +367,10 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.56.4' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.58.0' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
-#     lower-than: 2.57 # 2.57 requires a more modern Cargo version
     source-depth: 1
     plugin: autotools
     autotools-configure-parameters:
@@ -972,7 +933,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-tag: '42.0'
+    source-tag: '46.0'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -992,7 +953,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '42.10'
+    source-tag: '44.0'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -1232,7 +1193,7 @@ parts:
   gjs:
     after: [ libhandy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
-    source-tag: '1.76.3'
+    source-tag: '1.80.2'
 # ext:updatesnap
 #   version-format:
 #     same-minor: true
@@ -1245,9 +1206,6 @@ parts:
       - -Dskip_gtk_tests=true
       - -Dskip_dbus_tests=true
       - -Dinstalled_tests=false
-    override-pull: |
-      craftctl default
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/meson-Fix-GJS.patch
     build-environment: *buildenv
     build-packages:
       - dbus
@@ -1288,7 +1246,7 @@ parts:
     after: [ libsecret, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libgnome-games-support.git
     source-type: git
-    source-tag: '1.8.2'
+    source-tag: '2.0.0'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -1544,6 +1502,8 @@ parts:
       - libgcr-3-dev
       - libgcrypt20
       - libgcrypt20-dev
+      - libgee-0.8-2
+      - libgee-0.8-dev
       - libgl1-mesa-dev
       - libglu1-mesa
       - libglu1-mesa-dev
