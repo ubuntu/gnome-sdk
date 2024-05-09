@@ -222,31 +222,8 @@ parts:
       - valac
       - libgraphviz-dev
 
-  atk:
-    after: [ meson-deps ]
-    source: https://gitlab.gnome.org/GNOME/atk.git
-    source-tag: '2.38.0'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dintrospection=true
-      - -Ddocs=false
-    build-environment: *buildenv
-    override-build: |
-      set -eux
-      craftctl default
-      PC=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/atk.pc
-      sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
-      sed -i 's#libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#libdir=${prefix}/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $PC
-      sed -i 's#includedir=/usr/include#includedir=${prefix}/include#' $PC
-    build-packages:
-      - libgirepository1.0-dev
-
   at-spi2-core:
-    after: [ atk, meson-deps ]
+    after: [ glib, gobject-introspection, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
     source-tag: 'AT_SPI2_CORE_2_50_2'
 # ext:updatesnap
