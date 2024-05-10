@@ -176,7 +176,7 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
-      - libfreetype6-dev
+      - libfreetype-dev
       - libx11-dev
       - libxext-dev
       - libxcb1-dev
@@ -412,7 +412,7 @@ parts:
       - -Ddebug=true
     build-environment: *buildenv
     build-packages:
-      - libidn2-0-dev
+      - libidn2-dev
       - libunistring-dev
     override-pull: |
       set -eux
