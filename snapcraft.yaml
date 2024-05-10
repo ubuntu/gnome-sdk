@@ -229,11 +229,11 @@ parts:
   at-spi2-core:
     after: [ glib, gobject-introspection, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/at-spi2-core.git
-    source-tag: 'AT_SPI2_CORE_2_50_2'
+    source-tag: 'AT_SPI2_CORE_2_52_0'
 # ext:updatesnap
 #   version-format:
 #     format: 'AT_SPI2_CORE_%M_%m_%R'
-#     lower-than: 2.51
+#     lower-than: 2.53
     source-depth: 1
     plugin: meson
     meson-parameters:
