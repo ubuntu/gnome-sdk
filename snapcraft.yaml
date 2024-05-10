@@ -122,6 +122,7 @@ parts:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
+      - -Dintrospection=enabled
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -134,6 +135,9 @@ parts:
       - gcc
       - g++
       - clang
+# Use the packages rather than the gobject-introspection part to avoid a depends cycle
+      - gir1.2-glib-2.0-dev
+      - gobject-introspection
 
   pixman:
     after: [ glib, meson-deps ]
