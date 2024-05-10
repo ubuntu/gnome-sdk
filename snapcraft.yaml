@@ -1239,6 +1239,8 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
+    build-packages:
+      - libgee-0.8-dev
 
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
