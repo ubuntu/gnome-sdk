@@ -1190,7 +1190,7 @@ parts:
     build-environment: *buildenv
     build-packages:
       - dbus
-      - libmozjs-102-dev
+      - libmozjs-115-dev
 
   p11-kit:
     after: [ gjs, meson-deps ]
