@@ -33,6 +33,7 @@ parts:
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
       - CRAFT_EXT_CORE_LEVEL: core24
+      - PYTHONPATH: $CRAFT_STAGE/lib/python3.12/site-packages
 
   ninja:
     plugin: nil
@@ -1445,6 +1446,61 @@ parts:
       else
         echo 'Disabled for this architecture'
       fi
+
+  python-deps:
+    source: .
+    plugin: python
+    python-packages:
+      - jinja2
+      - ply
+      - PyYAML
+    override-prime: ''
+
+  libcamera:
+    after: [python-deps, meson-deps]
+    source: https://git.libcamera.org/libcamera/libcamera.git
+    source-tag: 'v0.3.0'
+    source-depth: 1
+    plugin: meson
+    build-environment: *buildenv
+    build-packages:
+      - libyaml-dev
+      - python3-jinja2
+      - python3-ply
+      - python3-yaml
+    meson-parameters:
+      - --prefix=/usr
+      - -Dcam=disabled
+      - -Ddocumentation=disabled
+      - -Dtest=false
+      - -Dqcam=disabled
+      - -Dtracing=disabled
+
+  pipewire:
+    after: [libcamera, meson-deps]
+    source: https://gitlab.freedesktop.org/pipewire/pipewire.git
+    source-tag: '1.1.82'
+    source-depth: 1
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Dexamples=disabled
+      - -Dtests=disabled
+      - -Dgstreamer=enabled
+      - -Dgstreamer-device-provider=enabled
+      - -Dlibcamera=enabled
+      - -Dsnap=enabled
+    build-packages:
+      - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+      - libgstreamer-plugins-good1.0-dev
+      - libgstreamer1.0-dev
+      - libapparmor-dev
+      - libsnapd-glib-dev
+      - libyaml-dev
+    prime:
+      - -usr/lib/systemd
 
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
