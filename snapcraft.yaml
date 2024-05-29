@@ -474,22 +474,6 @@ parts:
     build-packages:
       - gtk-doc-tools
 
-  wayland:
-    after: [ librest, meson-deps ]
-    source: https://gitlab.freedesktop.org/wayland/wayland.git
-    source-tag: '1.22.0'
-    source-depth: 1
-    plugin: meson
-# ext:updatesnap
-#   version-format:
-#     no-9x-revisions: true
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Ddocumentation=false
-    build-environment: *buildenv
-
   wayland-protocols:
     after: [ wayland, meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
@@ -1378,74 +1362,6 @@ parts:
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
 
-  libva:
-    after: [ libtool, meson-deps, libayatana-appindicator ]
-    source: https://github.com/intel/libva.git
-    source-tag: '2.21.0'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dwith_x11=yes
-      - -Dwith_glx=yes
-      - -Dwith_wayland=yes
-    build-environment: *buildenv
-    build-packages:
-      - libxcb-dri3-dev
-
-  intel-gmm:
-    after: [ libva ]
-    source: https://github.com/intel/gmmlib.git
-    source-tag: 'intel-gmmlib-22.3.18'
-# ext:updatesnap
-#   version-format:
-#     format: 'intel-gmmlib-%M.%m.%R'
-    source-depth: 1
-    plugin: cmake
-    build-environment: *buildenv
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-    override-stage: |
-      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
-        craftctl default
-        sed -i 's#prefix=$CRAFT_STAGE/usr#prefix=$CRAFT_STAGE/usr#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
-        sed -i 's#includedir=/usr/include/igdgmm#includedir=${prefix}/include/igdgmm#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
-      fi
-    override-build: |
-      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
-        craftctl default
-      else
-        echo 'Disabled for this architecture'
-      fi
-
-  intel-media-driver:
-    after: [ intel-gmm ]
-    source: https://github.com/intel/media-driver.git
-    source-tag: 'intel-media-24.1.5'
-# ext:updatesnap
-#   version-format:
-#     format: 'intel-media-%M.%m.%R'
-    source-depth: 1
-    plugin: cmake
-    build-environment: *buildenv
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-    build-packages:
-      - pkg-config
-      - cmake
-    override-build: |
-      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
-        craftctl default
-      else
-        echo 'Disabled for this architecture'
-      fi
-
   debs:
     after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
     plugin: nil
@@ -1554,8 +1470,10 @@ parts:
       - libudev1
       - libunity-dev
       - libuuid1
+      - libva-dev
       - libvorbisfile3
       - libvulkan-dev
+      - libwayland-dev
       - libwebkit2gtk-4.1-dev
       - libx11-xcb-dev
       - libxcb-render0-dev
