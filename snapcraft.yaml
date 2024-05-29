@@ -475,10 +475,12 @@ parts:
       - gtk-doc-tools
 
   wayland-protocols:
-    after: [ wayland, meson-deps ]
+    after: [ meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
     source-tag: '1.34'
     source-depth: 1
+    build-packages:
+      - libwayland-dev
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -487,7 +489,7 @@ parts:
     build-environment: *buildenv
 
   gtk3:
-    after: [ wayland-protocols, wayland, meson-deps ]
+    after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '3.24.41'
 # ext:updatesnap
@@ -519,6 +521,7 @@ parts:
       - libxinerama-dev
       - libcups2-dev
       - libcolord-dev
+      - libwayland-dev
       - libxrandr-dev
       - libxcursor-dev
       - libxcomposite-dev
@@ -532,7 +535,7 @@ parts:
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
   gtk4:
-    after: [ wayland-protocols, wayland, meson-deps ]
+    after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
     source-tag: '4.14.1'
 # ext:updatesnap
@@ -577,6 +580,7 @@ parts:
       - libxml2-utils
       - libgstreamer-plugins-bad1.0-dev
       - libvulkan-dev
+      - libwayland-dev
       - glslc
     stage:
       - -usr/bin/wayland-scanner
@@ -1363,7 +1367,7 @@ parts:
       done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
     plugin: nil
     stage-packages:
       - appstream
