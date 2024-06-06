@@ -1367,7 +1367,7 @@ parts:
       done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, libsoup3 ]
     plugin: nil
     stage-packages:
       - appstream
