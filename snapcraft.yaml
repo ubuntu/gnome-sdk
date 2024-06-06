@@ -37,7 +37,7 @@ parts:
   ninja:
     plugin: nil
     source: https://github.com/ninja-build/ninja.git
-    source-tag: 'v1.11.1'
+    source-tag: 'v1.12.1'
     source-depth: 1
     override-build: |
       rm -rf build
@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.4.0'
+    source-tag: '1.4.1'
     source-depth: 1
     override-build: |
       python3 -m pip install --break-system-packages .
@@ -112,7 +112,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.80.0'
+    source-tag: '2.80.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -189,7 +189,7 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-tag: '1.80.0'
+    source-tag: '1.80.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -213,7 +213,7 @@ parts:
   vala:
     after: [ gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/vala.git
-    source-tag: '0.56.16'
+    source-tag: '0.56.17'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -250,7 +250,7 @@ parts:
   fribidi:
     after: [ meson-deps ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: 'v1.0.13'
+    source-tag: 'v1.0.14'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -263,7 +263,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.3.1' # developers declared that they won't break ABI
+    source-tag: '8.5.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -294,7 +294,7 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.52.1'
+    source-tag: '1.52.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -315,7 +315,7 @@ parts:
   gdk-pixbuf:
     after: [ pango, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: '2.42.10'
+    source-tag: '2.42.12'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -348,7 +348,7 @@ parts:
   librsvg:
     after: [ gdk-pixbuf, vala ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.58.0' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.58.1' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -477,7 +477,7 @@ parts:
   wayland-protocols:
     after: [ meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.34'
+    source-tag: '1.36'
     source-depth: 1
     build-packages:
       - libwayland-dev
@@ -491,7 +491,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.41'
+    source-tag: '3.24.42'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -537,7 +537,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.14.1'
+    source-tag: '4.14.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -582,6 +582,7 @@ parts:
       - libvulkan-dev
       - libwayland-dev
       - glslc
+      - libgraphene-1.0-dev
     stage:
       - -usr/bin/wayland-scanner
       - -usr/lib/*/libwayland-client.so.0.20.0
@@ -605,7 +606,7 @@ parts:
   poppler:
     after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
     source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-24.03.0'
+    source-tag: 'poppler-24.06.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'poppler-%M.%m.%R'
@@ -637,7 +638,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.5.0'
+    source-tag: '1.5.1'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -830,7 +831,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.12.0'
+    source-tag: '5.12.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -970,7 +971,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.10.0'
+    source-tag: 'libwacom-2.11.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1003,7 +1004,7 @@ parts:
       - libevdev-dev
 
   clutter:
-    after: [ cogl, libinput, meson-deps ]
+    after: [ cogl, json-glib, libinput, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/clutter.git
     source-tag: '1.26.4'
 # ext:updatesnap
@@ -1134,7 +1135,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.48.1'
+    source-tag: '3.48.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1290,7 +1291,7 @@ parts:
   libayatana-ido:
     after: [glib, gtk3]
     source: https://github.com/AyatanaIndicators/ayatana-ido.git
-    source-tag: '0.10.1'
+    source-tag: '0.10.2'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
@@ -1514,6 +1515,7 @@ parts:
       - zlib1g-dev
       - zlib1g
       - libwebp-dev
+      - libigdgmm-dev
     override-build: |
       set -eux
       craftctl default
