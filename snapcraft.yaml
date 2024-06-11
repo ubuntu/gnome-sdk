@@ -602,40 +602,6 @@ parts:
       mkdir -p $CRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
-
-  poppler:
-    after: [ cairo, gdk-pixbuf, glib, gobject-introspection, gtk3, meson-deps ]
-    source: https://gitlab.freedesktop.org/poppler/poppler.git
-    source-tag: 'poppler-24.06.0'
-# ext:updatesnap
-#   version-format:
-#     format: 'poppler-%M.%m.%R'
-    source-depth: 1
-    plugin: cmake
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -DBUILD_GTK_TESTS=OFF
-      - -DBUILD_QT5_TESTS=OFF
-      - -DBUILD_QT6_TESTS=OFF
-      - -DBUILD_CPP_TESTS=OFF
-      - -DBUILD_MANUAL_TESTS=OFF
-      - -DENABLE_QT5=OFF
-      - -DENABLE_QT6=OFF
-      - -DENABLE_GLIB=ON
-      - -DENABLE_GTK_DOC=OFF
-      - -DENABLE_GPGME=OFF
-      - -DENABLE_GOBJECT_INTROSPECTION=ON
-    build-environment: *buildenv
-    build-packages:
-      - libboost1.74-dev
-      - libcurl4-openssl-dev
-      - libopenjp2-7-dev
-      - libnss3-dev
-      - liblcms2-dev
-
-
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
     source-tag: '1.5.1'
@@ -1368,7 +1334,7 @@ parts:
       done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, libsoup3 ]
+    after: [ libgnome-games-support, libadwaita, libgweather, libayatana-appindicator, libsoup3 ]
     plugin: nil
     stage-packages:
       - appstream
@@ -1516,6 +1482,10 @@ parts:
       - zlib1g
       - libwebp-dev
       - libigdgmm-dev
+      - libpoppler-dev
+      - libpoppler-glib-dev
+      - gir1.2-poppler-0.18
+      
     override-build: |
       set -eux
       craftctl default
