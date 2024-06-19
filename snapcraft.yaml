@@ -1481,11 +1481,12 @@ parts:
       - zlib1g-dev
       - zlib1g
       - libwebp-dev
-      - libigdgmm-dev
       - libpoppler-dev
       - libpoppler-glib-dev
       - gir1.2-poppler-0.18
-      
+      # the package is intel specific
+      - on amd64:
+        - libigdgmm-dev
     override-build: |
       set -eux
       craftctl default
