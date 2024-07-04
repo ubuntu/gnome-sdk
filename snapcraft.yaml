@@ -112,7 +112,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.80.2'
+    source-tag: '2.80.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -250,7 +250,7 @@ parts:
   fribidi:
     after: [ meson-deps ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: 'v1.0.14'
+    source-tag: 'v1.0.15'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -263,7 +263,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '8.5.0' # developers declared that they won't break ABI
+    source-tag: '9.0.0' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -294,16 +294,17 @@ parts:
   pango:
     after: [ harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
-    source-tag: '1.52.2'
+    source-tag: '1.54.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
-      - -Dinstall-tests=false
+      - -Dbuild-testsuite=false
       - -Dgtk_doc=false
       - -Dintrospection=enabled
+      - -Dbuild-examples=false
     build-environment: *buildenv
     build-packages:
       - libthai-dev
@@ -388,7 +389,7 @@ parts:
   json-glib:
     after: [ epoxy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-tag: '1.8.0'
+    source-tag: '1.9.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -604,7 +605,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.5.1'
+    source-tag: '1.5.2'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -766,11 +767,11 @@ parts:
   gtkmm:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '3.24.9'
+    source-tag: '4.14.0'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
-#     lower-than: 4
+#     lower-than: 5
 #     no-9x-minors: true
     plugin: meson
     meson-parameters:
@@ -937,7 +938,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.11.0'
+    source-tag: 'libwacom-2.12.2'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -954,7 +955,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.25.0'
+    source-tag: '1.26.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1089,7 +1090,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.26.0'
+    source-tag: 'v1.26.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1150,7 +1151,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.25.3'
+    source-tag: '0.25.5'
     source-depth: 1
     plugin: meson
     meson-parameters:
