@@ -1353,7 +1353,7 @@ parts:
       - libcairo2-dev
       - libcanberra-gtk3-dev
       - libcrypt1
-      - libcurl4
+      - libcurl4t64
       - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
@@ -1400,7 +1400,7 @@ parts:
       - libmount-dev
       - libmount1
       - libmozjs-102-dev
-      - libmtdev1
+      - libmtdev1t64
       - libnettle8t64
       - libnghttp2-14
       - libnghttp2-dev
