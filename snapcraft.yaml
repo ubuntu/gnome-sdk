@@ -138,7 +138,7 @@ parts:
       - gstreamer1.0-plugins-good
       - gstreamer1.0-pipewire
       - ibus-gtk3
-      - libasound2
+      - libasound2t64
       - libasyncns0
       - libavahi-client3
       - libavahi-common3
@@ -148,12 +148,12 @@ parts:
       - libcdt5
       - libcgraph6
       - libcolord2
-      - libcups2
+      - libcups2t64
       - libdatrie1
       - libdbus-glib-1-2
-      - libdb5.3
+      - libdb5.3t64
       - libevdev2
-      - libflac12
+      - libflac12t64
       - libfontconfig1
       - libfreetype6
       - libgck-1-0
@@ -174,17 +174,17 @@ parts:
       - libjpeg-turbo8
       - liblcms2-2
       - libllvm17t64
-      - libmozjs-115-0
+      - libmozjs-115-0t64
       - libmpc3
       - libmpfr6
       - libmtdev1t64
       - libogg0
       - libpathplan4
-      - libpipewire-0.3-0
+      - libpipewire-0.3-0t64
       - libproxy1v5
       - libpng16-16t64
       - libpulse0
-      - libpython3.12
+      - libpython3.12t64
       - librsvg2-2
       - libsigc++-2.0-0v5
       - libsndfile1
