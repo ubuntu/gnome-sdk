@@ -173,11 +173,11 @@ parts:
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
-      - libllvm17
+      - libllvm17t64
       - libmozjs-115-0
       - libmpc3
       - libmpfr6
-      - libmtdev1
+      - libmtdev1t64
       - libogg0
       - libpathplan4
       - libpipewire-0.3-0
