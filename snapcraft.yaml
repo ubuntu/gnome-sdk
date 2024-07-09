@@ -1582,7 +1582,9 @@ parts:
       cp /snap/$CRAFT_EXT_CORE_LEVEL/current/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/
 
       # Necessary for armhf builds, triggers review warning
-      execstack --clear-execstack  usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libde265.so.0*
+      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "arm-linux-gnueabihf" ]; then
+        execstack --clear-execstack  usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libde265.so.0*
+      fi
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
