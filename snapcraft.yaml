@@ -1508,6 +1508,8 @@ parts:
     after: [ debs ]
     plugin: nil
     build-environment: *buildenv
+    build-packages:
+      - execstack
     override-prime: |
       set -eux
       craftctl default
@@ -1578,6 +1580,9 @@ parts:
       ln -sf lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0 usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so
       # CHECK THIS When changing the core base, this line must be update
       cp /snap/$CRAFT_EXT_CORE_LEVEL/current/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libc_malloc_debug.so.0 lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/
+
+      # Necessary for armhf builds, triggers review warning
+      execstack --clear-execstack  usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libde265.so.0*
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
