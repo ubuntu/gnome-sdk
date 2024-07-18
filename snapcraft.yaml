@@ -219,6 +219,7 @@ parts:
       - ubuntu-settings
       - unity-gtk3-module
       - xdg-user-dirs
+      - xkb-data
     stage:
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
     override-build: |
