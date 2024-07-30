@@ -1,6 +1,7 @@
 name: gnome-42-2204
 version: git
 summary: Shared GNOME 42 Ubuntu stack
+source-code: https://github.com/ubuntu/gnome-sdk/tree/gnome-42-2204
 description: |
   This snap provides the GNOME 42 stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
 
