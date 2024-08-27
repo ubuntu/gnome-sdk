@@ -45,6 +45,7 @@ parts:
     stage:
       # libegl-mesa0
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libEGL_mesa.so.0.0.0
+      - -usr/share/glvnd/egl_vendor.d
       # libgbm1
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libgbm.so.1.0.0
       # libglapi-mesa
@@ -56,21 +57,51 @@ parts:
       # libgl1-mesa-dri
       # mesa-va-drivers
       - -usr/lib/$CRAFT_ARCH_TRIPLET/dri
+      - -usr/share/drirc.d
+      # mesa-vulkan-drivers
+      - -usr/bin/mesa-overlay-control.py
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libVkLayer*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libvulkan*
+      - -usr/share/vulkan/explicit_layer.d
+      - -usr/share/vulkan/icd.d
+      - -usr/share/vulkan/implicit_layer.d
+      # libdrm2
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libdrm.so.2.4.0
+      # libdrm-common
+      - -usr/share/libdrm
+      # libdrm-*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_amdgpu.so.1.0.0
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_nouveau.so.2.0.0
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_radeon.so.1.0.1
+      # libvdpau1
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libvdpau.so.1.0.0
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/vdpau/libvdpau_trace.so.1.0.0
 
   debs:
     after: [ gnome ]
     plugin: nil
     stage-packages:
+      # mesa
       - libegl-mesa0
       - libgbm1
+      - libgl1-mesa-dri
       - libglapi-mesa
       - libglu1-mesa
       - libglx-mesa0
-      - libgl1-mesa-dri
       - mesa-va-drivers
+      - mesa-vulkan-drivers
+      # libdrm
+      - libdrm2
+      - libdrm-common
+      - libdrm-amdgpu1
+      - libdrm-nouveau2
+      - libdrm-radeon1
+      # libvdpau
+      - libvdpau1
     stage:
       # libegl-mesa0
       - usr/lib/$CRAFT_ARCH_TRIPLET/libEGL_mesa.so.0.0.0
+      - usr/share/glvnd/egl_vendor.d
       # libgbm1
       - usr/lib/$CRAFT_ARCH_TRIPLET/libgbm.so.1.0.0
       # libglapi-mesa
@@ -82,3 +113,22 @@ parts:
       # libgl1-mesa-dri
       # mesa-va-drivers
       - usr/lib/$CRAFT_ARCH_TRIPLET/dri
+      - usr/share/drirc.d
+      # mesa-vulkan-drivers
+      - usr/bin/mesa-overlay-control.py
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libVkLayer*
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libvulkan*
+      - usr/share/vulkan/explicit_layer.d
+      - usr/share/vulkan/icd.d
+      - usr/share/vulkan/implicit_layer.d
+      # libdrm-common
+      - usr/share/libdrm
+      # libdrm2
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libdrm.so.2.4.0
+      # libdrm-*
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_amdgpu.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_nouveau.so.2.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libdrm_radeon.so.1.0.1
+      # libvdpau1
+      - usr/lib/$CRAFT_ARCH_TRIPLET/libvdpau.so.1.0.0
+      - usr/lib/$CRAFT_ARCH_TRIPLET/vdpau/libvdpau_trace.so.1.0.0
