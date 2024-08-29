@@ -5,6 +5,7 @@ on:
     branches:
       - gnome-42-2204-sdk
       - gnome-46-2404-sdk
+  workflow_dispatch:
 
 jobs:
   snap:
