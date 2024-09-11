@@ -1653,6 +1653,7 @@ parts:
       - shared-mime-info
       - zlib1g-dev
       - libwebp-dev
+      - libpolkit-gobject-1-0
       - libpolkit-gobject-1-dev
     override-build: |
       set -eux
