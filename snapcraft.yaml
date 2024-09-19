@@ -1335,7 +1335,7 @@ parts:
       done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, libayatana-appindicator, libsoup3, librest, buildenv, at-spi2-core, webp-pixbuf-loader ]
+    after: [ libgnome-games-support, libadwaita, libgweather, libayatana-appindicator, libsoup3, librest, at-spi2-core, webp-pixbuf-loader ]
     plugin: nil
     stage-packages:
       - appstream

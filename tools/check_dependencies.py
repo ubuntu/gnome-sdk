@@ -13,10 +13,13 @@ if not os.path.exists(config_file):
 data = yaml.safe_load(open(config_file, "r"))
 
 parts = {}
+exceptions = ['buildenv']
 
 for part in data['parts']:
     if part == "debs":
         break
+    if part in exceptions:
+        continue
     parts[part] = False
 
 def filldeps(part):
