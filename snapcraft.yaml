@@ -1522,7 +1522,7 @@ parts:
       fi
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver, webp-pixbuf-loader ]
     plugin: nil
     stage-packages:
       - appstream
