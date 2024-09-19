@@ -12,34 +12,41 @@ if not os.path.exists(config_file):
 
 data = yaml.safe_load(open(config_file, "r"))
 
-parts = {}
 exceptions = ['buildenv']
 
-for part in data['parts']:
-    if part == "debs":
-        break
+def filldeps(part):
+    """ Fill recursively the dependencies of each part """
+    global data
+    output = []
+    if 'after' in data['parts'][part]:
+        for dep in data['parts'][part]['after']:
+            # it's not a problem to have duplicated dependencies
+            output += filldeps(dep)
+            output.append(dep)
+    return output
+
+dependencies = {}
+
+# get the dependencies for each part
+for part in data["parts"]:
+    dependencies[part] = filldeps(part)
+
+deb_dependencies = []
+for part in data["parts"]:
+    if "debs" == part:
+        continue
+    if "debs" in dependencies[part]:
+        # if it depends on debs, it must be after, so don't take it into account
+        continue
     if part in exceptions:
         continue
-    parts[part] = False
+    deb_dependencies.append(part)
 
-def filldeps(part):
-    global data
-    global parts
-    if 'after' not in data['parts'][part]:
-        return
-
-    deps = data['parts'][part]['after']
-    for dep in deps:
-        parts[dep] = True
-        filldeps(dep)
-
-filldeps("debs")
 failed = False
-for part in parts:
-    if parts[part]:
-        continue
-    print(f"DEBS must depend on {part}")
-    failed = True
+for dependency in deb_dependencies:
+    if dependency not in dependencies["debs"]:
+        print(f"DEBS part must be after {dependency}")
+        failed = True
 
 if failed:
     sys.exit(1)
