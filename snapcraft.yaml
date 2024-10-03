@@ -628,6 +628,9 @@ parts:
       - libappstream-dev
     override-pull: |
       craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-tab-box-skip-middle-clicks-on-different-tab.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-add-thai-translation.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-update-thai-translation.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-Add-wartybrown-accent-color.patch
 
