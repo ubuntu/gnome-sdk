@@ -1,4 +1,4 @@
-From 248e68733a6fbc455da30d36f6c913edbe6c1f11 Mon Sep 17 00:00:00 2001
+From 0686cf22563f291e1e65e750748848568a7e17aa Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Marco=20Trevisan=20=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
 Date: Tue, 5 Apr 2022 16:00:46 +0200
 Subject: [PATCH] style-manager: Support Yaru accent colors
@@ -27,10 +27,10 @@ index b95d0ae4..4c51f2a3 100644
 +       description: 'Mimic Yaru accent colors')
 \ No newline at end of file
 diff --git a/src/adw-settings-impl-portal.c b/src/adw-settings-impl-portal.c
-index 9f9fbf7c..be2466e2 100644
+index 7f50a79c..585117fe 100644
 --- a/src/adw-settings-impl-portal.c
 +++ b/src/adw-settings-impl-portal.c
-@@ -233,3 +233,28 @@ adw_settings_impl_portal_new (gboolean enable_color_scheme,
+@@ -253,3 +253,28 @@ adw_settings_impl_portal_new (gboolean enable_color_scheme,
  
    return ADW_SETTINGS_IMPL (self);
  }
@@ -510,10 +510,10 @@ index d27ebda5..59da0dcb 100644
  }
  
 diff --git a/src/stylesheet/_colors.scss b/src/stylesheet/_colors.scss
-index 32df08f8..118b5e5b 100644
+index 614055c5..e246c2f9 100644
 --- a/src/stylesheet/_colors.scss
 +++ b/src/stylesheet/_colors.scss
-@@ -127,3 +127,9 @@ $strong_disabled_opacity: 0.3;
+@@ -129,3 +129,9 @@ $strong_disabled_opacity: 0.3;
    $trough_active_color: gtkalpha(currentColor, .5);
    $window_outline_color: transparentize(white, .7);
  }
@@ -525,7 +525,7 @@ index 32df08f8..118b5e5b 100644
 +}
 \ No newline at end of file
 diff --git a/src/stylesheet/_defaults.scss b/src/stylesheet/_defaults.scss
-index 76cc94d5..8a0f88cd 100644
+index a262a989..1d926ebc 100644
 --- a/src/stylesheet/_defaults.scss
 +++ b/src/stylesheet/_defaults.scss
 @@ -8,10 +8,13 @@
@@ -682,7 +682,7 @@ index 98a07acf..0d86a06f 100644
      <file>assets/bullet-symbolic.symbolic.png</file>
      <file>assets/bullet@2-symbolic.symbolic.png</file>
 diff --git a/src/stylesheet/meson.build b/src/stylesheet/meson.build
-index 56466c1c..a77302f6 100644
+index 563cafcc..1c93e67c 100644
 --- a/src/stylesheet/meson.build
 +++ b/src/stylesheet/meson.build
 @@ -2,14 +2,67 @@ fs = import('fs')
@@ -754,7 +754,7 @@ index 56466c1c..a77302f6 100644
    if sassc.found()
      sassc_opts = [ '-a', '-M', '-t', 'compact' ]
  
-@@ -72,10 +125,21 @@ if not fs.exists('base.css')
+@@ -73,10 +126,21 @@ if not fs.exists('base.css')
        'defaults-dark',
      ]
  
@@ -779,7 +779,7 @@ index 56466c1c..a77302f6 100644
          command: [
            sassc, sassc_opts, '@INPUT@', '@OUTPUT@',
          ],
-@@ -85,9 +149,24 @@ if not fs.exists('base.css')
+@@ -86,9 +150,24 @@ if not fs.exists('base.css')
    endif
  endif
  

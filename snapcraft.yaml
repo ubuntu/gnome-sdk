@@ -629,6 +629,7 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-Add-wartybrown-accent-color.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
