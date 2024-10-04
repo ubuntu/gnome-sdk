@@ -1,3 +1,8 @@
+From 248e68733a6fbc455da30d36f6c913edbe6c1f11 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marco=20Trevisan=20=28Trevi=C3=B1o=29?= <mail@3v1n0.net>
+Date: Tue, 5 Apr 2022 16:00:46 +0200
+Subject: [PATCH] style-manager: Support Yaru accent colors
+
 Generate the libadwaita color schemes using Yaru accent colors.
 Then, when the Yaru theme is used in the system, use the generated
 variant instead of the default one.
@@ -677,10 +682,10 @@ index 98a07acf..0d86a06f 100644
      <file>assets/bullet-symbolic.symbolic.png</file>
      <file>assets/bullet@2-symbolic.symbolic.png</file>
 diff --git a/src/stylesheet/meson.build b/src/stylesheet/meson.build
-index 56466c1c..8f56cccc 100644
+index 56466c1c..a77302f6 100644
 --- a/src/stylesheet/meson.build
 +++ b/src/stylesheet/meson.build
-@@ -2,14 +2,66 @@ fs = import('fs')
+@@ -2,14 +2,67 @@ fs = import('fs')
  
  stylesheet_deps = []
  
@@ -698,6 +703,7 @@ index 56466c1c..8f56cccc 100644
 +      'purple',
 +      'magenta',
 +      'red',
++      'yellow',
 +  ]
 +
 +  yaru_accent_colors_sassc += configure_file(
@@ -748,7 +754,7 @@ index 56466c1c..8f56cccc 100644
    if sassc.found()
      sassc_opts = [ '-a', '-M', '-t', 'compact' ]
  
-@@ -72,10 +124,21 @@ if not fs.exists('base.css')
+@@ -72,10 +125,21 @@ if not fs.exists('base.css')
        'defaults-dark',
      ]
  
@@ -773,7 +779,7 @@ index 56466c1c..8f56cccc 100644
          command: [
            sassc, sassc_opts, '@INPUT@', '@OUTPUT@',
          ],
-@@ -85,9 +148,24 @@ if not fs.exists('base.css')
+@@ -85,9 +149,24 @@ if not fs.exists('base.css')
    endif
  endif
  
@@ -1020,10 +1026,10 @@ index 00000000..4055eb81
 \ No newline at end of file
 diff --git a/src/stylesheet/yaru_accent_colors.scss b/src/stylesheet/yaru_accent_colors.scss
 new file mode 100644
-index 00000000..a1aa8ee7
+index 00000000..d3ea98e1
 --- /dev/null
 +++ b/src/stylesheet/yaru_accent_colors.scss
-@@ -0,0 +1,75 @@
+@@ -0,0 +1,84 @@
 +// Keep this in sync with
 +//   https://github.com/ubuntu/yaru/blob/master/common/accent-colors.scss.in
 +
@@ -1049,6 +1055,8 @@ index 00000000..a1aa8ee7
 +        $color: #B34CB3;
 +    } @else if $accent_color == 'red' {
 +        $color: #DA3450;
++    } @else if $accent_color == 'yellow' {
++        $color: #C88800;
 +    } @else {
 +        @error('No known accent color defined!');
 +    }
@@ -1059,6 +1067,7 @@ index 00000000..a1aa8ee7
 +$yaru_is_dark_variant: @yaru_dark_variant@;
 +$yaru_accent_bg_color: get_accent_color('@yaru_accent_color@', $yaru_is_dark_variant);
 +$accent_bg_color: $yaru_accent_bg_color;
++$accent_fg_color: white;
 +$accent_color: $yaru_accent_bg_color;
 +@debug("Accent color is " + $yaru_accent_bg_color);
 +
@@ -1085,14 +1094,20 @@ index 00000000..a1aa8ee7
 +    @define-color popover_fg_color #{$window-fg-color};
 +    @define-color thumbnail_fg_color #{$window-fg-color};
 +
-+    $contrast_target: if($variant=='light', 4.5, 4.8);
++    $contrast_target: if($variant=='light', 4.51, 4.8);
 +    $yaru-accent-color: optimize-contrast($window-bg-color,
++        $yaru_accent_bg_color, $target: $contrast_target);
++    $yaru_accent_bg_color: optimize-contrast($accent_fg_color,
 +        $yaru_accent_bg_color, $target: $contrast_target);
 +    @define-color yaru_accent_color #{$yaru-accent-color};
 +    @define-color yaru_accent_bg_color #{$yaru_accent_bg_color};
 +    @define-color accent_color #{$yaru-accent-color};
++    @define-color accent_bg_color #{$yaru_accent_bg_color};
 +
-+    $contrast_target: if($variant=='light', 4.5, 6);
++    @debug("Accent optimized colors for @yaru_accent_color@ are accent " +
++        $yaru-accent-color + ", bg " + $yaru-accent-bg-color);
++
++    $contrast_target: if($variant=='light', 6, 5.5);
 +    $link-color: optimize-contrast($window-bg-color,
 +        $accent-color, $target: $contrast_target);
 +    $link-visited-color: gtkmix($link-color, $window-fg-color, 80%) !default;
