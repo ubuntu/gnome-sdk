@@ -72,19 +72,12 @@ parts:
       - python3-pip
 
   libtool:
-    source: https://git.savannah.gnu.org/git/libtool.git
-    source-tag: 'v2.4.7'
-    plugin: autotools
+    plugin: nil
 # ext:updatesnap
 #   version-format:
 #     ignore: true
-    autotools-configure-parameters: [ --prefix=/usr ]
-    build-environment: *buildenv
-    build-packages:
-      - help2man
-      - texinfo
-    override-pull: |
-      git clone --recursive --branch v2.4.7 https://git.savannah.gnu.org/git/libtool.git /root/parts/libtool/src
+    stage-packages:
+      - libtool
     override-stage: |
       set -eux
       craftctl default
