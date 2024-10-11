@@ -964,6 +964,7 @@ parts:
       - libtdb-dev
       - libpulse-dev
       - libgstreamer1.0-dev
+      - libltdl-dev
 
   gsound:
     after: [ libcanberra, meson-deps ]
@@ -1572,6 +1573,7 @@ parts:
       - libjpeg-dev
       - libkrb5-3
       - liblcms2-dev
+      - libltdl-dev
       - liblzo2-dev
       - libmount-dev
       - libmount1
