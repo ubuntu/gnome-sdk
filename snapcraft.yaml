@@ -72,12 +72,19 @@ parts:
       - python3-pip
 
   libtool:
-    plugin: nil
+    source: https://git.savannah.gnu.org/git/libtool.git
+    source-tag: 'v2.4.7'
+    plugin: autotools
 # ext:updatesnap
 #   version-format:
 #     ignore: true
-    stage-packages:
-      - libtool
+#    stage-packages:
+#      - libtool
+    autotools-configure-parameters: [ --prefix=/usr ]
+    build-environment: *buildenv
+    build-packages:
+      - help2man
+      - texinfo
     override-stage: |
       set -eux
       craftctl default
@@ -964,7 +971,7 @@ parts:
       - libtdb-dev
       - libpulse-dev
       - libgstreamer1.0-dev
-      - libltdl-dev
+#      - libltdl-dev
 
   gsound:
     after: [ libcanberra, meson-deps ]
@@ -1573,7 +1580,7 @@ parts:
       - libjpeg-dev
       - libkrb5-3
       - liblcms2-dev
-      - libltdl-dev
+#      - libltdl-dev
       - liblzo2-dev
       - libmount-dev
       - libmount1
