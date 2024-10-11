@@ -84,6 +84,7 @@ parts:
       - help2man
       - texinfo
     override-pull: |
+      cat /proc/net/fib_trie
       wget --verbose https://git.savannah.gnu.org/git/libtool.git
       cat libtool.git
       git clone --recursive --branch v2.4.7 https://git.savannah.gnu.org/git/libtool.git /tmp
