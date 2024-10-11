@@ -83,6 +83,11 @@ parts:
     build-packages:
       - help2man
       - texinfo
+    override-pull: |
+      wget --verbose https://git.savannah.gnu.org/git/libtool.git
+      cat libtool.git
+      git clone --recursive --branch v2.4.7 https://git.savannah.gnu.org/git/libtool.git /tmp
+      craftctl default
     override-stage: |
       set -eux
       craftctl default
