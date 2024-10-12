@@ -188,6 +188,7 @@ parts:
       - libpython3.12t64
       - librsvg2-2
       - libsigc++-2.0-0v5
+      - libsigc++-3.0-0
       - libsndfile1
       - libthai0
       - libtiff6
