@@ -59,6 +59,7 @@ parts:
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
       - ibus-gtk3
+      - gcin-gtk3-immodule
       - libappindicator3-1
       - libindicator3-7
       - libasound2
