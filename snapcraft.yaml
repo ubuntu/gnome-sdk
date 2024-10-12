@@ -130,6 +130,7 @@ parts:
     stage-packages:
       - fcitx-frontend-gtk3
       - fonts-noto-color-emoji
+      - gcin-gtk3-immodule
       - gir1.2-ggit-1.0
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
