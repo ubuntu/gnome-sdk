@@ -1404,7 +1404,7 @@ parts:
       - liblzma5
       - libmount-dev
       - libmount1
-      - libmozjs-102-dev
+      - libmozjs-115-dev
       - libmtdev1t64
       - libnettle8t64
       - libnghttp2-14
