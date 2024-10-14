@@ -14,7 +14,7 @@ the yaru ones.
 Forwarded: not-needed
 
 diff --git a/meson_options.txt b/meson_options.txt
-index b95d0ae4..4c51f2a3 100644
+index b95d0ae4..2ef97791 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -20,3 +20,7 @@ option('tests',
@@ -25,7 +25,6 @@ index b95d0ae4..4c51f2a3 100644
 +option('yaru-accent-colors',
 +       type: 'boolean', value: true,
 +       description: 'Mimic Yaru accent colors')
-\ No newline at end of file
 diff --git a/src/adw-settings-impl-portal.c b/src/adw-settings-impl-portal.c
 index 7f50a79c..585117fe 100644
 --- a/src/adw-settings-impl-portal.c
@@ -93,7 +92,7 @@ index dc11df58..427470b9 100644
 +
  G_END_DECLS
 diff --git a/src/adw-settings.c b/src/adw-settings.c
-index cf0e81c0..74977791 100644
+index cf0e81c0..c537765b 100644
 --- a/src/adw-settings.c
 +++ b/src/adw-settings.c
 @@ -26,6 +26,9 @@ struct _AdwSettings
@@ -114,7 +113,7 @@ index cf0e81c0..74977791 100644
    LAST_PROP,
  };
  
-@@ -132,6 +136,198 @@ register_impl (AdwSettings     *self,
+@@ -132,6 +136,199 @@ register_impl (AdwSettings     *self,
    }
  }
  
@@ -310,10 +309,11 @@ index cf0e81c0..74977791 100644
 +
 +
 +
++
  static void
  adw_settings_constructed (GObject *object)
  {
-@@ -155,17 +351,7 @@ adw_settings_constructed (GObject *object)
+@@ -155,17 +352,7 @@ adw_settings_constructed (GObject *object)
      register_impl (self, self->platform_impl, &found_color_scheme, &found_high_contrast);
    }
  
@@ -332,7 +332,7 @@ index cf0e81c0..74977791 100644
  }
  
  static void
-@@ -176,6 +362,8 @@ adw_settings_dispose (GObject *object)
+@@ -176,6 +363,8 @@ adw_settings_dispose (GObject *object)
    g_clear_object (&self->platform_impl);
    g_clear_object (&self->gsettings_impl);
    g_clear_object (&self->legacy_impl);
@@ -341,7 +341,7 @@ index cf0e81c0..74977791 100644
  
    G_OBJECT_CLASS (adw_settings_parent_class)->dispose (object);
  }
-@@ -201,6 +389,10 @@ adw_settings_get_property (GObject    *object,
+@@ -201,6 +390,10 @@ adw_settings_get_property (GObject    *object,
      g_value_set_boolean (value, adw_settings_get_high_contrast (self));
      break;
  
@@ -352,7 +352,7 @@ index cf0e81c0..74977791 100644
    default:
      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
    }
-@@ -231,6 +423,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
+@@ -231,6 +424,13 @@ adw_settings_class_init (AdwSettingsClass *klass)
                            FALSE,
                            G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
  
@@ -366,7 +366,7 @@ index cf0e81c0..74977791 100644
    g_object_class_install_properties (object_class, LAST_PROP, props);
  }
  
-@@ -321,6 +520,8 @@ adw_settings_end_override (AdwSettings *self)
+@@ -321,6 +521,8 @@ adw_settings_end_override (AdwSettings *self)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_COLOR_SCHEME]);
    if (notify_hc)
      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
@@ -375,7 +375,7 @@ index cf0e81c0..74977791 100644
  }
  
  void
-@@ -375,3 +576,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
+@@ -375,3 +577,9 @@ adw_settings_override_high_contrast (AdwSettings *self,
  
    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_HIGH_CONTRAST]);
  }
@@ -510,7 +510,7 @@ index d27ebda5..59da0dcb 100644
  }
  
 diff --git a/src/stylesheet/_colors.scss b/src/stylesheet/_colors.scss
-index 614055c5..e246c2f9 100644
+index 614055c5..8997a579 100644
 --- a/src/stylesheet/_colors.scss
 +++ b/src/stylesheet/_colors.scss
 @@ -129,3 +129,9 @@ $strong_disabled_opacity: 0.3;
@@ -523,7 +523,6 @@ index 614055c5..e246c2f9 100644
 +  $link_color: gtkcolor(yaru_link_color);
 +  $link_visited_color: gtkcolor(yaru_link_visited_color);
 +}
-\ No newline at end of file
 diff --git a/src/stylesheet/_defaults.scss b/src/stylesheet/_defaults.scss
 index a262a989..1d926ebc 100644
 --- a/src/stylesheet/_defaults.scss
@@ -546,7 +545,7 @@ index a262a989..1d926ebc 100644
  @define-color destructive_bg_color #{if($variant == 'dark', "@red_4", "@red_3")};
 diff --git a/src/stylesheet/_palette-yaru.scss b/src/stylesheet/_palette-yaru.scss
 new file mode 100644
-index 00000000..6b335a22
+index 00000000..a943a2eb
 --- /dev/null
 +++ b/src/stylesheet/_palette-yaru.scss
 @@ -0,0 +1,118 @@
@@ -668,7 +667,6 @@ index 00000000..6b335a22
 +@define-color dark_3 #{$dark_3};
 +@define-color dark_4 #{$dark_4};
 +@define-color dark_5 #{$dark_5};
-\ No newline at end of file
 diff --git a/src/stylesheet/adwaita-stylesheet.gresources.xml b/src/stylesheet/adwaita-stylesheet.gresources.xml
 index 98a07acf..0d86a06f 100644
 --- a/src/stylesheet/adwaita-stylesheet.gresources.xml
