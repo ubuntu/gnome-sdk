@@ -610,7 +610,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.5.5'
+    source-tag: '1.6.0'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -633,8 +633,12 @@ parts:
       - libappstream-dev
     override-pull: |
       craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-disabled-opacity-for-disabled-pictu.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-opacity-for-all-disabled-gtk-images.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Return-return-orange-as-default-color.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-Add-wartybrown-accent-color.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Always-expose-and-use-yaru-accent-colors-val.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-Add-wartybrown-accent-support.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
