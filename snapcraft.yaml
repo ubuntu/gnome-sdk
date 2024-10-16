@@ -298,3 +298,5 @@ parts:
       find . -type d -empty -delete
 
       ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
+      # delete any broken link
+      find . -xtype l -delete
