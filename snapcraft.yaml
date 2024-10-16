@@ -58,7 +58,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.4.1'
+    source-tag: '1.5.2'
     source-depth: 1
     override-build: |
       python3 -m pip install --break-system-packages .
@@ -108,7 +108,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.80.3'
+    source-tag: '2.82.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -154,7 +154,7 @@ parts:
   cairo:
     after: [ pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
-    source-tag: '1.18.0' # 1.17.8 fails to build, so... maybe in core24, or 1.17.9
+    source-tag: '1.18.2'
 # ext:updatesnap
 #   version-format:
 #     ignore-version: '1.17.8'
@@ -169,6 +169,7 @@ parts:
       - -Dxcb=enabled
       - -Dtee=enabled
       - -Dzlib=enabled
+      - -Dtests=disabled
     build-environment: *buildenv
     build-packages:
       - libfontconfig1-dev
@@ -185,6 +186,7 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
+    # using 1.82.0 breaks libportal
     source-tag: '1.80.1'
 # ext:updatesnap
 #   version-format:
@@ -246,7 +248,7 @@ parts:
   fribidi:
     after: [ meson-deps ]
     source: https://github.com/fribidi/fribidi.git
-    source-tag: 'v1.0.15'
+    source-tag: 'v1.0.16'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -259,7 +261,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '9.0.0' # developers declared that they won't break ABI
+    source-tag: '10.0.1' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -288,7 +290,7 @@ parts:
       - libgraphite2-dev
 
   pango:
-    after: [ harfbuzz, meson-deps ]
+    after: [ libffi, harfbuzz, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pango.git
     source-tag: '1.54.0'
     source-depth: 1
@@ -298,7 +300,7 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
       - -Dbuild-testsuite=false
-      - -Dgtk_doc=false
+      - -Ddocumentation=false
       - -Dintrospection=enabled
       - -Dbuild-examples=false
     build-environment: *buildenv
@@ -343,28 +345,35 @@ parts:
       - libtiff-dev
 
   librsvg:
-    after: [ gdk-pixbuf, vala ]
+    after: [ gdk-pixbuf, vala, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.58.1' # they left the odd->unstable even->stable scheme, and now tags are stable
+    source-tag: '2.59.1' # they left the odd->unstable even->stable scheme, and now tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --enable-introspection=yes
-      - --enable-vala=yes
-      - --enable-pixbuf-loader
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dintrospection=enabled
+      - -Dvala=enabled
+      - -Dpixbuf=enabled
+      - -Dpixbuf-loader=enabled
+      - -Ddocs=disabled
+      - -Dtests=false
     build-environment: *buildenv
     build-packages:
-      - cargo
-      #- libcroco3-dev
-    override-stage: |
-      set -eux
+      - libssl-dev
+    override-pull: |
       craftctl default
-      # snapcraft is adding twice $CRAFT_STAGE
-      cp -a $CRAFT_STAGE/$CRAFT_STAGE/* $CRAFT_STAGE/
+      # cargo version in .deb is too old
+      curl https://sh.rustup.rs -sSf > cargo.sh
+      sh ./cargo.sh -y
+      export PATH=$PATH:$HOME/.cargo/bin
+      ~/.cargo/bin/cargo install cargo-c
+      cp ~/.cargo/bin/* /usr/local/bin
 
   epoxy:
     after: [ librsvg, meson-deps ]
@@ -385,7 +394,7 @@ parts:
   json-glib:
     after: [ epoxy, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/json-glib.git
-    source-tag: '1.9.2'
+    source-tag: '1.10.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -440,7 +449,7 @@ parts:
   libsoup3:
     after: [ libsoup2, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.4.4'
+    source-tag: '3.6.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -474,7 +483,7 @@ parts:
   wayland-protocols:
     after: [ meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.36'
+    source-tag: '1.38'
     source-depth: 1
     build-packages:
       - libwayland-dev
@@ -483,12 +492,13 @@ parts:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
+      - -Dtests=false
     build-environment: *buildenv
 
   gtk3:
     after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.42'
+    source-tag: '3.24.43'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -534,7 +544,7 @@ parts:
   gtk4:
     after: [ wayland-protocols, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.14.4'
+    source-tag: '4.16.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -550,12 +560,11 @@ parts:
       - -Dwin32-backend=false
       - -Dmacos-backend=false
       - -Dintrospection=enabled
-      - -Dgtk_doc=false
-      - -Ddemos=false
+      - -Ddocumentation=false
       - -Dbuild-examples=false
       - -Dbuild-tests=false
       - -Dmedia-gstreamer=enabled
-      - -Ddemos=false
+      - -Dbuild-demos=false
       - -Dbuild-testsuite=false
       - -Dbuild-examples=false
       - -Dbuild-tests=false
@@ -601,7 +610,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.5.4'
+    source-tag: '1.6.1'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
@@ -624,17 +633,18 @@ parts:
       - libappstream-dev
     override-pull: |
       craftctl default
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-tab-box-skip-middle-clicks-on-different-tab.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-add-thai-translation.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/libadwaita-update-thai-translation.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-disabled-opacity-for-disabled-pictu.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-opacity-for-all-disabled-gtk-images.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Return-return-orange-as-default-color.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-Add-wartybrown-accent-color.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Always-expose-and-use-yaru-accent-colors-val.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-Add-wartybrown-accent-support.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, meson-deps ]
     plugin: meson
     source: https://github.com/flatpak/libportal.git
-    source-tag: '0.7.1'
+    source-tag: '0.8.1'
     source-depth: 1
     build-environment: *buildenv
     meson-parameters:
@@ -671,7 +681,7 @@ parts:
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.80.0'
+    source-tag: '2.82.0'
     source-depth: 1
     plugin: autotools
     override-build: |
@@ -719,9 +729,9 @@ parts:
       - doxygen
 
   pangomm:
-    after: [ cairomm, meson-deps ]
+    after: [ pango, libffi,  cairomm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pangomm.git
-    source-tag: '2.52.0'
+    source-tag: '2.54.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -733,8 +743,10 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
@@ -760,14 +772,16 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
 
   gtkmm:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '4.14.0'
+    source-tag: '4.16.0'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -788,6 +802,8 @@ parts:
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
@@ -798,7 +814,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.12.1'
+    source-tag: '5.14.1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -871,7 +887,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-tag: '46.0'
+    source-tag: '46.1'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -891,7 +907,7 @@ parts:
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gnome-desktop.git
-    source-tag: '44.0'
+    source-tag: '44.1'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
@@ -939,7 +955,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.12.2'
+    source-tag: 'libwacom-2.13.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -956,7 +972,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.26.1'
+    source-tag: '1.26.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1091,7 +1107,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.26.1'
+    source-tag: 'v1.27.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1103,7 +1119,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.48.2'
+    source-tag: '3.50.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1220,7 +1236,7 @@ parts:
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libgweather.git
-    source-tag: '4.4.2'
+    source-tag: '4.4.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1259,7 +1275,7 @@ parts:
   libayatana-ido:
     after: [glib, gtk3]
     source: https://github.com/AyatanaIndicators/ayatana-ido.git
-    source-tag: '0.10.2'
+    source-tag: '0.10.4'
     source-depth: 1
     plugin: cmake
     build-environment: *buildenv
