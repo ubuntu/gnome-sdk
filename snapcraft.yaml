@@ -610,7 +610,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.6.0'
+    source-tag: '1.6.1'
     source-depth: 1
     after: [ meson-deps, gtk4 ]
     plugin: meson
