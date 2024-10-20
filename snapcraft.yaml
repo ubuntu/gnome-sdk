@@ -29,7 +29,7 @@ parts:
     build-environment: &buildenv
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/vala-0.56:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
       - CRAFT_EXT_CORE_LEVEL: core22
@@ -78,7 +78,9 @@ parts:
 # ext:updatesnap
 #   version-format:
 #     ignore: true
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-environment: *buildenv
     build-packages:
       - help2man
@@ -216,7 +218,9 @@ parts:
 #   version-format:
 #     ignore-odd-minor: true
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-environment: *buildenv
     build-packages:
       - autoconf-archive
@@ -232,7 +236,9 @@ parts:
 #   version-format:
 #     ignore-odd-minor: true
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -414,6 +420,7 @@ parts:
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
       - --enable-introspection=yes
       - --enable-vala=yes
       - --enable-pixbuf-loader
@@ -527,7 +534,9 @@ parts:
 #     same-minor: true
     source-depth: 1
     plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
@@ -851,7 +860,7 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
@@ -878,7 +887,7 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/vala-0.56${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
 
@@ -902,7 +911,7 @@ parts:
     build-environment:
       - ACLOCAL_PATH: $CRAFT_STAGE/usr/share/aclocal
       - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/usr/share
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.4/proc/m4
     override-build: |
@@ -958,6 +967,7 @@ parts:
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
       - --with-builtin=pulse
     build-environment: *buildenv
     override-build: |
@@ -1033,6 +1043,7 @@ parts:
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
+      - --libdir=\${exec_prefix}/lib/$CRAFT_ARCH_TRIPLET
       - --enable-wayland-egl-platform=yes
       - --enable-kms-egl-platform=yes
       - --enable-introspection=yes
@@ -1731,10 +1742,10 @@ parts:
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/gnome-42-2204-sdk/current#g' $XML2_CONFIG
 
-      rm -f usr/lib/vala-current
+      rm -f usr/lib/$CRAFT_ARCH_TRIPLET/vala-current
       rm -f usr/share/gettext-current
       rm -f usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
-      ln -s vala-0.56 usr/lib/vala-current
+      ln -s vala-0.56 usr/lib/$CRAFT_ARCH_TRIPLET/vala-current
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET/gdk-pixbuf-current
 
