@@ -43,8 +43,9 @@ parts:
     plugin: nil
     stage-snaps: [ gnome-42-2204/latest/stable ]
     stage:
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/dri
+      - -usr/lib/aarch64-linux-gnu/dri
       - -usr/lib/aarch64-linux-gnu/libEGL_mesa.so.0.0.0
+      - -usr/lib/aarch64-linux-gnu/libGLX_mesa.so.0.0.0
       - -usr/lib/aarch64-linux-gnu/libgbm.so.1.0.0
       - -usr/lib/aarch64-linux-gnu/libglapi.so.0.0.0
       - -usr/lib/aarch64-linux-gnu/libwayland-client.so.0
@@ -58,7 +59,10 @@ parts:
       - libgbm1
       - libegl-mesa0
       - libglu1-mesa
+      - libglx-mesa0
       - libgl1-mesa-dri
       - mesa-va-drivers
+      - mesa-vulkan-drivers
+
     stage:
       - usr/lib/$CRAFT_ARCH_TRIPLET
