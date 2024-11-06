@@ -260,7 +260,12 @@ parts:
       craftctl default
       $CRAFT_STAGE/usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
       $CRAFT_STAGE/usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
+
       # the icons cache is rebuilt in 'cleanup' priming because it is there where the duplicated icons are removed
+
+      export CACHE=$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
+      $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders/* > $CACHE
+      sed -i "s@$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0@/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0@g" $CACHE
 
   command-chain:
     source: https://github.com/snapcore/snapcraft-desktop-integration.git
