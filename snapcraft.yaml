@@ -416,29 +416,8 @@ parts:
       craftctl default
       sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
-  libsoup2:
-    after: [ libpsl, meson-deps ]
-    source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '2.74.3'
-# ext:updatesnap
-#   version-format:
-#     lower-than: 3
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dvapi=enabled
-      - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
-    build-environment: *buildenv
-    build-packages:
-      - libsqlite3-dev
-      - libkrb5-dev
-      - libbrotli-dev
-
   libsoup3:
-    after: [ libsoup2, meson-deps ]
+    after: [ libpsl, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
     source-tag: '3.4.4'
     source-depth: 1
@@ -457,16 +436,20 @@ parts:
       - libnghttp2-dev
 
   librest:
-    after: [ libsoup3 ]
+    after: [ libsoup3, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/librest.git
-    source-tag: '0.8.1'  # looks like this branch has been updated more recently than the 0.8 tags - weird
-# ext:updatesnap
-#   version-format:
-#     same-major: true
-#     same-minor: true
+    source-tag: '0.9.1'
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters: [ --prefix=/usr ]
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dvapi=true
+      - -Dexamples=false
+      - -Dgtk_doc=false
+      - -Dsoup2=false
+      - -Dtests=false
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
@@ -1201,7 +1184,7 @@ parts:
 
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
-    after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup2, libffi ]
+    after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup3, libffi ]
     source-tag: '3.26.4'
     source-depth: 1
     plugin: meson
@@ -1213,7 +1196,7 @@ parts:
       - -Denable-installed-tests=false
       - -Denable-introspection=true
       - -Denable-gtk-doc=false
-      - -Dsoup2=true
+      - -Dsoup2=false
     build-packages:
       - libnghttp2-dev
 
@@ -1234,7 +1217,7 @@ parts:
       - -Dintrospection=true
       - -Dgtk_doc=false
       - -Dtests=false
-      - -Dsoup2=true
+      - -Dsoup2=false
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
