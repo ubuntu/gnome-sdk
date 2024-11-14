@@ -260,11 +260,7 @@ parts:
       craftctl default
       $CRAFT_STAGE/usr/bin/glib-compile-schemas $CRAFT_STAGE/usr/share/glib-2.0/schemas
       $CRAFT_STAGE/usr/bin/update-mime-database $CRAFT_STAGE/usr/share/mime
-      for dir in $CRAFT_STAGE/usr/share/icons/*; do
-        if [ -f "$dir/index.theme" ]; then
-          $CRAFT_STAGE/usr/bin/gtk-update-icon-cache --force "$dir"
-        fi
-      done
+      # the icons cache is rebuilt in 'cleanup' priming because it is there where the duplicated icons are removed
 
   command-chain:
     source: https://github.com/snapcore/snapcraft-desktop-integration.git
@@ -289,8 +285,13 @@ parts:
       set -eux
 
       cd /snap/gtk-common-themes/current
-      find . -type f,l -exec rm -f $CRAFT_PRIME/usr/{} \;
+      find . -type f,l ! -name index.theme -exec rm -f $CRAFT_PRIME/usr/{} \;
       cd $CRAFT_PRIME
+      for dir in usr/share/icons/*; do
+        if [ -f "$dir/index.theme" ]; then
+          gtk-update-icon-cache --force "$dir"
+        fi
+      done
 
       rm -rf usr/share/doc
       rm -rf usr/share/man
