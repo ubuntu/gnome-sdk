@@ -289,7 +289,7 @@ parts:
       cd $CRAFT_PRIME
       for dir in usr/share/icons/*; do
         if [ -f "$dir/index.theme" ]; then
-          gtk-update-icon-cache --force "$dir"
+          $CRAFT_STAGE/usr/bin/gtk-update-icon-cache --force "$dir"
         fi
       done
 
