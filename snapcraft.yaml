@@ -426,6 +426,27 @@ parts:
       craftctl default
       sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
+  libsoup2:
+    after: [ libpsl, meson-deps ]
+    source: https://gitlab.gnome.org/GNOME/libsoup.git
+    source-tag: '2.74.3'
+# ext:updatesnap
+#   version-format:
+#     lower-than: 3
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dvapi=enabled
+      - -Dtls_check=false #disable build time check, but we need to ensure glib-networking is available at runtime
+    build-environment: *buildenv
+    build-packages:
+      - libsqlite3-dev
+      - libkrb5-dev
+      - libbrotli-dev
+
   libsoup3:
     after: [ libpsl, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
@@ -1199,6 +1220,24 @@ parts:
     build-packages:
       - libgee-0.8-dev
 
+  libgeocode-libsoup2:
+    source: https://gitlab.gnome.org/GNOME/geocode-glib.git
+    after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup2, libffi ]
+    source-tag: '3.26.4'
+    source-depth: 1
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Denable-installed-tests=false
+      - -Denable-introspection=true
+      - -Denable-gtk-doc=false
+      - -Dsoup2=true
+    build-packages:
+      - libnghttp2-dev
+
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
     after: [ libgnome-games-support, glib, meson-deps, gobject-introspection, libsoup3, libffi ]
@@ -1336,7 +1375,7 @@ parts:
       done
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, libayatana-appindicator, libsoup3, librest, at-spi2-core, webp-pixbuf-loader ]
+    after: [ libgeocode-libsoup2, libgnome-games-support, libadwaita, libgweather, libayatana-appindicator, libsoup3, librest, at-spi2-core, webp-pixbuf-loader ]
     plugin: nil
     stage-packages:
       - appstream
