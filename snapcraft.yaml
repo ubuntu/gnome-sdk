@@ -351,27 +351,39 @@ parts:
       - libtiff-dev
 
   librsvg:
-    after: [ gdk-pixbuf, vala ]
+    after: [ gdk-pixbuf, vala, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.58.5' # they left the odd->unstable even->stable scheme, and now all tags are stable
+    source-tag: '2.59.1' # they left the odd->unstable even->stable scheme, and now all tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --enable-introspection=yes
-      - --enable-vala=yes
-      - --enable-pixbuf-loader
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dintrospection=enabled
+      - -Dvala=enabled
+      - -Dpixbuf=enabled
+      - -Dpixbuf-loader=enabled
+      - -Ddocs=disabled
+      - -Dtests=false
     build-environment: *buildenv
     build-packages:
-      - cargo
-    override-stage: |
-      set -eux
+      - libssl-dev
+      - curl
+    override-pull: |
       craftctl default
-      # snapcraft is adding twice $CRAFT_STAGE
-      cp -a $CRAFT_STAGE/$CRAFT_STAGE/* $CRAFT_STAGE/
+      # cargo version in .deb is too old
+      curl https://sh.rustup.rs -sSf > cargo.sh
+      sh ./cargo.sh -y
+      export PATH=$PATH:$HOME/.cargo/bin
+      ~/.cargo/bin/cargo install cargo-c
+      cp ~/.cargo/bin/* /usr/local/bin
+    override-stage: |
+      craftctl default
+      sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/librsvg-2.0.pc
 
   epoxy:
     after: [ librsvg, meson-deps ]
@@ -1235,7 +1247,7 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
-      sed -i 's#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#' $CRAFT_PART_SRC/data/meson.build
+      sed -i "s#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#" $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
 
@@ -1526,6 +1538,7 @@ parts:
 
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
+        sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $PC
         sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/gnome-46-2404-sdk/current#' $PC
         sed -i 's#prefix = /usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
         sed -i 's#prefix=/usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
