@@ -1,5 +1,5 @@
 name: gnome-46-2404
-version: git
+adopt-info: gnome-sdk
 summary: Shared GNOME 46 Ubuntu stack
 source-code: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404
 description: |
@@ -36,6 +36,21 @@ parts:
   gnome-sdk:
     plugin: nil
     stage-snaps: [ gnome-46-2404-sdk/latest/candidate ]
+    build-packages:
+      - yq
+    override-build: |
+      set -eu
+      craftctl default
+      sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-46-2404-sdk/manifest.yaml \
+        | yq -r '.version')
+
+      # Use the same logic of snapcraft
+      project_version=$(git -C "${CRAFT_PROJECT_DIR}" describe --dirty 2>/dev/null || true)
+      if [ -z "${project_version}" ]; then
+        project_version="0+git.$(git -C "${CRAFT_PROJECT_DIR}" describe --dirty --always)"
+      fi
+      version="${project_version}-sdk${sdk_version}"
+      craftctl set version="${version:0:32}"
     stage:
       - lib/*/bindtextdomain.so
       - usr
