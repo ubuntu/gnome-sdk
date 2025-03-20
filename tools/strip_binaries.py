@@ -41,6 +41,8 @@ def read_elf_type(filepath):
                 for note in sect.iter_notes():
                     if  note['n_type'] == 'NT_GNU_BUILD_ID':
                         buildId = note['n_desc']
+                        if isinstance(buildId, bytes):
+                            buildId = buildId.hex()
                         break
         except:
             return None, None
