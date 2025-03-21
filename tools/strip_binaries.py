@@ -41,6 +41,11 @@ def read_elf_type(filepath):
                 for note in sect.iter_notes():
                     if  note['n_type'] == 'NT_GNU_BUILD_ID':
                         buildId = note['n_desc']
+                        # Sometimes, ELFtools return a bytes array instead of a string.
+                        # This fixes it.
+                        # https://github.com/eliben/pyelftools/issues/188
+                        if isinstance(buildId, bytes):
+                            buildId = buildId.hex()
                         break
         except:
             return None, None
@@ -124,6 +129,10 @@ while len(paths) != 0:
 
         debugpath = os.path.join(debugroot, buildid[:2])
         debugname = os.path.join(debugpath, f"{buildid[2:]}.debug")
+
+        if os.path.exists(debugname):
+            print(f"Debug symbols file {debugname} already exists, skipping.")
+            continue
 
         print(f"Extracting symbols from {fullpath} into {debugname}")
         try:
