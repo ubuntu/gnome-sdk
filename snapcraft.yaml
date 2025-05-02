@@ -1666,6 +1666,16 @@ parts:
       rm -f usr/lib/*.la
       rm -f usr/lib/*/*.la
 
+      # cleanup broken links; all these are from libc6-dev, libcrypt-dev and libpciaccess-dev
+      for FILE in libcrypt pciaccess libBrokenLocale libanl libc_malloc_debug libmvec libnss_compat libnss_hesiod libpciaccess libresolv libthread_db; do
+        rm -f usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/${FILE}.so
+        rm -f usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/${FILE}.a
+      done
+
+      # remove invalid pkgconfig files from libcrypt-dev and libpciaccess-dev (there are no pkgconfig files in libc6-dev)
+      rm -f usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libcrypt.pc
+      rm -f usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pciaccess.pc
+
       # Cleanup from libunity addition
       rm -f usr/bin/dbus-binding-tool
       rm -f usr/bin/unity-scope-loader
