@@ -864,7 +864,7 @@ parts:
 
   libcanberra:
     after: [ libdazzle ]
-    source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
+    source: http://0pointer.net/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
 # ext:updatesnap
 #   version-format:
 #     ignore: true
