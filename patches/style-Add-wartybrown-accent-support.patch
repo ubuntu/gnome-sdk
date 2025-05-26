@@ -9,9 +9,9 @@ Subject: style: Add wartybrown accent support
  src/adw-settings.c                     |  8 +++++++-
  src/stylesheet/_colors.scss            |  1 +
  src/stylesheet/meson.build             |  1 +
- src/stylesheet/yaru_accent_colors.scss |  5 +++++
+ src/stylesheet/yaru_accent_colors.scss |  2 ++
  tests/test-accent-color.c              | 20 ++++++++++----------
- 8 files changed, 39 insertions(+), 13 deletions(-)
+ 8 files changed, 36 insertions(+), 13 deletions(-)
 
 diff --git a/src/adw-accent-color.c b/src/adw-accent-color.c
 index 89abce0..d41a597 100644
@@ -79,10 +79,10 @@ index c6251ac..35fbb92 100644
  
  ADW_AVAILABLE_IN_1_6
 diff --git a/src/adw-inspector-page.c b/src/adw-inspector-page.c
-index 43b450f..c90b408 100644
+index 3f8a5a3..5c54f55 100644
 --- a/src/adw-inspector-page.c
 +++ b/src/adw-inspector-page.c
-@@ -129,6 +129,8 @@ get_accent_color_name (AdwEnumListItem *item,
+@@ -160,6 +160,8 @@ get_accent_color_name (AdwEnumListItem *item,
      return g_strdup (_("Purple"));
    case ADW_ACCENT_COLOR_SLATE:
      return g_strdup (_("Slate"));
@@ -92,10 +92,10 @@ index 43b450f..c90b408 100644
      g_assert_not_reached ();
    }
 diff --git a/src/adw-settings.c b/src/adw-settings.c
-index dd59c33..5962af1 100644
+index df971c3..a116960 100644
 --- a/src/adw-settings.c
 +++ b/src/adw-settings.c
-@@ -165,9 +165,11 @@ init_debug (AdwSettings *self,
+@@ -192,9 +192,11 @@ init_debug (AdwSettings *self,
        self->accent_color = ADW_ACCENT_COLOR_PURPLE;
      } else if (!g_strcmp0 (env, "slate")) {
        self->accent_color = ADW_ACCENT_COLOR_SLATE;
@@ -108,7 +108,7 @@ index dd59c33..5962af1 100644
      }
    }
  }
-@@ -239,6 +241,8 @@ yaru_accent_to_accent_color (const char     *yaru_accent,
+@@ -286,6 +288,8 @@ yaru_accent_to_accent_color (const char     *yaru_accent,
      rgba_hex = 0xda3450;
    else if (g_str_equal (yaru_accent, "yellow"))
      rgba_hex = 0xc88800;
@@ -117,7 +117,7 @@ index dd59c33..5962af1 100644
  
    if (G_UNLIKELY (rgba_hex == 0))
      {
-@@ -313,6 +317,8 @@ compute_yaru_accent_from_system_accent (AdwSettings *self)
+@@ -360,6 +364,8 @@ compute_yaru_accent_from_system_accent (AdwSettings *self)
        return "purple";
      case ADW_ACCENT_COLOR_SLATE:
        return "sage";
@@ -127,7 +127,7 @@ index dd59c33..5962af1 100644
        g_return_val_if_reached (NULL);
    }
 diff --git a/src/stylesheet/_colors.scss b/src/stylesheet/_colors.scss
-index 4accb71..594e28a 100644
+index 38ad366..0c42245 100644
 --- a/src/stylesheet/_colors.scss
 +++ b/src/stylesheet/_colors.scss
 @@ -13,6 +13,7 @@ $focus_border_opacity: if($contrast == 'high', 80%, 50%);
@@ -139,19 +139,19 @@ index 4accb71..594e28a 100644
    --accent-bg-color: @accent_bg_color;
    --accent-fg-color: @accent_fg_color;
 diff --git a/src/stylesheet/meson.build b/src/stylesheet/meson.build
-index 41e60f6..2ed2a50 100644
+index 8d6c73d..f5933b6 100644
 --- a/src/stylesheet/meson.build
 +++ b/src/stylesheet/meson.build
-@@ -15,6 +15,7 @@ if get_option('yaru-accent-colors')
-       'magenta',
-       'red',
-       'yellow',
-+      'wartybrown',
-   ]
+@@ -23,6 +23,7 @@ if sassc.found()
+         'magenta',
+         'red',
+         'yellow',
++        'wartybrown',
+     ]
  
-   yaru_accent_colors_sassc += configure_file(
+     yaru_accent_colors_sassc += configure_file(
 diff --git a/src/stylesheet/yaru_accent_colors.scss b/src/stylesheet/yaru_accent_colors.scss
-index 74f2e02..941b227 100644
+index 74f2e02..715d0ab 100644
 --- a/src/stylesheet/yaru_accent_colors.scss
 +++ b/src/stylesheet/yaru_accent_colors.scss
 @@ -21,6 +21,8 @@
@@ -163,18 +163,8 @@ index 74f2e02..941b227 100644
      } @else {
          @error('No known accent color defined!');
      }
-@@ -52,6 +54,9 @@ $accent-fg-color: white;
-     @define-color accent_color #{$accent_color};
-     $window-bg-color: if($variant == 'light', #FAFAFA, lighten($jet, 8%));
-     $window-fg-color: if($variant == 'light', $inkstone, $porcelain);
-+    @if @yaru_accent_color@ == 'wartybrown' and $variant == 'light' {
-+        $window-bg-color: #eeeeee;
-+    }
-     @define-color window_bg_color #{$window-bg-color};
-     @define-color window_fg_color #{$window-fg-color};
-     :root {
 diff --git a/tests/test-accent-color.c b/tests/test-accent-color.c
-index bf4628e..255d399 100644
+index ff708fd..ab52848 100644
 --- a/tests/test-accent-color.c
 +++ b/tests/test-accent-color.c
 @@ -90,11 +90,11 @@ test_adw_accent_color_nearest_from_rgba (void)

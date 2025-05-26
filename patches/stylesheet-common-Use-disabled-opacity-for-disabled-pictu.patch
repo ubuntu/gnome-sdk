@@ -10,7 +10,7 @@ Origin: https://gitlab.gnome.org/GNOME/libadwaita/-/merge_requests/814
  1 file changed, 4 insertions(+)
 
 diff --git a/src/stylesheet/_common.scss b/src/stylesheet/_common.scss
-index dd263bd..b3bab72 100644
+index cebd8bf..fd939f9 100644
 --- a/src/stylesheet/_common.scss
 +++ b/src/stylesheet/_common.scss
 @@ -34,6 +34,10 @@ dnd {
@@ -22,5 +22,5 @@ index dd263bd..b3bab72 100644
 +}
 +
  %osd,
- .osd:not(progressbar):not(button):not(menubutton):not(splitbutton) {
+ .osd:not(progressbar):not(button):not(menubutton):not(splitbutton):not(inline-view-switcher) {
    --accent-bg-color: RGB(255 255 255 / 75%);

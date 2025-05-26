@@ -89,10 +89,10 @@ index fa937aa..89abce0 100644
    case ADW_ACCENT_COLOR_BLUE:
      hex = "#3584e4";
 diff --git a/src/stylesheet/_colors.scss b/src/stylesheet/_colors.scss
-index 4c47949..4accb71 100644
+index 9c05c7f..38ad366 100644
 --- a/src/stylesheet/_colors.scss
 +++ b/src/stylesheet/_colors.scss
-@@ -142,4 +142,16 @@ $is_yaru: false !default;
+@@ -145,4 +145,16 @@ $is_yaru: false !default;
  @if $is_yaru {
    $link_color: var(--yaru-link-color);
    $link_visited_color: var(--yaru-link-visited-color);

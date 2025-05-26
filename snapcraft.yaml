@@ -619,7 +619,7 @@ parts:
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.6.2'
+    source-tag: '1.7.2'
     source-depth: 1
     after: [ meson-deps, gtk4, vala, gobject-introspection ]
     plugin: meson
@@ -642,6 +642,7 @@ parts:
       - libappstream-dev
     override-pull: |
       craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/header-bar-Fix-the-icon-padding-for-.default-decoration-t.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-disabled-opacity-for-disabled-pictu.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-opacity-for-all-disabled-gtk-images.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Return-return-orange-as-default-color.patch
