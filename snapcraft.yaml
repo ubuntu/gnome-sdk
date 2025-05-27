@@ -54,7 +54,7 @@ parts:
     stage:
       - lib/*/bindtextdomain.so
       - usr
-      - lib/$CRAFT_ARCH_TRIPLET/*
+      - lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/*
       - etc/gnome/*
       - -etc/emacs
       - -etc/X11/Xreset.d/README
@@ -73,7 +73,7 @@ parts:
       - -usr/share/installed-tests
       - -usr/share/maven-repo
       - -usr/bin/dpkg*
-      - -usr/bin/$CRAFT_ARCH_TRIPLET-*
+      - -usr/bin/$CRAFT_ARCH_TRIPLET_BUILD_FOR-*
       - -usr/bin/g-ir-*
       - -usr/bin/glib-compile-*
       - -usr/bin/glib-gettextize
@@ -237,7 +237,7 @@ parts:
       - xdg-user-dirs
       - xkb-data
     stage:
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libLLVM*
     override-build: |
       set -eux
       craftctl default
@@ -247,9 +247,9 @@ parts:
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
       cd $CRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
-      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{}*" \;
+      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
@@ -269,7 +269,7 @@ parts:
       - libglib2.0-bin
       - shared-mime-info
     build-environment:
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     override-build: |
       set -eux
       craftctl default
