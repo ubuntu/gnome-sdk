@@ -21,6 +21,8 @@ jobs:
         id: checker-test1
         continue-on-error: true
         run: |
+          # The checker-testX are to ensure that the test works as expected
+          # and that it detects the expected errors. They must fail.
           tools/check_dependencies.py test_data/test1.yaml
       - name: Verity dependency checker test2
         id: checker-test2
