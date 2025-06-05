@@ -1400,25 +1400,31 @@ parts:
       - itstool
       - libappstream5
       - libblkid1
+      - libblkid-dev
       - libbrotli1
       - libbrotli-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
       - libcrypt1
+      - libcrypt-dev
       - libcurl4t64
       - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
       - libxcb-dri3-0
+      - libxcb-dri3-dev
       - libdrm2
       - libdrm-dev
       - libdrm-common
       - libegl-mesa0
       - libegl1-mesa-dev
       - libexpat1
+      - libexpat1-dev
       - libevdev2
+      - libevdev-dev
       - libfontconfig1-dev
       - libfreetype6
+      - libfreetype-dev
       - libgbm-dev
       - libgraphene-1.0-dev
       - libgcr-3-dev
@@ -1430,27 +1436,32 @@ parts:
       - libglu1-mesa
       - libglu1-mesa-dev
       - libgmp10
+      - libgmp-dev
       - libgnutls28-dev
       - libgnutls30t64
       - libgnutls-dane0t64
       - libgspell-1-dev
-      - libgstreamer-plugins-base1.0-0
-      - libgstreamer-plugins-bad1.0-0
-      - libgstreamer-plugins-good1.0-0
+      - libgstreamer-plugins-base1.0-dev
+      - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer-plugins-good1.0-dev
       - libgudev-1.0-dev
       - libgvc6
       - libgraphviz-dev
       - libhogweed6t64
       - libgpg-error0
+      - libgpg-error-dev
       - libheif-dev
       - libidn2-0
+      - libidn2-dev
       - libjpeg-dev
       - libkrb5-3
+      - libkrb5-dev
       - liblcms2-dev
       - libltdl-dev
       - liblzo2-dev
       - liblzo2-2
       - liblzma5
+      - liblzma-dev
       - libmount-dev
       - libmount1
       - libmozjs-115-dev
@@ -1460,17 +1471,21 @@ parts:
       - libnghttp2-dev
       - libnotify-dev
       - libnsl2
+      - libnsl-dev
       - libnss3
       - libnss3-dev
       - libopenjp2-7
       - libopenjp2-7-dev
       - libpcre2-8-0
+      - libpcre2-dev
       - libpcre3
       - libpcre3-dev
       - libpng16-16t64
+      - libpng-dev
       - libpulse0
       - libpulse-dev
       - libwrap0
+      - libwrap0-dev
       - libpython3-dev
       - libpython3.12-dev
       - libpython3.12-minimal
@@ -1478,7 +1493,9 @@ parts:
       - libseccomp-dev
       - libseccomp2
       - libselinux1
+      - libselinux1-dev
       - libsepol2
+      - libsepol-dev
       - libsigc++-2.0-0v5
       - libsigc++-2.0-dev
       - libsigc++-3.0-0
@@ -1489,7 +1506,9 @@ parts:
       - libsystemd0
       - libsystemd-dev
       - libtasn1-6
+      - libtasn1-6-dev
       - libtdb1
+      - libtdb-dev
       - libthai-dev
       - libudev-dev
       - libudev1
@@ -1518,8 +1537,10 @@ parts:
       - libxrender-dev
       - libxtst-dev
       - libyaml-0-2
+      - libyaml-dev
       - libzstd1
       - libbz2-1.0
+      - libbz2-dev
       - pkg-config
       - python3-dev
       - python3-distlib
