@@ -104,6 +104,7 @@ parts:
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
+      - --libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
     build-environment: *buildenv
     override-pull: |
       craftctl default
