@@ -1390,128 +1390,90 @@ parts:
     stage-packages:
       - appstream
       - appstream-util
-      - libappstream-dev
       - desktop-file-utils
-      - libglut3.12
-      - libglut-dev
       - gcc
       - gettext
+      - gir1.2-poppler-0.18
       - heif-gdk-pixbuf
       - itstool
-      - libappstream5
-      - libblkid1
+      - libappstream-dev
       - libblkid-dev
-      - libbrotli1
       - libbrotli-dev
+      - libbz2-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
-      - libcrypt1
       - libcrypt-dev
-      - libcurl4t64
       - libcurl4-openssl-dev
-      - libdbus-1-3
       - libdbus-1-dev
-      - libxcb-dri3-0
-      - libxcb-dri3-dev
-      - libdrm2
-      - libdrm-dev
       - libdrm-common
-      - libegl-mesa0
+      - libdrm-dev
       - libegl1-mesa-dev
-      - libexpat1
-      - libexpat1-dev
-      - libevdev2
       - libevdev-dev
+      - libexpat1-dev
       - libfontconfig1-dev
-      - libfreetype6
       - libfreetype-dev
       - libgbm-dev
-      - libgraphene-1.0-dev
       - libgcr-3-dev
-      - libgcrypt20
       - libgcrypt20-dev
-      - libgee-0.8-2
       - libgee-0.8-dev
       - libgl1-mesa-dev
-      - libglu1-mesa
       - libglu1-mesa-dev
-      - libgmp10
+      - libglut-dev
       - libgmp-dev
+      - libgnutls-dane0t64
       - libgnutls28-dev
       - libgnutls30t64
-      - libgnutls-dane0t64
+      - libgpg-error-dev
+      - libgraphene-1.0-dev
+      - libgraphviz-dev
       - libgspell-1-dev
-      - libgstreamer-plugins-base1.0-dev
       - libgstreamer-plugins-bad1.0-dev
+      - libgstreamer-plugins-base1.0-dev
       - libgstreamer-plugins-good1.0-dev
       - libgudev-1.0-dev
       - libgvc6
-      - libgraphviz-dev
-      - libhogweed6t64
-      - libgpg-error0
-      - libgpg-error-dev
       - libheif-dev
-      - libidn2-0
+      - libhogweed6t64
       - libidn2-dev
       - libjpeg-dev
-      - libkrb5-3
       - libkrb5-dev
       - liblcms2-dev
       - libltdl-dev
-      - liblzo2-dev
-      - liblzo2-2
-      - liblzma5
       - liblzma-dev
+      - liblzo2-dev
       - libmount-dev
-      - libmount1
       - libmozjs-115-dev
       - libmtdev1t64
       - libnettle8t64
-      - libnghttp2-14
       - libnghttp2-dev
       - libnotify-dev
-      - libnsl2
       - libnsl-dev
-      - libnss3
       - libnss3-dev
-      - libopenjp2-7
       - libopenjp2-7-dev
-      - libpcre2-8-0
       - libpcre2-dev
-      - libpcre3
       - libpcre3-dev
-      - libpng16-16t64
       - libpng-dev
-      - libpulse0
+      - libpng16-16t64
+      - libpoppler-dev
+      - libpoppler-glib-dev
       - libpulse-dev
-      - libwrap0
-      - libwrap0-dev
       - libpython3-dev
       - libpython3.12-dev
       - libpython3.12-minimal
       - libpython3.12-stdlib
       - libseccomp-dev
-      - libseccomp2
-      - libselinux1
       - libselinux1-dev
-      - libsepol2
       - libsepol-dev
       - libsigc++-2.0-0v5
       - libsigc++-2.0-dev
-      - libsigc++-3.0-0
       - libsigc++-3.0-dev
-      - libsqlite3-0
       - libsqlite3-dev
       - libstdc++6
-      - libsystemd0
       - libsystemd-dev
-      - libtasn1-6
       - libtasn1-6-dev
-      - libtdb1
       - libtdb-dev
       - libthai-dev
       - libudev-dev
-      - libudev1
       - libunity-dev
       - libuuid1
       - libva-dev
@@ -1519,7 +1481,10 @@ parts:
       - libvulkan-dev
       - libwayland-dev
       - libwebkit2gtk-4.1-dev
+      - libwebp-dev
+      - libwrap0-dev
       - libx11-xcb-dev
+      - libxcb-dri3-dev
       - libxcb-render0-dev
       - libxcb-shm0-dev
       - libxcomposite-dev
@@ -1529,18 +1494,14 @@ parts:
       - libxft-dev
       - libxi-dev
       - libxinerama-dev
-      - libxkbcommon0
       - libxkbcommon-dev
       - libxml2-dev
       - libxml2-utils
       - libxrandr-dev
       - libxrender-dev
       - libxtst-dev
-      - libyaml-0-2
       - libyaml-dev
       - libzstd1
-      - libbz2-1.0
-      - libbz2-dev
       - pkg-config
       - python3-dev
       - python3-distlib
@@ -1554,11 +1515,6 @@ parts:
       - python3.12-venv
       - shared-mime-info
       - zlib1g-dev
-      - zlib1g
-      - libwebp-dev
-      - libpoppler-dev
-      - libpoppler-glib-dev
-      - gir1.2-poppler-0.18
       # the package is intel specific
       - on amd64:
         - libigdgmm-dev
