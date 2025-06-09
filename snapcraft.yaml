@@ -1397,32 +1397,43 @@ parts:
       - heif-gdk-pixbuf
       - itstool
       - libappstream-dev
+      - libblkid1
       - libblkid-dev
+      - libbrotli1
       - libbrotli-dev
+      - libbz2-1.0
       - libbz2-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
       - libcrypt-dev
       - libcurl4-openssl-dev
+      - libdbus-1-3
       - libdbus-1-dev
       - libdrm-common
+      - libdrm2
       - libdrm-dev
       - libegl1-mesa-dev
+      - libevdev2
       - libevdev-dev
+      - libexpat1
       - libexpat1-dev
       - libfontconfig1-dev
+      - libfreetype6
       - libfreetype-dev
       - libgbm-dev
       - libgcr-3-dev
+      - libgcrypt20
       - libgcrypt20-dev
       - libgee-0.8-dev
       - libgl1-mesa-dev
       - libglu1-mesa-dev
       - libglut-dev
+      - libgmp10
       - libgmp-dev
       - libgnutls-dane0t64
       - libgnutls28-dev
       - libgnutls30t64
+      - libgpg-error0
       - libgpg-error-dev
       - libgraphene-1.0-dev
       - libgraphviz-dev
@@ -1434,13 +1445,18 @@ parts:
       - libgvc6
       - libheif-dev
       - libhogweed6t64
+      - libidn2-0
       - libidn2-dev
       - libjpeg-dev
+      - libkrb5-3
       - libkrb5-dev
       - liblcms2-dev
       - libltdl-dev
+      - liblzma5
       - liblzma-dev
+      - liblzo2-2
       - liblzo2-dev
+      - libmount1
       - libmount-dev
       - libmozjs-115-dev
       - libmtdev1t64
@@ -1450,7 +1466,9 @@ parts:
       - libnsl-dev
       - libnss3-dev
       - libopenjp2-7-dev
+      - libpcre2-8-0
       - libpcre2-dev
+      - libpcre3
       - libpcre3-dev
       - libpng-dev
       - libpng16-16t64
@@ -1461,18 +1479,25 @@ parts:
       - libpython3.12-dev
       - libpython3.12-minimal
       - libpython3.12-stdlib
+      - libseccomp2
       - libseccomp-dev
+      - libselinux1
       - libselinux1-dev
+      - libsepol2
       - libsepol-dev
       - libsigc++-2.0-0v5
       - libsigc++-2.0-dev
       - libsigc++-3.0-dev
+      - libsqlite3-0
       - libsqlite3-dev
       - libstdc++6
+      - libsystemd0
       - libsystemd-dev
+      - libtasn1-6
       - libtasn1-6-dev
       - libtdb-dev
       - libthai-dev
+      - libudev1
       - libudev-dev
       - libunity-dev
       - libuuid1
@@ -1482,6 +1507,7 @@ parts:
       - libwayland-dev
       - libwebkit2gtk-4.1-dev
       - libwebp-dev
+      - libwrap0
       - libwrap0-dev
       - libx11-xcb-dev
       - libxcb-dri3-dev
@@ -1494,12 +1520,14 @@ parts:
       - libxft-dev
       - libxi-dev
       - libxinerama-dev
+      - libxkbcommon0
       - libxkbcommon-dev
       - libxml2-dev
       - libxml2-utils
       - libxrandr-dev
       - libxrender-dev
       - libxtst-dev
+      - libyaml-0-2
       - libyaml-dev
       - libzstd1
       - pkg-config
@@ -1514,6 +1542,7 @@ parts:
       - python3.12-minimal
       - python3.12-venv
       - shared-mime-info
+      - zlib1g
       - zlib1g-dev
       # the package is intel specific
       - on amd64:
