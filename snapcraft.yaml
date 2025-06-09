@@ -97,22 +97,19 @@ parts:
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
 
   libffi:
-    after: [ libtool, meson-deps ]
-    source: https://gitlab.freedesktop.org/gstreamer/meson-ports/libffi.git
-    source-tag: 'meson-3.2.9999.4'
-# ext:updatesnap
-#   version-format:
-#     format: 'meson-%M.%m.%R'
+    after: [ libtool ]
+    source: https://github.com/libffi/libffi.git
+    source-tag: 'v3.5.0'
     source-depth: 1
-    plugin: meson
-    meson-parameters:
+    plugin: autotools
+    autotools-configure-parameters:
       - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
     build-environment: *buildenv
     override-pull: |
       craftctl default
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/libffi-enable-building-on-riscv64.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/libffi-autoconf.patch
+    build-packages:
+      - texinfo
 
   glib:
     after: [ libffi, meson-deps ]
