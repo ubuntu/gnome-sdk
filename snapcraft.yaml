@@ -1397,6 +1397,10 @@ parts:
       - heif-gdk-pixbuf
       - itstool
       - libappstream-dev
+# it seems that snapcraft not always include dependencies, so we
+# must add the "normal" library .deb files too in some cases.
+# That's why several "devel" packages come along with the corresponding
+# "runtime" package.
       - libblkid1
       - libblkid-dev
       - libbrotli1
