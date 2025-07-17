@@ -1389,6 +1389,7 @@ parts:
       - appstream-util
       - desktop-file-utils
       - gcc
+      - g++
       - gettext
       - gir1.2-poppler-0.18
       - heif-gdk-pixbuf
