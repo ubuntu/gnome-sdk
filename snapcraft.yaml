@@ -1684,6 +1684,11 @@ parts:
       rm -rf usr/share/locale-langpack/kab
       rm -f usr/share/unity/client-scopes.json
 
+      # Libm is a dangling symlink in armhf and riscv64, breaking builds.
+      # We don't need them anyway, the base image has them.
+      rm -f usr/lib/*/lib[mc].so || :
+      rm -f usr/lib/*/lib[mc].a  || :
+
       find . -type d -empty -delete
 
       PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
