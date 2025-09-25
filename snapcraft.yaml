@@ -839,7 +839,6 @@ parts:
     override-pull: |
       set -eux
       craftctl default
-      meson subprojects download
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libdazzle:
