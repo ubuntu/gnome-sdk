@@ -545,7 +545,6 @@ parts:
       - meson
     override-pull: |
       craftctl default
-      meson subprojects download
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
   gtk4:
