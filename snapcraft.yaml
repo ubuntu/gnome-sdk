@@ -372,9 +372,11 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libssl-dev
+      - meson
       - curl
     override-pull: |
       craftctl default
+      meson subprojects download
       # cargo version in .deb is too old
       curl https://sh.rustup.rs -sSf > cargo.sh
       sh ./cargo.sh -y
@@ -434,9 +436,11 @@ parts:
     build-packages:
       - libidn2-dev
       - libunistring-dev
+      - meson
     override-pull: |
       set -eux
       craftctl default
+      meson subprojects download
       sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
 
   libsoup3:
@@ -538,8 +542,10 @@ parts:
       - libxi-dev
       - libxkbfile-dev
       - libxml2-utils
+      - meson
     override-pull: |
       craftctl default
+      meson subprojects download
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
   gtk4:
@@ -632,8 +638,10 @@ parts:
       - libsystemd-dev
       - gperf
       - libappstream-dev
+      - meson
     override-pull: |
       craftctl default
+      meson subprojects download
       patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-disabled-opacity-for-disabled-pictu.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-opacity-for-all-disabled-gtk-images.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Return-return-orange-as-default-color.patch
@@ -828,9 +836,11 @@ parts:
     build-packages:
       - gettext
       - libxml2-dev
+      - meson
     override-pull: |
       set -eux
       craftctl default
+      meson subprojects download
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
   libdazzle:
@@ -1142,6 +1152,11 @@ parts:
       - -Ddebug=true
       - -Dtests=false
     build-environment: *buildenv
+    build-packages:
+      - meson
+    override-pull: |
+      craftctl default
+      meson subprojects download
 
   libhandy:
     after: [ pygobject, meson-deps, vala, gobject-introspection ]
@@ -1274,10 +1289,12 @@ parts:
       - -Denable_vala=true
     override-pull: |
       craftctl default
+      meson subprojects download
       patch -p1 < $CRAFT_PROJECT_DIR/patches/libgweather.diff
       sed -i "s#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#" $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
+      - meson
 
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
