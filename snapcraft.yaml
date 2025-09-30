@@ -1680,6 +1680,9 @@ parts:
       - python3-pip
       - zip
       - python3-apt
+    override-pull: |
+      craftctl default
+      python3 -m pip install --break-system-packages pyyaml pyelftools
     override-prime: |
       set -eux
 
@@ -1711,7 +1714,6 @@ parts:
       mkdir -p $DEBUG_BUILDID
 
       OLDPATH=$PATH
-      python3 -m pip install --break-system-packages pyyaml pyelftools
       $CRAFT_PROJECT_DIR/tools/strip_binaries.py $CRAFT_PRIME $DEBUG_BUILDID
       PATH=$OLDPATH
       echo Symbols compressed
