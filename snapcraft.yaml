@@ -381,6 +381,7 @@ parts:
       curl https://sh.rustup.rs -sSf > cargo.sh
       sh ./cargo.sh -y
       export PATH=$PATH:$HOME/.cargo/bin
+      ~/.cargo/bin/cargo update
       ~/.cargo/bin/cargo install cargo-c --locked
       cp ~/.cargo/bin/* /usr/local/bin
     override-stage: |
