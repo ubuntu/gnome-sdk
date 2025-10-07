@@ -860,35 +860,8 @@ parts:
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
-  libcanberra:
-    after: [ libdazzle ]
-    source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
-# ext:updatesnap
-#   version-format:
-#     ignore: true
-    plugin: autotools
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --with-builtin=pulse
-    build-environment: *buildenv
-    override-pull: |
-      craftctl default
-      for p in $CRAFT_PROJECT_DIR/patches/libcanberra/*.patch; do
-        patch -p1 < "$p"
-      done
-    override-build: |
-      ./autogen.sh
-      craftctl default
-    build-packages:
-      - libasound2-dev
-      - libvorbis-dev
-      - libtdb-dev
-      - libpulse-dev
-      - libgstreamer1.0-dev
-      - libltdl-dev
-
   gsound:
-    after: [ libcanberra, meson-deps, vala, gobject-introspection ]
+    after: [ meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
     source-tag: '1.0.3'
     source-depth: 1
@@ -901,6 +874,9 @@ parts:
       - -Dintrospection=true
       - -Denable_vala=true
     build-environment: *buildenv
+    build-packages:
+      - libcanberra-dev
+      - libcanberra-gtk3-dev
 
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps, gobject-introspection ]
@@ -1422,6 +1398,7 @@ parts:
       - libbz2-dev
       - libcairo2-dev
       - libcanberra-gtk3-dev
+      - libcanberra-pulse
       - libcrypt-dev
       - libcurl4-openssl-dev
       - libdbus-1-3
