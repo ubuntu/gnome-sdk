@@ -108,6 +108,7 @@ parts:
     build-environment: *buildenv
     build-packages:
       - texinfo
+      - libltdl-dev
 
   glib:
     after: [ libffi, meson-deps ]
