@@ -1360,13 +1360,23 @@ parts:
 
   debs:
     after:
+      - atkmm
       - at-spi2-core
+      - cairomm
+      - glibmm
+      - gtk-locales
+      - gtkmm
+      - gtksourceview
       - libadwaita
       - libayatana-appindicator
+      - libdazzle
       - libgnome-games-support
       - libgweather
+      - libportal
       - librest
       - libsoup3
+      - mm-common
+      - pangomm
       - webp-pixbuf-loader
     plugin: nil
     stage-packages:
