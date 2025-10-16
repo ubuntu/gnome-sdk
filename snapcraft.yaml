@@ -374,15 +374,24 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libssl-dev
+      - meson
       - curl
+      - cargo-1.82
     override-pull: |
       craftctl default
       meson subprojects download
+      # This avoids crate downloads at the build lifecycle, which comes too late
+      # in RISC-V Launchpad builders, so that it errors with HTTP 407.
+      # No blooming idea why '~/.cargo/bin/cargo update' does not suffice;
+      # launchpad.net/~desktop-snappers/+snap/gnome-46-2404-sdk/+build/2931431
+      # shows it does not.
+      if test "$CRAFT_ARCH_BUILD_FOR" = riscv64; then
+        cargo-1.82 update
+      fi
       # cargo version in .deb is too old
       curl https://sh.rustup.rs -sSf > cargo.sh
       sh ./cargo.sh -y
       export PATH=$PATH:$HOME/.cargo/bin
-      ~/.cargo/bin/cargo update
       ~/.cargo/bin/cargo install cargo-c --locked
       cp ~/.cargo/bin/* /usr/local/bin
     override-stage: |
