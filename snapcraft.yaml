@@ -294,6 +294,7 @@ parts:
   command-chain:
     source: https://github.com/snapcore/snapcraft-desktop-integration.git
     source-type: git
+    source-branch: gbm_backends_path
     source-subdir: gnome
     plugin: make
     make-parameters:
