@@ -32,10 +32,14 @@ slots:
       read:
         - /
 
+package-repositories:
+  - type: apt
+    ppa: desktop-snappers/core22-mesa-backports
+
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/stable ]
+    stage-snaps: [ gnome-42-2204-sdk/latest/edge/core22-mesa-backport ]
     override-build: |
       set -eu
       craftctl default
