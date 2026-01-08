@@ -90,6 +90,23 @@ parts:
       sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
+  fontconfig:
+    after: [ libtool ]
+    source: https://gitlab.freedesktop.org/fontconfig/fontconfig.git
+    source-tag: 2.13.1
+    source-depth: 1
+    plugin: autotools
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+    build-environment: *buildenv
+    build-packages:
+      - libfontconfig1-dev
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/fontconfig-delay.patch
+    stage:
+      - usr/bin/fc-cache
 
   libffi:
     after: [ libtool, meson-deps ]
@@ -1529,7 +1546,7 @@ parts:
       fi
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver, webp-pixbuf-loader ]
+    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver, webp-pixbuf-loader, fontconfig ]
     plugin: nil
     stage-packages:
       - appstream
@@ -1677,6 +1694,8 @@ parts:
       cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
+    stage:
+      - -usr/bin/fc-cache
 
   conditioning:
     after: [ debs ]
