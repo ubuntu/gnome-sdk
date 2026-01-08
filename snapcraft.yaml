@@ -100,8 +100,6 @@ parts:
       - --prefix=/usr
       - --libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
     build-environment: *buildenv
-    build-packages:
-      - libfontconfig1-dev
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/fontconfig-delay.patch
