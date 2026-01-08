@@ -32,6 +32,10 @@ slots:
       read:
         - /
 
+package-repositories:
+  - type: apt
+    ppa: desktop-snappers/core22-mesa-backports
+
 parts:
   gnome-sdk:
     plugin: nil
@@ -188,7 +192,7 @@ parts:
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
-      - libllvm11
+      - libllvm20
       - libmozjs-91-0
       - libmpc3
       - libmpfr6
