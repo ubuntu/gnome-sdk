@@ -81,6 +81,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libtool:
     plugin: nil
@@ -100,6 +101,7 @@ parts:
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   fontconfig:
     after: [ libtool ]
@@ -119,6 +121,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libffi:
     after: [ libtool ]
@@ -136,6 +139,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   glib:
     after: [ libffi, meson-deps ]
@@ -169,6 +173,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   pixman:
     after: [ glib, meson-deps ]
@@ -190,6 +195,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   cairo:
     after: [ pixman, meson-deps ]
@@ -225,6 +231,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gobject-introspection:
     after: [ cairo, meson-deps ]
@@ -253,6 +260,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   vala:
     after: [ gobject-introspection ]
@@ -272,6 +280,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   at-spi2-core:
     after: [ glib, gobject-introspection, meson-deps ]
@@ -296,6 +305,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   fribidi:
     after: [ meson-deps ]
@@ -313,6 +323,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   harfbuzz:
     after: [ fribidi, meson-deps, gobject-introspection ]
@@ -346,6 +357,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   pango:
     after: [ libffi, harfbuzz, meson-deps, gobject-introspection ]
@@ -371,6 +383,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gdk-pixbuf:
     after: [ pango, meson-deps, gobject-introspection ]
@@ -407,6 +420,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   librsvg:
     after: [ gdk-pixbuf, vala, meson-deps, gobject-introspection ]
@@ -454,6 +468,7 @@ parts:
       craftctl default
       sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/librsvg-2.0.pc
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   epoxy:
     after: [ librsvg, meson-deps ]
@@ -474,6 +489,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   json-glib:
     after: [ epoxy, meson-deps, gobject-introspection ]
@@ -493,6 +509,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libpsl:
     after: [ json-glib, meson-deps ]
@@ -518,6 +535,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libsoup3:
     after: [ libpsl, meson-deps, vala, gobject-introspection ]
@@ -543,6 +561,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   librest:
     after: [ libsoup3, meson-deps, gobject-introspection ]
@@ -565,6 +584,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   wayland-protocols:
     after: [ meson-deps ]
@@ -583,6 +603,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gtk3:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
@@ -633,6 +654,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gtk4:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
@@ -689,6 +711,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gtk-locales:
     after: [ gtk3, gtk4 ]
@@ -706,6 +729,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
@@ -742,6 +766,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, vala, meson-deps, gobject-introspection ]
@@ -765,6 +790,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   mm-common:
     after: [ libportal, meson-deps ]
@@ -786,6 +812,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   glibmm:
     after: [ mm-common ]
@@ -819,6 +846,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   cairomm:
     after: [ glibmm, meson-deps ]
@@ -839,6 +867,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   pangomm:
     after: [ pango, libffi,  cairomm, meson-deps ]
@@ -868,6 +897,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   atkmm:
     after: [ pangomm ]
@@ -895,6 +925,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gtkmm:
     after: [ atkmm, meson-deps ]
@@ -932,6 +963,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gtksourceview:
     after: [ gtkmm, meson-deps, gobject-introspection ]
@@ -958,6 +990,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libdazzle:
     after: [ gtksourceview, meson-deps, vala, gobject-introspection ]
@@ -979,6 +1012,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gsound:
     after: [ meson-deps, vala, gobject-introspection ]
@@ -1000,6 +1034,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps, gobject-introspection ]
@@ -1024,6 +1059,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps, gobject-introspection ]
@@ -1050,6 +1086,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   cogl:
     after: [ gnome-desktop, gobject-introspection ]
@@ -1078,6 +1115,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libwacom:
     after: [ cogl, meson-deps ]
@@ -1099,6 +1137,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libinput:
     after: [ libwacom, meson-deps ]
@@ -1121,6 +1160,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   clutter:
     after: [ cogl, json-glib, libinput, meson-deps, gobject-introspection ]
@@ -1205,6 +1245,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   clutter-gtk:
     after: [ clutter, meson-deps ]
@@ -1220,6 +1261,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libpeas:
     after: [ clutter-gtk, meson-deps, vala, gobject-introspection ]
@@ -1248,6 +1290,8 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   pycairo:
     after: [ libpeas, meson-deps ]
@@ -1264,6 +1308,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   pygobject:
     after: [ pycairo, meson-deps ]
@@ -1283,6 +1328,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libhandy:
     after: [ pygobject, meson-deps, vala, gobject-introspection ]
@@ -1304,6 +1350,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   gjs:
     after: [ libhandy, meson-deps ]
@@ -1328,6 +1375,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   p11-kit:
     after: [ gjs, meson-deps ]
@@ -1348,6 +1396,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libsecret:
     after: [ p11-kit, meson-deps, gobject-introspection, vala ]
@@ -1368,6 +1417,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libgnome-games-support:
     after: [ libsecret, meson-deps ]
@@ -1390,6 +1440,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
@@ -1411,6 +1462,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection, vala ]
@@ -1441,6 +1493,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
@@ -1458,6 +1511,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libayatana-ido:
     after: [glib, gtk3]
@@ -1492,6 +1546,7 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
 
   libayatana-appindicator:
     after: [libayatana-ido, glib, gtk3, vala]
@@ -1543,6 +1598,8 @@ parts:
     override-stage: |
       craftctl default
       rm -rf $CRAFT_PART_SRC/*
+      rm -rf $CRAFT_PART_BUILD/*
+
 
   debs:
     after:
