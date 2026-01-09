@@ -1123,6 +1123,9 @@ parts:
     build-packages:
       - python3-dev
       - python-gi-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pycairo:
     after: [ libpeas, meson-deps ]
@@ -1136,6 +1139,9 @@ parts:
       - -Ddebug=true
       - -Dtests=false
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pygobject:
     after: [ pycairo, meson-deps ]
@@ -1152,6 +1158,9 @@ parts:
     override-pull: |
       craftctl default
       meson subprojects download
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libhandy:
     after: [ pygobject, meson-deps, vala, gobject-introspection ]
@@ -1170,6 +1179,9 @@ parts:
       - -Dintrospection=enabled
       - -Dvapi=true
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gjs:
     after: [ libhandy, meson-deps ]
@@ -1191,6 +1203,9 @@ parts:
     build-packages:
       - dbus
       - libmozjs-115-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   p11-kit:
     after: [ gjs, meson-deps ]
@@ -1208,6 +1223,9 @@ parts:
     build-packages:
       - libtasn1-6-dev
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libsecret:
     after: [ p11-kit, meson-deps, gobject-introspection, vala ]
@@ -1225,6 +1243,9 @@ parts:
     build-packages:
       - libgcrypt20-dev
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgnome-games-support:
     after: [ libsecret, meson-deps ]
@@ -1244,6 +1265,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libgee-0.8-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
@@ -1262,6 +1286,9 @@ parts:
       - -Dsoup2=false
     build-packages:
       - libnghttp2-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection, vala ]
@@ -1289,6 +1316,9 @@ parts:
       sed -i "s#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#" $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
@@ -1303,6 +1333,9 @@ parts:
       - -Ddebug=true
     build-packages:
       - libwebp-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libayatana-ido:
     after: [glib, gtk3]
@@ -1334,6 +1367,9 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libayatana-appindicator:
     after: [libayatana-ido, glib, gtk3, vala]
@@ -1382,6 +1418,9 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   debs:
     after:
