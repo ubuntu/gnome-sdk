@@ -78,6 +78,9 @@ parts:
     build-packages:
       - python3-pip
       - meson
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libtool:
     plugin: nil
@@ -96,6 +99,7 @@ parts:
       sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
+      rm -rf $CRAFT_PART_SRC/*
 
   fontconfig:
     after: [ libtool ]
@@ -112,6 +116,9 @@ parts:
       patch -p1 < $CRAFT_PROJECT_DIR/patches/fontconfig-delay.patch
     stage:
       - usr/bin/fc-cache
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libffi:
     after: [ libtool ]
@@ -126,6 +133,9 @@ parts:
     build-packages:
       - texinfo
       - libltdl-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   glib:
     after: [ libffi, meson-deps ]
@@ -156,6 +166,9 @@ parts:
 # Use the packages rather than the gobject-introspection part to avoid a depends cycle
       - gir1.2-glib-2.0-dev
       - gobject-introspection
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pixman:
     after: [ glib, meson-deps ]
@@ -174,6 +187,9 @@ parts:
       - -Dtests=disabled
       - -Ddemos=disabled
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   cairo:
     after: [ pixman, meson-deps ]
@@ -206,6 +222,9 @@ parts:
       - libsm-dev
       - zlib1g-dev
       - liblzo2-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gobject-introspection:
     after: [ cairo, meson-deps ]
@@ -231,6 +250,9 @@ parts:
       - python3-dev
       - bison
       - flex
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   vala:
     after: [ gobject-introspection ]
@@ -247,6 +269,9 @@ parts:
       - autoconf-archive
       - valac
       - libgraphviz-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   at-spi2-core:
     after: [ glib, gobject-introspection, meson-deps ]
@@ -268,6 +293,9 @@ parts:
     build-packages:
       - libdbus-1-dev
       - libxtst-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   fribidi:
     after: [ meson-deps ]
@@ -282,6 +310,9 @@ parts:
       - -Ddocs=false
       - -Dtests=false
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   harfbuzz:
     after: [ fribidi, meson-deps, gobject-introspection ]
@@ -312,6 +343,9 @@ parts:
     build-packages:
       - ragel
       - libgraphite2-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pango:
     after: [ libffi, harfbuzz, meson-deps, gobject-introspection ]
@@ -334,6 +368,9 @@ parts:
       - libxrender-dev
       - libxt-dev
       - cmake
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gdk-pixbuf:
     after: [ pango, meson-deps, gobject-introspection ]
@@ -367,6 +404,9 @@ parts:
       - libpng-dev
       - libjpeg-dev
       - libtiff-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   librsvg:
     after: [ gdk-pixbuf, vala, meson-deps, gobject-introspection ]
@@ -413,6 +453,7 @@ parts:
     override-stage: |
       craftctl default
       sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/librsvg-2.0.pc
+      rm -rf $CRAFT_PART_SRC/*
 
   epoxy:
     after: [ librsvg, meson-deps ]
@@ -430,6 +471,9 @@ parts:
       - libgl1-mesa-dev
       - libegl1-mesa-dev
       - xutils-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   json-glib:
     after: [ epoxy, meson-deps, gobject-introspection ]
@@ -446,6 +490,9 @@ parts:
       - -Ddocumentation=disabled
       - -Dtests=false
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libpsl:
     after: [ json-glib, meson-deps ]
@@ -468,6 +515,9 @@ parts:
       craftctl default
       meson subprojects download
       sed -i 's#^\#!/usr/bin/env python$#\#!/usr/bin/env python3#g' src/psl-make-dafsa
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libsoup3:
     after: [ libpsl, meson-deps, vala, gobject-introspection ]
@@ -490,6 +540,9 @@ parts:
       - libkrb5-dev
       - libbrotli-dev
       - libnghttp2-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   librest:
     after: [ libsoup3, meson-deps, gobject-introspection ]
@@ -509,6 +562,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - gtk-doc-tools
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   wayland-protocols:
     after: [ meson-deps ]
@@ -524,6 +580,9 @@ parts:
       - -Ddebug=true
       - -Dtests=false
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gtk3:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
@@ -571,6 +630,9 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gtk4:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
@@ -624,6 +686,9 @@ parts:
       - -usr/bin/wayland-scanner
       - -usr/lib/*/libwayland-client.so.0.20.0
       - -usr/lib/*/libwayland-server.so.0.20.0
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gtk-locales:
     after: [ gtk3, gtk4 ]
@@ -638,6 +703,9 @@ parts:
       find usr/share/locale-langpack -type f -not -name "gtk30*.mo" -exec rm '{}' \;
       mkdir -p $CRAFT_PART_INSTALL/usr/share
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libadwaita:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
@@ -671,6 +739,9 @@ parts:
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Always-expose-and-use-yaru-accent-colors-val.patch
       patch -p1 < $CRAFT_PROJECT_DIR/patches/style-Add-wartybrown-accent-support.patch
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, vala, meson-deps, gobject-introspection ]
@@ -691,6 +762,9 @@ parts:
       - -Dbackend-qt5=disabled
       - -Dtests=false
       - -Dportal-tests=false
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   mm-common:
     after: [ libportal, meson-deps ]
@@ -709,6 +783,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - wget
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   glibmm:
     after: [ mm-common ]
@@ -739,6 +816,9 @@ parts:
       - libsigc++-3.0-dev
       - libxml-parser-perl
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   cairomm:
     after: [ glibmm, meson-deps ]
@@ -756,6 +836,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - doxygen
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pangomm:
     after: [ pango, libffi,  cairomm, meson-deps ]
@@ -782,6 +865,9 @@ parts:
       mkdir -p ../src/untracked/build_scripts/
       cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       craftctl default
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   atkmm:
     after: [ pangomm ]
@@ -806,6 +892,9 @@ parts:
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
       - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gtkmm:
     after: [ atkmm, meson-deps ]
@@ -840,6 +929,9 @@ parts:
       mkdir -p ../src/untracked/build_scripts/
       cp -p $CRAFT_STAGE/usr/share/mm-common/build/generate-binding.py ../src/untracked/build_scripts/
       craftctl default
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gtksourceview:
     after: [ gtkmm, meson-deps, gobject-introspection ]
@@ -863,6 +955,9 @@ parts:
       set -eux
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libdazzle:
     after: [ gtksourceview, meson-deps, vala, gobject-introspection ]
@@ -881,6 +976,9 @@ parts:
       set -eux
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gsound:
     after: [ meson-deps, vala, gobject-introspection ]
@@ -899,6 +997,9 @@ parts:
     build-packages:
       - libcanberra-dev
       - libcanberra-gtk3-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps, gobject-introspection ]
@@ -920,6 +1021,9 @@ parts:
       craftctl default
       PC=$CRAFT_PART_INSTALL/usr/share/pkgconfig/gsettings-desktop-schemas.pc
       sed -i 's#-I/usr#-I${prefix}#' $PC
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gnome-desktop:
     after: [ gsettings-desktop-schemas, meson-deps, gobject-introspection ]
@@ -943,6 +1047,9 @@ parts:
       - libudev-dev
       - xkb-data
       - yelp-tools
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   cogl:
     after: [ gnome-desktop, gobject-introspection ]
@@ -968,6 +1075,9 @@ parts:
       - xauth
       - xvfb
       - libgstreamer-plugins-base1.0-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libwacom:
     after: [ cogl, meson-deps ]
@@ -986,6 +1096,9 @@ parts:
       - -Dtests=disabled
       - -Ddocumentation=disabled
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libinput:
     after: [ libwacom, meson-deps ]
@@ -1005,6 +1118,9 @@ parts:
       - libmtdev-dev
       - libudev-dev
       - libevdev-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   clutter:
     after: [ cogl, json-glib, libinput, meson-deps, gobject-introspection ]
@@ -1086,6 +1202,9 @@ parts:
       - -usr/include/wayland*
       - -usr/share/aclocal/wayland-scanner.m4
       - -usr/share/wayland/wayland.xml
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   clutter-gtk:
     after: [ clutter, meson-deps ]
@@ -1098,6 +1217,9 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libpeas:
     after: [ clutter-gtk, meson-deps, vala, gobject-introspection ]
@@ -1123,6 +1245,9 @@ parts:
     build-packages:
       - python3-dev
       - python-gi-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pycairo:
     after: [ libpeas, meson-deps ]
@@ -1136,6 +1261,9 @@ parts:
       - -Ddebug=true
       - -Dtests=false
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   pygobject:
     after: [ pycairo, meson-deps ]
@@ -1152,6 +1280,9 @@ parts:
     override-pull: |
       craftctl default
       meson subprojects download
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libhandy:
     after: [ pygobject, meson-deps, vala, gobject-introspection ]
@@ -1170,6 +1301,9 @@ parts:
       - -Dintrospection=enabled
       - -Dvapi=true
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   gjs:
     after: [ libhandy, meson-deps ]
@@ -1191,6 +1325,9 @@ parts:
     build-packages:
       - dbus
       - libmozjs-115-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   p11-kit:
     after: [ gjs, meson-deps ]
@@ -1208,6 +1345,9 @@ parts:
     build-packages:
       - libtasn1-6-dev
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libsecret:
     after: [ p11-kit, meson-deps, gobject-introspection, vala ]
@@ -1225,6 +1365,9 @@ parts:
     build-packages:
       - libgcrypt20-dev
     build-environment: *buildenv
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgnome-games-support:
     after: [ libsecret, meson-deps ]
@@ -1244,6 +1387,9 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libgee-0.8-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgeocode:
     source: https://gitlab.gnome.org/GNOME/geocode-glib.git
@@ -1262,6 +1408,9 @@ parts:
       - -Dsoup2=false
     build-packages:
       - libnghttp2-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libgweather:
     after: [ libgeocode, meson-deps, gobject-introspection, vala ]
@@ -1289,6 +1438,9 @@ parts:
       sed -i "s#CRAFT_ENV_REPLACE#/usr/lib:/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR#" $CRAFT_PART_SRC/data/meson.build
     build-packages:
       - gir1.2-glib-2.0
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
@@ -1303,6 +1455,9 @@ parts:
       - -Ddebug=true
     build-packages:
       - libwebp-dev
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libayatana-ido:
     after: [glib, gtk3]
@@ -1334,6 +1489,9 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   libayatana-appindicator:
     after: [libayatana-ido, glib, gtk3, vala]
@@ -1382,6 +1540,9 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+    override-stage: |
+      craftctl default
+      rm -rf $CRAFT_PART_SRC/*
 
   debs:
     after:
