@@ -1382,6 +1382,24 @@ parts:
     build-packages:
       - gir1.2-glib-2.0
 
+  libnotify:
+    after: [ meson-deps, glib, gobject-introspection, gdk-pixbuf ]
+    source: https://gitlab.gnome.org/GNOME/libnotify.git
+    source-tag: '0.8.8'
+    source-depth: 1
+    plugin: meson
+    build-environment: *buildenv
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Dintrospection=enabled
+      - -Dgtk_doc=false
+      - -Ddocbook_docs=disabled
+      - -Dtests=false
+      - -Dman=false
+    stage:
+      - -usr/bin
+
   webp-pixbuf-loader:
     after: [meson-deps, gdk-pixbuf]
     source: https://github.com/aruiz/webp-pixbuf-loader.git
@@ -1546,7 +1564,7 @@ parts:
       fi
 
   debs:
-    after: [ libgnome-games-support, libadwaita, libgweather, poppler, libayatana-appindicator, intel-media-driver, webp-pixbuf-loader, fontconfig ]
+    after: [ libgnome-games-support, libadwaita, libgweather, libnotify, poppler, libayatana-appindicator, intel-media-driver, webp-pixbuf-loader, fontconfig ]
     plugin: nil
     stage-packages:
       - appstream
@@ -1612,7 +1630,6 @@ parts:
       - libnettle8
       - libnghttp2-14
       - libnghttp2-dev
-      - libnotify-dev
       - libnsl2
       - libnss3
       - libnss3-dev
