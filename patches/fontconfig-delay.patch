@@ -1,79 +1,21 @@
 diff --git a/fc-cache/fc-cache.c b/fc-cache/fc-cache.c
-index a99adba9..d6165f5b 100644
+index a99adba9..e9956fe7 100644
 --- a/fc-cache/fc-cache.c
 +++ b/fc-cache/fc-cache.c
-@@ -84,6 +84,7 @@
- const struct option longopts[] = {
-     {"error-on-no-fonts", 0, 0, 'E'},
-     {"force", 0, 0, 'f'},
-+    { "no-sleep", 0, 0, 'n' },
-     {"really-force", 0, 0, 'r'},
-     {"sysroot", required_argument, 0, 'y'},
-     {"system-only", 0, 0, 's'},
-@@ -104,10 +105,10 @@ usage (char *program, int error)
- {
-     FILE *file = error ? stderr : stdout;
- #if HAVE_GETOPT_LONG
--    fprintf (file, _("usage: %s [-EfrsvVh] [-y SYSROOT] [--error-on-no-fonts] [--force|--really-force] [--sysroot=SYSROOT] [--system-only] [--verbose] [--version] [--help] [dirs]\n"),
-+    fprintf (file, _("usage: %s [-EfnrsvVh] [-y SYSROOT] [--error-on-no-fonts] [--force|--really-force] [--no-sleep] [--sysroot=SYSROOT] [--system-only] [--verbose] [--version] [--help] [dirs]\n"),
- 	     program);
- #else
--    fprintf (file, _("usage: %s [-EfrsvVh] [-y SYSROOT] [dirs]\n"),
-+    fprintf (file, _("usage: %s [-EfnrsvVh] [-y SYSROOT] [dirs]\n"),
- 	     program);
- #endif
-     fprintf (file, _("Build font information caches in [dirs]\n"
-@@ -115,6 +116,7 @@ usage (char *program, int error)
-     fprintf (file, "\n");
- #if HAVE_GETOPT_LONG
-     fprintf (file, _("  -E, --error-on-no-fonts  raise an error if no fonts in a directory\n"));
-+    fprintf (file, _("  -n, --no-sleep           don't wait two seconds before exiting\n"));
-     fprintf (file, _("  -f, --force              scan directories with apparently valid caches\n"));
-     fprintf (file, _("  -r, --really-force       erase all existing caches, then rescan\n"));
-     fprintf (file, _("  -s, --system-only        scan system-wide directories only\n"));
-@@ -125,6 +127,7 @@ usage (char *program, int error)
- #else
-     fprintf (file, _("  -E         (error-on-no-fonts)\n"));
-     fprintf (file, _("                       raise an error if no fonts in a directory\n"));
-+    fprintf (file, _("  -n        (no-sleep) don't wait two seconds before exiting\n"));
-     fprintf (file, _("  -f         (force)   scan directories with apparently valid caches\n"));
-     fprintf (file, _("  -r,   (really force) erase all existing caches, then rescan\n"));
-     fprintf (file, _("  -s         (system)  scan system-wide directories only\n"));
-@@ -315,6 +318,7 @@ main (int argc, char **argv)
-     FcBool    	verbose = FcFalse;
-     FcBool	force = FcFalse;
-     FcBool	really_force = FcFalse;
-+    FcBool     noSleep = FcFalse;
-     FcBool	systemOnly = FcFalse;
-     FcBool	error_on_no_fonts = FcFalse;
-     FcConfig	*config;
-@@ -327,15 +331,18 @@ main (int argc, char **argv)
+@@ -442,16 +442,6 @@ main (int argc, char **argv)
  
-     setlocale (LC_ALL, "");
- #if HAVE_GETOPT_LONG
--    while ((c = getopt_long (argc, argv, "Efrsy:Vvh", longopts, NULL)) != -1)
-+    while ((c = getopt_long (argc, argv, "Enfrsy:Vvh", longopts, NULL)) != -1)
- #else
--    while ((c = getopt (argc, argv, "Efrsy:Vvh")) != -1)
-+    while ((c = getopt (argc, argv, "Enfrsy:Vvh")) != -1)
- #endif
-     {
- 	switch (c) {
- 	case 'E':
- 	    error_on_no_fonts = FcTrue;
- 	    break;
-+	case 'n':
-+	    noSleep = FcTrue;
-+	    break;
- 	case 'r':
- 	    really_force = FcTrue;
- 	    /* fall through */
-@@ -450,7 +457,7 @@ main (int argc, char **argv)
-      * library, and there aren't any signals flying around here.
-      */
-     /* the resolution of mtime on FAT is 2 seconds */
+     FcConfigDestroy (config);
+     FcFini ();
+-    /* 
+-     * Now we need to sleep a second  (or two, to be extra sure), to make
+-     * sure that timestamps for changes after this run of fc-cache are later
+-     * then any timestamps we wrote.  We don't use gettimeofday() because
+-     * sleep(3) can't be interrupted by a signal here -- this isn't in the
+-     * library, and there aren't any signals flying around here.
+-     */
+-    /* the resolution of mtime on FAT is 2 seconds */
 -    if (changed)
-+    if (changed && !noSleep)
- 	sleep (2);
+-	sleep (2);
      if (verbose)
  	printf ("%s: %s\n", argv[0], ret ? _("failed") : _("succeeded"));
+     return ret;
