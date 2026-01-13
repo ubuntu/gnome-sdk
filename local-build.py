@@ -38,7 +38,7 @@ gnome_part = config['parts']['gnome-sdk']
 del gnome_part['stage-snaps']
 
 version = config['name'].split('-')[1]
-gnome_part['build-environment'] = [
+gnome_part['build-environment'] = gnome_part.get('build-environment', []) + [
     {'LOCAL_SDK_SNAP': SDK_FILE},
     {'sdk_version': version}
 ]
