@@ -41,7 +41,7 @@ parts:
     override-build: |
       set -eu
       craftctl default
-      # This export is replaced by `local-build.py` when using a local snap
+      # LOCAL_SDK_SNAP is set by `local-build.py` when using a local snap
       if [ -z "${LOCAL_SDK_SNAP:-}" ]; then
         echo Using upstream SDK
         sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-46-2404-sdk/manifest.yaml \
