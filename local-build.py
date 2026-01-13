@@ -37,15 +37,8 @@ gnome_part = config['parts']['gnome-sdk']
 # remove the stage-snaps entry
 del gnome_part['stage-snaps']
 
-build_script = gnome_part['override-build']
-new_script = ""
-for line in build_script.splitlines():
-    if line.startswith('LOCAL_SDK_SNAP='):
-        pos = line.find('=')
-        line = f'{line[:pos]}="{SDK_FILE}"'
-    new_script += line + '\n'
-
-gnome_part['override-build'] = new_script
+version = config['name'].split('-')[1]
+gnome_part['build-environment'] = [{'LOCAL_SDK_SNAP': SDK_FILE}, {'sdk_version': version}]
 
 with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
     config_file.write(yaml.dump(config, Dumper=yaml.Dumper))

@@ -42,8 +42,7 @@ parts:
       set -eu
       craftctl default
       # This export is replaced by `local-build.py` when using a local snap
-      LOCAL_SDK_SNAP=""
-      if [ -z "${LOCAL_SDK_SNAP}" ]; then
+      if [ -z "${LOCAL_SDK_SNAP:-}" ]; then
         echo Using upstream SDK
         sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-46-2404-sdk/manifest.yaml \
           | yq -r '.version')
@@ -55,7 +54,6 @@ parts:
         cp -a /snap/gnome-46-2404-sdk/current/etc $CRAFT_PART_INSTALL/
         cp -a /snap/gnome-46-2404-sdk/current/var $CRAFT_PART_INSTALL/
         cp -a /snap/gnome-46-2404-sdk/current/lib $CRAFT_PART_INSTALL/
-        sdk_version=46
       fi
 
       # Use the same logic of snapcraft
