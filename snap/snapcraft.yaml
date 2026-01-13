@@ -27,10 +27,10 @@ compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-46-2404:
-      interface: content
-      read:
-        - /
+  gnome-46-2404:
+    interface: content
+    read:
+      - /
 
 parts:
   gnome-sdk:
@@ -43,7 +43,7 @@ parts:
       craftctl default
       # This export is replaced by `local-build.py` when using a local snap
       LOCAL_SDK_SNAP=""
-      if [ -z ${LOCAL_SDK_SNAP} ]; then
+      if [ -z "${LOCAL_SDK_SNAP}" ]; then
         echo Using upstream SDK
         sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-46-2404-sdk/manifest.yaml \
           | yq -r '.version')
