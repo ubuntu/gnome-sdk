@@ -43,9 +43,11 @@ gnome_part['build-environment'] = gnome_part.get('build-environment', []) + [
     {'sdk_version': version}
 ]
 
-with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
-    config_file.write(yaml.dump(config, Dumper=yaml.Dumper))
+try:
+    with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
+        config_file.write(yaml.dump(config, Dumper=yaml.Dumper))
 
-os.system('snapcraft clean')
-os.system('snapcraft pack -v')
-os.remove(f'./{MODIFIED_CONFIG}')
+    os.system('snapcraft clean')
+    os.system('snapcraft pack -v')
+finally:
+    os.remove(f'./{MODIFIED_CONFIG}')
