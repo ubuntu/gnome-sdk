@@ -9,14 +9,167 @@ on:
 jobs:
   snap:
     runs-on: ubuntu-latest
+    outputs:
+      runtime: ${{ steps.upload-runtime.outputs.artifact-id }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
+
     - name: Free disk space
       run: |
         sudo rm -rf /usr/local/lib/android
-    - uses: snapcore/action-build@v1
+
+    - name: Build SDK
+      uses: snapcore/action-build@v1
       id: snapcraft
-    - uses: actions/upload-artifact@v4
+
+    - uses: actions/upload-artifact@v6
       with:
         name: 'snap'
         path: ${{ steps.snapcraft.outputs.snap}}
+
+    - name: Prepare runtime
+      run: |
+        set -eu
+        git clone --depth 1 --branch gnome-46-2404 https://github.com/ubuntu/gnome-sdk gnome-runtime
+        mkdir gnome-runtime/base-gnome-sdk
+        mv ${{ steps.snapcraft.outputs.snap}} gnome-runtime/base-gnome-sdk/
+        cd gnome-runtime
+        ./local-build.py --prepare-only
+
+    - name: Build runtime
+      uses: snapcore/action-build@v1
+      id: snapcraft-runtime
+      with:
+        path: gnome-runtime
+
+    - name: Delete old snap
+      run: |
+        rm -f gnome-runtime/base-gnome-sdk/*.snap
+
+    - uses: actions/upload-artifact@v6
+      id: upload-runtime
+      with:
+        name: 'snap-runtime'
+        path: ${{ steps.snapcraft-runtime.outputs.snap}}
+
+  testing:
+    strategy:
+      fail-fast: false
+      matrix:
+        # define in 'snapname' the name of each snap to test
+        snapname:
+          - cheese
+          - chromium
+          - darktable
+          - evince
+          - epiphany
+          - firefox
+          - gimp
+          - gnome-calculator
+          - gnome-system-monitor
+          - gnome-text-editor
+          - kicad
+          - mattermost-desktop
+          - shotwell
+          - telegram-desktop
+          - thunderbird
+        # here, in waittext, define the text to find for each snap
+        # more variables are:
+        # - commandname: the command to run instead of 'snap run $snapname'
+        # - timeout: the timeout to wait for the text to appear. Default is 20 seconds.
+        # - connections: an space-separated list of plugs that must be connected
+        # - enablex11: if true, will enable Xwayland
+        # - separated: if true, the words will be split and must be found each anywhere in the screen
+        include:
+          - snapname: "cheese"
+            waittext: "Take a Photo"
+          - snapname: "chromium"
+            waittext: "New Tab"
+            enablex11: "true"
+          - snapname: "darktable"
+            waittext: "darktable lighttable darkroom"
+            separated: "true"
+          - snapname: "evince"
+            waittext: "Document Viewer Open"
+          - snapname: "epiphany"
+            waittext: "Set as Default Browser"
+            enablex11: "true"
+          - snapname: "firefox"
+            waittext: "Welcome to Firefox"
+          - snapname: "gimp"
+            waittext: "Welcome to GIMP"
+          - snapname: "gnome-calculator"
+            waittext: "Basic mod"
+            separated: "true"
+          - snapname: "gnome-system-monitor"
+            waittext: "Network Resources Processes Disk Memory Swap CPU"
+            separated: "true"
+          - snapname: "gnome-text-editor"
+            waittext: "New Document"
+          - snapname: "kicad"
+            waittext: "Configure KiCad"
+            enablex11: "true"
+          - snapname: "mattermost-desktop"
+            waittext: "Mattermost"
+            separated: "true"
+            commandname: "snap run mattermost-desktop"
+            enablex11: "true"
+            connections: "login-session-observe"
+          - snapname: "shotwell"
+            waittext: "Shotwell"
+          - snapname: "telegram-desktop"
+            waittext: "Welcome to the official Telegram Desktop app"
+          - snapname: "thunderbird"
+            waittext: "Thunderbird will automatically search"
+    runs-on: ubuntu-latest
+    needs: snap
+    steps:
+    - name: Get data
+      uses: actions/checkout@v6
+    - name: Download artifact
+      id: download-snap
+      uses: actions/download-artifact@v8
+      with:
+        artifact-ids: ${{ needs.snap.outputs.runtime }}
+    - name: Install tools
+      run: |
+        set -eu
+        sudo snap refresh
+        sudo apt update
+        # dbus-x11 is required because it contains dbus-launch!!
+        # x11-apps are required to wait for XWayland
+        sudo apt install -y \
+          dbus-daemon \
+          dconf-gsettings-backend \
+          xwayland \
+          gnome-keyring \
+          wayland-utils \
+          xdg-desktop-portal-gnome \
+          gnome-session-common \
+          gnome-settings-daemon \
+          x11-apps
+        # to be able to use Xwayland, --devmode is required
+        sudo snap install --devmode mir-test-tools
+        sudo snap install --beta yarf
+        sudo snap connect yarf:process-control
+        sudo snap install --dangerous ${{ steps.download-snap.outputs.download-path}}/*.snap
+
+# test application with the new runtime
+    - name: Test application
+      run: |
+        export TEST_SNAPNAME=${{ matrix.snapname }}
+        export TEST_WAITTEXT="${{ matrix.waittext }}"
+        export TEST_COMMAND_NAME="${{ matrix.commandname }}"
+        export TEST_DO_ENABLE_X11=${{ matrix.enablex11 }}
+        export TEST_DO_SEPARATED=${{ matrix.separated }}
+        export TEST_TIMEOUT=${{ matrix.timeout }}
+        export TEST_IFACE_CONNECTIONS=${{ matrix.connections }}
+
+        ./.github/workflows/test_script.sh
+
+    - uses: actions/upload-artifact@v6
+      id: upload-yarf-log
+      if: always()
+      with:
+        path: ~/snap/yarf/common/yarf-outdir
+        name: yarf-logs-${{ matrix.snapname }}

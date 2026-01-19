@@ -27,3 +27,21 @@ Core22/Gnome-42-2204:
 Core24/Gnome-46-2404:
 
     git clone -b gnome-46-2404-sdk https://github.com/ubuntu/gnome-sdk.git gnome-46-2404-sdk
+
+## CI tests
+
+The `build.yml` CI test builds the SDK, then builds the RUNTIME from it, and finally
+tests it against a curated list of snaps. It installs the needed dependencies, connects
+the RUNTIME being tested to each snap, launches the snap itself and waits for some specific
+text to appear on the screen. When it happens, it waits five seconds and checks that the
+text is still there, to ensure that the application hasn't crashed.
+
+When adding new tests, the `local-test.py` script can be useful. It uses multipass to
+create a VM and run the test inside. To use it, first initialize the VM with
+
+    local-test.py init
+
+and then you can run the test for a specific snap by calling it with the snap name.
+For example, if you want to test `chromium`, just run
+
+    local-test.py chromium
