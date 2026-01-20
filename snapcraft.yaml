@@ -967,7 +967,9 @@ parts:
 
   libcanberra:
     after: [ libdazzle ]
-    source: http://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
+    source: https://salsa.debian.org/gnome-team/libcanberra.git
+    source-depth: 1
+    source-tag: ubuntu/0.30-18ubuntu1
 # ext:updatesnap
 #   version-format:
 #     ignore: true
