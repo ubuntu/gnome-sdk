@@ -39,7 +39,7 @@ package-repositories:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/stable ]
+    stage-snaps: [ gnome-42-2204-sdk/latest/candidate ]
     override-build: |
       set -eu
       craftctl default
