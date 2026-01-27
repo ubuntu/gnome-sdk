@@ -46,6 +46,8 @@ gnome_part['build-environment'] = gnome_part.get('build-environment', []) + [
 try:
     with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
         config_file.write(yaml.dump(config, Dumper=yaml.Dumper))
+    if "--prepare-only" in sys.argv:
+        sys.exit(0)
 
     os.system('snapcraft clean')
     os.system('snapcraft pack -v')
