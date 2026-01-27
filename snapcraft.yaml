@@ -53,7 +53,7 @@ parts:
     after: [ apt-file ]
     plugin: nil
     source: https://github.com/ninja-build/ninja.git
-    source-tag: 'v1.12.1'
+    source-tag: 'v1.13.2'
     source-depth: 1
     override-build: |
       rm -rf build
@@ -74,7 +74,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.8.4'
+    source-tag: '1.10.1'
     source-depth: 1
     override-build: |
       python3 -m pip install --break-system-packages .
@@ -140,7 +140,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.84.4'
+    source-tag: '2.86.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -220,7 +220,7 @@ parts:
   gobject-introspection:
     after: [ cairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gobject-introspection.git
-    source-tag: '1.84.0'
+    source-tag: '1.86.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -296,7 +296,7 @@ parts:
   harfbuzz:
     after: [ fribidi, meson-deps, gobject-introspection ]
     source: https://github.com/harfbuzz/harfbuzz.git
-    source-tag: '11.4.5' # developers declared that they won't break ABI
+    source-tag: '12.3.2' # developers declared that they won't break ABI
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -348,7 +348,7 @@ parts:
   gdk-pixbuf:
     after: [ pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: '2.42.12'
+    source-tag: '2.44.4'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -357,11 +357,12 @@ parts:
       - -Ddebug=true
       - -Dinstalled_tests=false
       - -Dgtk_doc=false
-      - -Ddocs=false
+      - -Ddocumentation=false
       - -Dintrospection=enabled
       - -Dman=false
       - -Dtests=false
       - -Dinstalled_tests=false
+      - -Dglycin=disabled
     build-environment: *buildenv
     override-build: |
       set -eux
@@ -378,10 +379,19 @@ parts:
       - libjpeg-dev
       - libtiff-dev
 
+  libcroco:
+    after: [gdk-pixbuf]
+    source: https://gitlab.com/inkscape/libcroco.git
+    source-depth: 1
+    plugin: autotools
+    autotools-configure-parameters:
+      - --prefix=/usr
+    build-environment: *buildenv
+
   librsvg:
-    after: [ gdk-pixbuf, vala, meson-deps, gobject-introspection ]
+    after: [ libcroco, gdk-pixbuf, vala, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.61.1' # they left the odd->unstable even->stable scheme, and now all tags are stable
+    source-tag: '2.61.3' # they left the odd->unstable even->stable scheme, and now all tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -523,7 +533,7 @@ parts:
   wayland-protocols:
     after: [ meson-deps ]
     source: https://gitlab.freedesktop.org/wayland/wayland-protocols.git
-    source-tag: '1.45'
+    source-tag: '1.47'
     source-depth: 1
     build-packages:
       - libwayland-dev
@@ -538,7 +548,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.50'
+    source-tag: '3.24.51'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -583,9 +593,9 @@ parts:
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gdkglcontext-wayland-Fallback-to-GLES-2_0-after-GL-failed.patch
 
   gtk4:
-    after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
+    after: [ libcroco, librsvg, wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.18.6'
+    source-tag: '4.20.3'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -723,7 +733,7 @@ parts:
   glibmm:
     after: [ mm-common ]
     source: https://gitlab.gnome.org/GNOME/glibmm.git
-    source-tag: '2.84.0'
+    source-tag: '2.86.0'
     source-depth: 1
     plugin: autotools
     override-build: |
@@ -753,7 +763,7 @@ parts:
   cairomm:
     after: [ glibmm, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairomm.git
-    source-tag: '1.18.0'
+    source-tag: '1.19.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -820,7 +830,7 @@ parts:
   gtkmm:
     after: [ atkmm, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/gtkmm.git
-    source-tag: '4.18.0'
+    source-tag: '4.20.0'
     source-depth: 1
 # ext:updatesnap
 #   version-format:
@@ -854,7 +864,7 @@ parts:
   gtksourceview:
     after: [ gtkmm, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtksourceview.git
-    source-tag: '5.16.0'
+    source-tag: '5.18.0'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -983,7 +993,7 @@ parts:
     after: [ cogl, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
-    source-tag: 'libwacom-2.16.1'
+    source-tag: 'libwacom-2.17.0'
 # ext:updatesnap
 #   version-format:
 #     format: 'libwacom-%M.%m.%R'
@@ -1000,7 +1010,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.29.1'
+    source-tag: '1.30.1'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1112,7 +1122,7 @@ parts:
   libpeas:
     after: [ clutter-gtk, meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.36.0' # developers say that they don't want to break ABI, so it should be safe to always update
+    source-tag: 'libpeas-1.38.0' # developers say that they don't want to break ABI, so it should be safe to always update
 # ext:updatesnap
 #   version-format:
 #     format: 'libpeas-%M.%m.%R'
@@ -1137,7 +1147,7 @@ parts:
   pycairo:
     after: [ libpeas, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
-    source-tag: 'v1.28.0'
+    source-tag: 'v1.29.0'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1150,7 +1160,7 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.54.2'
+    source-tag: '3.55.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
