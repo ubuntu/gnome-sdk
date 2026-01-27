@@ -4,8 +4,8 @@ This snap builds the GNOME-46-2404 runtime from the corresponding GNOME-46-2404-
 snap.
 
 By default, it will get the SDK from the store, from the CANDIDATE branch; but it is
-possible to use a different SDK (for example, one built locally), putting it in the
-project root folder, renaming it to `gnome-46-2404-sdk.snap`, and launching the
+possible to use a different SDK (for example, one built locally), by creating a folder
+called `base-gnome-sdk`, putting it inside, and launching the
 `local-build.py` script. It will create a new, modified `snapcraft.yaml` file in the,
 project's root, clean the snapcraft build environment, build the new snap, and restore
 the `snapcraft.yaml` file. This is useful if you do a change in the SDK and want
