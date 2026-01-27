@@ -866,7 +866,7 @@ parts:
 
   libdazzle:
     after: [ gtksourceview, meson-deps, vala, gobject-introspection ]
-    source: https://gitlab.gnome.org/GNOME/libdazzle.git
+    source: https://gitlab.gnome.org/Archive/libdazzle.git
     source-tag: '3.44.0'
     source-depth: 1
     plugin: meson
@@ -1008,7 +1008,7 @@ parts:
 
   clutter:
     after: [ cogl, json-glib, libinput, meson-deps, gobject-introspection ]
-    source: https://gitlab.gnome.org/GNOME/clutter.git
+    source: https://gitlab.gnome.org/Archive/clutter.git
     source-tag: '1.26.4'
 # ext:updatesnap
 #   version-format:
