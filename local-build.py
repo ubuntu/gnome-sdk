@@ -5,6 +5,7 @@
 import sys
 import os
 import yaml
+import glob
 
 def str_presenter(dumper, data):
     """configures yaml for dumping multiline strings
@@ -21,20 +22,19 @@ BASE_CONFIG = 'snap/snapcraft.yaml'
 MODIFIED_CONFIG = 'snapcraft.yaml'
 BASE_SNAP_FOLDER = 'base-gnome-sdk'
 SDK_FILE = None
+PREPARE_ONLY_OPTION = '--prepare-only'
 
 # If there is a modified snapcraft.yaml, delete it before re-generating it
 if os.path.exists(f'./{MODIFIED_CONFIG}'):
     os.remove(f'./{MODIFIED_CONFIG}')
 
 last_time = None
-# get the most recent snap
-for f in os.listdir(BASE_SNAP_FOLDER):
-    if f.endswith(".snap"):
-        fullpath = os.path.join(BASE_SNAP_FOLDER, f)
-        now_time = os.path.getmtime(fullpath)
-        if (last_time is None) or (now_time > last_time):
-            SDK_FILE = fullpath
-            last_time = now_time
+# If there are more than one snap, use the most recent one
+for fullpath in glob.glob(os.path.join(BASE_SNAP_FOLDER, "*.snap")):
+    now_time = os.path.getmtime(fullpath)
+    if (last_time is None) or (now_time > last_time):
+        SDK_FILE = fullpath
+        last_time = now_time
 
 if SDK_FILE is None:
     print(f'There is no valid SDK file in the {BASE_SNAP_FOLDER} folder. Aborting.', file=sys.stderr)
@@ -57,9 +57,9 @@ gnome_part['build-environment'] = gnome_part.get('build-environment', []) + [
 try:
     with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
         config_file.write(yaml.dump(config, Dumper=yaml.Dumper))
-    if "--prepare-only" not in sys.argv:
+    if PREPARE_ONLY_OPTION not in sys.argv:
         os.system('snapcraft clean')
         os.system('snapcraft pack -v')
 finally:
-    if "--prepare-only" not in sys.argv:
+    if PREPARE_ONLY_OPTION not in sys.argv:
         os.remove(f'./{MODIFIED_CONFIG}')
