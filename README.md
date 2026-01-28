@@ -11,6 +11,14 @@ project's root, clean the snapcraft build environment, build the new snap, and r
 the `snapcraft.yaml` file. This is useful if you do a change in the SDK and want
 to test it, to ensure that everything works as expected and nothing breaks.
 
+If the script finds several `snap` files inside the `base-gnome-sdk` folder, it will
+use the most recent one, based on the modification time of the file.
+
+Also, if the build must be done by an external script (like when using Github's CI),
+then it is possible to call the `local-build.py` script with the `--prepare-only`
+parameter. With it, it will just generate the modified `snapcraft.yaml` file in the
+project folder, nothing else.
+
 ## Getting the repository
 
 To get the repository, just run:
