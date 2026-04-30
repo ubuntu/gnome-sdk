@@ -74,7 +74,7 @@ parts:
     after: [ ninja ]
     plugin: nil
     source: https://github.com/mesonbuild/meson.git
-    source-tag: '1.10.1'
+    source-tag: '1.10.2'
     source-depth: 1
     override-build: |
       python3 -m pip install --break-system-packages .
@@ -140,7 +140,7 @@ parts:
   glib:
     after: [ libffi, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/glib.git
-    source-tag: '2.86.3'
+    source-tag: '2.86.5'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -348,7 +348,7 @@ parts:
   gdk-pixbuf:
     after: [ pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: '2.44.4'
+    source-tag: '2.44.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -391,7 +391,7 @@ parts:
   librsvg:
     after: [ libcroco, gdk-pixbuf, vala, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
-    source-tag: '2.61.3' # they left the odd->unstable even->stable scheme, and now all tags are stable
+    source-tag: '2.61.4' # they left the odd->unstable even->stable scheme, and now all tags are stable
 # ext:updatesnap
 #   version-format:
 #     no-9x-revisions: true
@@ -492,7 +492,7 @@ parts:
   libsoup3:
     after: [ libpsl, meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libsoup.git
-    source-tag: '3.6.5'
+    source-tag: '3.6.6'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -548,7 +548,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.51'
+    source-tag: '3.24.52'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -595,7 +595,7 @@ parts:
   gtk4:
     after: [ libcroco, librsvg, wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.20.3'
+    source-tag: '4.20.4'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
@@ -1010,7 +1010,7 @@ parts:
   libinput:
     after: [ libwacom, meson-deps ]
     source: https://gitlab.freedesktop.org/libinput/libinput.git
-    source-tag: '1.30.1'
+    source-tag: '1.30.3'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1122,7 +1122,7 @@ parts:
   libpeas:
     after: [ clutter-gtk, meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.38.0' # developers say that they don't want to break ABI, so it should be safe to always update
+    source-tag: 'libpeas-1.38.1' # developers say that they don't want to break ABI, so it should be safe to always update
 # ext:updatesnap
 #   version-format:
 #     format: 'libpeas-%M.%m.%R'
@@ -1160,7 +1160,10 @@ parts:
   pygobject:
     after: [ pycairo, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
-    source-tag: '3.55.2'
+# ext:updatesnap
+#   version-format:
+#     ignore-odd-minor: true
+    source-tag: '3.56.2'
     source-depth: 1
     plugin: meson
     meson-parameters:
@@ -1215,7 +1218,7 @@ parts:
   p11-kit:
     after: [ gjs, meson-deps ]
     source: https://github.com/p11-glue/p11-kit.git
-    source-tag: '0.25.9'
+    source-tag: '0.25.10'
     source-depth: 1
     plugin: meson
     meson-parameters:
