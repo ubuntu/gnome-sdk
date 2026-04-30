@@ -383,6 +383,9 @@ parts:
     after: [gdk-pixbuf]
     source: https://gitlab.com/inkscape/libcroco.git
     source-depth: 1
+    # this repo is newer than the one archived in Gnome, but currently
+    # has no tags, so we have to use a commit.
+    source-commit: d851af79660943cb8b6feaa9c7cc9d39eb3b4686
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
