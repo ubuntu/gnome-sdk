@@ -1512,48 +1512,48 @@ parts:
       for PC in $(find . -path "*/pkgconfig/*.pc")
       do
         sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $PC
-        sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/gnome-46-2404-sdk/current#' $PC
-        sed -i 's#prefix = /usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
-        sed -i 's#prefix=/usr#prefix=/snap/gnome-46-2404-sdk/current/usr#' $PC
-        sed -i 's#original_prefix=/snap/gnome-46-2404-sdk/current/usr#original_prefix=/usr#' $PC
+        sed -i 's#prefix=$CRAFT_STAGE#prefix=/snap/$CRAFT_PROJECT_NAME/current#' $PC
+        sed -i 's#prefix = /usr#prefix=/snap/$CRAFT_PROJECT_NAME/current/usr#' $PC
+        sed -i 's#prefix=/usr#prefix=/snap/$CRAFT_PROJECT_NAME/current/usr#' $PC
+        sed -i 's#original_prefix=/snap/$CRAFT_PROJECT_NAME/current/usr#original_prefix=/usr#' $PC
 
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
-        sed -i 's#libdir=/lib#libdir=/snap/gnome-46-2404-sdk/current/lib#' $PC
+        sed -i 's#libdir=/lib#libdir=/snap/$CRAFT_PROJECT_NAME/current/lib#' $PC
 
         sed -i 's#exec_prefix=/usr#exec_prefix=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
-        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/gnome-46-2404-sdk/current/etc#' $PC
+        sed -i 's#sysconfdir=/etc#sysconfdir=/snap/$CRAFT_PROJECT_NAME/current/etc#' $PC
 
-        sed -i 's#/usr/#/snap/gnome-46-2404-sdk/current/usr/#g' $PC
-        sed -i 's#/etc/#/snap/gnome-46-2404-sdk/current/etc/#g' $PC
+        sed -i 's#/usr/#/snap/$CRAFT_PROJECT_NAME/current/usr/#g' $PC
+        sed -i 's#/etc/#/snap/$CRAFT_PROJECT_NAME/current/etc/#g' $PC
       done
 
       if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
-        sed -i 's#includedir=${prefix}/snap/gnome-46-2404-sdk/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
+        sed -i 's#includedir=${prefix}/snap/$CRAFT_PROJECT_NAME/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
       fi
 
       LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/gnome-46-2404-sdk/current#' $LIBTOOLIZE
+      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
+      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
 
       SCANNER=usr/bin/g-ir-scanner
-      sed -i 's#$CRAFT_STAGE#/snap/gnome-46-2404-sdk/current#g' $SCANNER
+      sed -i 's#$CRAFT_STAGE#/snap/$CRAFT_PROJECT_NAME/current#g' $SCANNER
 
       ITSTOOL=usr/bin/itstool
-      sed -i 's#/usr/local/share#/snap/gnome-46-2404-sdk/current/usr/local/share#g' $ITSTOOL
-      sed -i 's#/usr/share#/snap/gnome-46-2404-sdk/current/usr/share#g' $ITSTOOL
+      sed -i 's#/usr/local/share#/snap/$CRAFT_PROJECT_NAME/current/usr/local/share#g' $ITSTOOL
+      sed -i 's#/usr/share#/snap/$CRAFT_PROJECT_NAME/current/usr/share#g' $ITSTOOL
 
       GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0
       LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
       rm -f $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so
       cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
       $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $CRAFT_PRIME/$LOADERS
-      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/gnome-46-2404-sdk/current#g' $CRAFT_PRIME/$LOADERS
-      sed -i 's#/build/gnome-46-2404-sdk/parts/gdk-pixbuf/install#/snap/gnome-46-2404-sdk/current#g' $CRAFT_PRIME/$LOADERS
+      sed -i 's#/root/parts/gdk-pixbuf/install#/snap/$CRAFT_PROJECT_NAME/current#g' $CRAFT_PRIME/$LOADERS
+      sed -i 's#/build/$CRAFT_PROJECT_NAME/parts/gdk-pixbuf/install#/snap/$CRAFT_PROJECT_NAME/current#g' $CRAFT_PRIME/$LOADERS
 
       XML2_CONFIG=usr/bin/xml2-config
-      sed -i 's#/root/parts/debs/install#/snap/gnome-46-2404-sdk/current#g' $XML2_CONFIG
+      sed -i 's#/root/parts/debs/install#/snap/$CRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
 
       rm -f usr/lib/vala-current
       rm -f usr/share/gettext-current
