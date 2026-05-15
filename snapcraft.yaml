@@ -88,27 +88,8 @@ parts:
       # make some meson version available for the pull stage of other parts (e.g. meson subprojects download...)
       - meson
 
-  libtool:
-    plugin: nil
-# ext:updatesnap
-#   version-format:
-#     ignore: true
-    stage-packages:
-      - libtool
-      - libtool-bin
-      - libcrypt1
-      - libc6
-    override-stage: |
-      set -eux
-      craftctl default
-      LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
-      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
-
   fontconfig:
-    after: [ libtool, meson-deps ]
+    after: [ meson-deps ]
     source: https://gitlab.freedesktop.org/fontconfig/fontconfig.git
     source-tag: 2.15.0
     source-depth: 1
@@ -123,7 +104,7 @@ parts:
       - usr/bin/fc-cache
 
   libffi:
-    after: [ libtool ]
+    after: [ fontconfig ]
     source: https://github.com/libffi/libffi.git
     source-tag: 'v3.5.2'
     source-depth: 1
@@ -1492,7 +1473,6 @@ parts:
     after:
       - debs
       - gobject-introspection
-      - libtool
     plugin: nil
     build-environment: *buildenv
     build-packages:
@@ -1531,11 +1511,6 @@ parts:
       if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "x86_64-linux-gnu" ]; then
         sed -i 's#includedir=${prefix}/snap/$CRAFT_PROJECT_NAME/current#includedir=${prefix}#' $CRAFT_PRIME/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/igdgmm.pc
       fi
-
-      LIBTOOLIZE=usr/bin/libtoolize
-      sed -i 's#pkgauxdir="$CRAFT_STAGE#pkgauxdir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
-      sed -i 's#pkgltdldir="$CRAFT_STAGE#pkgltdldir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
-      sed -i 's#aclocaldir="$CRAFT_STAGE#aclocaldir="/snap/$CRAFT_PROJECT_NAME/current#' $LIBTOOLIZE
 
       SCANNER=usr/bin/g-ir-scanner
       sed -i 's#$CRAFT_STAGE#/snap/$CRAFT_PROJECT_NAME/current#g' $SCANNER
