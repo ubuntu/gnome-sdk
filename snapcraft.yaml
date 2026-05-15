@@ -38,7 +38,6 @@ parts:
                           $CRAFT_STAGE/usr/lib/pkgconfig:\
                           $CRAFT_STAGE/usr/share/pkgconfig\
                           ${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-      - CRAFT_EXT_CORE_LEVEL: core24
       - PATH: $CRAFT_STAGE/usr/bin:$PATH
 
   ninja:
@@ -773,7 +772,6 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
@@ -802,7 +800,6 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
 
   gtkmm:
@@ -831,7 +828,6 @@ parts:
       - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib/vala-0.56:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
       - GDK_PIXBUF_MODULE_FILE: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders.cache
       - PKG_CONFIG_PATH: $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig:$CRAFT_STAGE/usr/lib/pkgconfig:$CRAFT_STAGE/usr/share/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-      - CRAFT_EXT_CORE_LEVEL: core24
       - M4PATH: $CRAFT_STAGE/usr/lib/glibmm-2.68/proc/m4
     override-build: |
       set -eux
@@ -1693,7 +1689,6 @@ parts:
 
       # Check dangling libraries symlinks
       invalid_links=()
-      core_root_prefix=/snap/$CRAFT_EXT_CORE_LEVEL/current
       for i in $(find "$CRAFT_PRIME"/{usr/,}lib -xtype l -name '*.so'); do
         echo "$i: dangling symlink!"
         invalid_links+=($i)
