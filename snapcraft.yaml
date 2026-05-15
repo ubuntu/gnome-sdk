@@ -108,14 +108,13 @@ parts:
       PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
 
   fontconfig:
-    after: [ libtool ]
+    after: [ libtool, meson-deps ]
     source: https://gitlab.freedesktop.org/fontconfig/fontconfig.git
     source-tag: 2.15.0
     source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
+    plugin: meson
+    meson-parameters:
       - --prefix=/usr
-      - --libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
     build-environment: *buildenv
     override-pull: |
       craftctl default
