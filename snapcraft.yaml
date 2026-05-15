@@ -240,6 +240,8 @@ parts:
       - python3-dev
       - bison
       - flex
+    stage-packages:
+      - python3-setuptools
 
   vala:
     after: [ gobject-introspection ]
