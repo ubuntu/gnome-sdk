@@ -102,6 +102,9 @@ parts:
       sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
+      for bin in aclocal automake; do
+        ln -s $(find $CRAFT_STAGE/usr/bin -type f -name ${bin}*) $CRAFT_STAGE/usr/bin/$bin
+      done
 
   fontconfig:
     after: [ libtool ]
