@@ -1,8 +1,8 @@
-name: gnome-46-2404-sdk
+name: gnome-core26-sdk
 version: git
-summary: Shared GNOME 46 Ubuntu stack SDK
+summary: Shared GNOME Ubuntu stack SDK
 description: |
-  This snap contains the GNOME 46 development files. These are used during the build process of snaps that depend on the GNOME 46 stack. This helps developers to make sure their application is built against the correct verson of GNOME and GTK libraries.  
+  This snap contains the GNOME development files. These are used during the build process of snaps that depend on the GNOME stack. This helps developers to make sure their application is built against the correct verson of GNOME and GTK libraries.
   
   **For users**
 
@@ -15,13 +15,14 @@ description: |
 
   * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
   * You can report issues with this SDK snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
-  * The source code of this snap is available on GitHub in the `gnome-46-2404-sdk` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404-sdk
+  * The source code of this snap is available on GitHub in the `gnome-core26-sdk` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-core26-sdk
   * This snap is used for building snaps of applications using GNOME or GTK. If you are looking for instructions on how to build GNOME applications instead, take a look at https://developer.gnome.org/
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: stable
-base: core24 # if the base is changed, the BUILDENV part must be updated
+grade: devel
+base: core26
+build-base: devel
 
 parts:
   buildenv:
