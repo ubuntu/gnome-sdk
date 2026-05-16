@@ -381,7 +381,7 @@ parts:
     build-packages:
       - libssl-dev
       - curl
-      - cargo-1.82
+      - cargo
     override-pull: |
       craftctl default
       meson subprojects download
@@ -391,7 +391,7 @@ parts:
       # launchpad.net/~desktop-snappers/+snap/gnome-46-2404-sdk/+build/2931431
       # shows it does not.
       if test "$CRAFT_ARCH_BUILD_FOR" = riscv64; then
-        cargo-1.82 update
+        cargo update
       fi
       # cargo version in .deb is too old
       curl https://sh.rustup.rs -sSf > cargo.sh
