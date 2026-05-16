@@ -874,24 +874,6 @@ parts:
       craftctl default
       sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
 
-  libdazzle:
-    after: [ gtksourceview, meson-deps, vala, gobject-introspection ]
-    source: https://gitlab.gnome.org/Archive/libdazzle.git
-    source-tag: '3.44.0'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dwith_vapi=true
-      - -Dwith_introspection=true
-    build-environment: *buildenv
-    override-pull: |
-      set -eux
-      craftctl default
-      sed -i 's#Werror=missing-include-dirs#Wmissing-include-dirs#g' meson.build
-
   gsound:
     after: [ meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gsound.git
@@ -954,33 +936,8 @@ parts:
       - xkb-data
       - yelp-tools
 
-  cogl:
-    after: [ gnome-desktop, gobject-introspection ]
-    source: https://gitlab.gnome.org/Archive/cogl.git
-    source-tag: '1.22.8'
-    source-depth: 1
-    plugin: autotools
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --enable-wayland-egl-platform=yes
-      - --enable-kms-egl-platform=yes
-      - --enable-introspection=yes
-      - --enable-gdk-pixbuf
-      - --enable-cogl-pango
-      - --enable-gl
-      - --enable-xlib-egl-platform
-      - --enable-gles2
-      - --with-gles2-libname=libGLESv2.so.2
-    build-environment: *buildenv
-    build-packages:
-      - libgbm-dev
-      - libgles2-mesa-dev
-      - xauth
-      - xvfb
-      - libgstreamer-plugins-base1.0-dev
-
   libwacom:
-    after: [ cogl, meson-deps ]
+    after: [ gnome-desktop, meson-deps ]
     source: https://github.com/linuxwacom/libwacom
     source-type: git
     source-tag: 'libwacom-2.16.1'
@@ -1016,126 +973,8 @@ parts:
       - libudev-dev
       - libevdev-dev
 
-  clutter:
-    after: [ cogl, json-glib, libinput, meson-deps, gobject-introspection ]
-    source: https://gitlab.gnome.org/Archive/clutter.git
-    source-tag: '1.26.4'
-# ext:updatesnap
-#   version-format:
-#     ignore: true
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dbuild_examples=false
-      - -Ddocumentation=false
-      - -Dbuild_tests=false
-      - -Dpixbuf_tests=false
-      - -Dintrospection=true
-    build-environment: *buildenv
-    build-packages:
-      - libdrm-dev
-      - xsltproc
-      - libgudev-1.0-dev
-    stage:
-      - -usr/bin/gapplication
-      - -usr/bin/gdbus
-      - -usr/bin/gio*
-      - -usr/bin/glib*
-      - -usr/bin/gobject-query
-      - -usr/bin/gresource
-      - -usr/bin/gsettings
-      - -usr/bin/gtester*
-      - -usr/include/gio-unix-2.0/gio/gdesktopappinfo.h
-      - -usr/include/gio-unix-2.0/gio/gunixmounts.h
-      - -usr/include/glib-2.0/*
-      - -usr/include/pixman-1/*
-      - -usr/lib/*/glib-2.0/*
-      - -usr/lib/*/libffi*
-      - -usr/lib/*/libgio*
-      - -usr/lib/*/libglib*
-      - -usr/lib/*/libgmodule*
-      - -usr/lib/*/libgobject*
-      - -usr/lib/*/libgthread*
-      - -usr/lib/*/libpixman*
-      - -usr/lib/*/pkgconfig/gio*
-      - -usr/lib/*/pkgconfig/glib-2.0.pc
-      - -usr/lib/*/pkgconfig/gmodule*
-      - -usr/lib/*/pkgconfig/gobject-2.0.pc
-      - -usr/lib/*/pkgconfig/gthread-2.0.pc
-      - -usr/lib/*/pkgconfig/libffi.pc
-      - -usr/lib/*/pkgconfig/pixman-1.pc
-      - -usr/share/aclocal/glib-2.0.m4
-      - -usr/share/aclocal/gsettings.m4
-      - -usr/share/glib-2.0/*
-      - -usr/lib/*/girepository-1.0/GIRepository-2.0.typelib
-      - -usr/lib/*/girepository-1.0/GLib-2.0.typelib
-      - -usr/lib/*/girepository-1.0/GObject-2.0.typelib
-      - -usr/lib/*/girepository-1.0/Gio-2.0.typelib
-      - -usr/lib/*/libgirepository*
-      - -usr/include/fribidi/*
-      - -usr/lib/*/libfribidi*
-      - -usr/lib/*/pkgconfig/fribidi.pc
-      - -usr/include/harfbuzz/*
-      - -usr/share/gir-1.0/HarfBuzz-0.0.gir
-      - -usr/bin/pango*
-      - -usr/include/pango-1.0/pango/*
-      - -usr/lib/*/girepository-1.0/Pango*
-      - -usr/lib/*/libpango*
-      - -usr/lib/*/pkgconfig/pango*
-      - -usr/share/gir-1.0/Pango*
-      - -usr/bin/gdk-pixbuf*
-      - -usr/include/gdk-pixbuf-2.0/gdk-pixbuf/gdk-pixbuf-features.h
-      - -usr/lib/*/gdk-pixbuf-2.0/*
-      - -usr/lib/*/girepository-1.0/GdkPixbuf-2.0.typelib
-      - -usr/lib/*/libgdk_pixbuf*
-      - -usr/lib/*/pkgconfig/gdk-pixbuf*
-      - -usr/share/gir-1.0/GdkPix*
-      - -usr/bin/wayland-scanner
-      - -usr/include/wayland*
-      - -usr/share/aclocal/wayland-scanner.m4
-      - -usr/share/wayland/wayland.xml
-
-  clutter-gtk:
-    after: [ clutter, meson-deps ]
-    source: https://gitlab.gnome.org/Archive/clutter-gtk.git
-    source-tag: '1.8.4'  # ancient tag. should just build from master since it gets updates (like clutter)
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-    build-environment: *buildenv
-
-  libpeas:
-    after: [ clutter-gtk, meson-deps, vala, gobject-introspection ]
-    source: https://gitlab.gnome.org/GNOME/libpeas.git
-    source-tag: 'libpeas-1.36.0' # developers say that they don't want to break ABI, so it should be safe to always update
-# ext:updatesnap
-#   version-format:
-#     format: 'libpeas-%M.%m.%R'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dpython2=true
-      - -Dpython3=true
-      - -Dintrospection=true
-      - -Dvapi=true
-      - -Ddemos=true
-      - -Dglade_catalog=false
-      - -Dgtk_doc=false
-    build-environment: *buildenv
-    build-packages:
-      - python3-dev
-      - python-gi-dev
-
   pycairo:
-    after: [ libpeas, meson-deps ]
+    after: [ libinput, meson-deps ]
     source: https://github.com/pygobject/pycairo.git
     source-tag: 'v1.28.0'
     source-depth: 1
@@ -1426,7 +1265,6 @@ parts:
       - gtksourceview
       - libadwaita
       - libayatana-appindicator
-      - libdazzle
       - libgnome-games-support
       - libgweather
       - libnotify
