@@ -1632,8 +1632,6 @@ parts:
       - libtool
     plugin: nil
     build-environment: *buildenv
-    build-packages:
-      - execstack
     override-prime: |
       set -eux
       craftctl default
@@ -1710,11 +1708,6 @@ parts:
         echo "${invalid_links[@]}"
         echo "Ensure full package set (runtime and dev files) is staged!"
         exit 1;
-      fi
-
-      # Necessary for armhf builds, triggers review warning
-      if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "arm-linux-gnueabihf" ]; then
-        execstack --clear-execstack  usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libde265.so.0*
       fi
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
