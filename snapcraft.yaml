@@ -1524,8 +1524,8 @@ parts:
     plugin: nil
     override-build: |
       set -eux
-      mkdir -p $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
-      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/tools/bindtextdomain.c -ldl
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      gcc -Wall -O2 -o $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/bindtextdomain.so -fPIC -shared $CRAFT_PROJECT_DIR/tools/bindtextdomain.c -ldl
 
   cleanup:
     after: [ conditioning ]
