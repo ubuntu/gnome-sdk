@@ -1182,12 +1182,10 @@ parts:
       - -DENABLE_TESTS=OFF
       - -DENABLE_GTKDOC=OFF
       - -DENABLE_BINDINGS_MONO=OFF
-      - -DCMAKE_SHARED_LINKER_FLAGS="-lpcre"
     build-packages:
       - libayatana-indicator3-dev
       - libdbusmenu-glib-dev
       - libdbusmenu-gtk3-dev
-      - libpcre3-dev
       - cmake
     stage-packages:
       - libayatana-indicator3-dev
@@ -1328,19 +1326,18 @@ parts:
       - liblzo2-dev
       - libmount1
       - libmount-dev
-      - libmozjs-115-dev
+      - libmozjs-140-dev
       - libmtdev1t64
       - libnettle8t64
       - libnghttp2-dev
       - libnsl-dev
       - libnss3-dev
+      - libopenjpip7
       - libopenjp2-7-dev
       - libpciaccess0
       - libpciaccess-dev
       - libpcre2-8-0
       - libpcre2-dev
-      - libpcre3
-      - libpcre3-dev
       - libpng-dev
       - libpng16-16t64
       - libpoppler-dev
