@@ -1106,7 +1106,7 @@ parts:
       - gir1.2-glib-2.0
 
   libnotify:
-    after: [ glib, gobject-introspection, gdk-pixbuf ]
+    after: [ glib, gobject-introspection, gdk-pixbuf, meson-deps ]
     source: https://gitlab.gnome.org/GNOME/libnotify.git
     source-tag: '0.8.8'
     source-depth: 1
