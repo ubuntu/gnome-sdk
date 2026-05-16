@@ -1034,6 +1034,7 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
       - -Dgtk_doc=false
+      - -Dmanpage=false
       - -Dintrospection=true
       - -Dvapi=true
     build-packages:
