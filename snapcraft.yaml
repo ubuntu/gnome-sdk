@@ -1301,9 +1301,9 @@ parts:
       - libgssapi-krb5-2
       - libgstreamer-plugins-bad1.0-dev
       - libgstreamer-plugins-base1.0-dev
-      - libgstreamer-plugins-good1.0-dev
+      - libgstreamer-plugins-extra1.0-dev
       - libgudev-1.0-dev
-      - libgvc6
+      - libgvc7
       - libheif-dev
       - libhogweed6t64
       - libidn2-0
