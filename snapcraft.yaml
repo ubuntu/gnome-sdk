@@ -401,7 +401,6 @@ parts:
     build-environment: *buildenv
     build-packages:
       - libssl-dev
-      - meson
       - curl
       - cargo-1.82
     override-pull: |
