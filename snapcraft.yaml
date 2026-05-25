@@ -317,6 +317,9 @@ parts:
       - -Doptimization=3
       - -Ddebug=true
       - -Dtests=false
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/at-spi2-atk-collection-attributes.patch
     build-environment: *buildenv
 
   fribidi:
