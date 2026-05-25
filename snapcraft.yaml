@@ -932,6 +932,10 @@ parts:
       - libudev-dev
       - xkb-data
       - yelp-tools
+    override-build: |
+      set -eux
+      mount
+      craftctl default
 
   libwacom:
     after: [ gnome-desktop, meson-deps ]
