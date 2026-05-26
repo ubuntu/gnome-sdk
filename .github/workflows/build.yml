@@ -16,7 +16,6 @@ jobs:
 
     - name: Free disk space
       run: |
-        findmnt
         sudo rm -rf /usr/local/lib/android
 
     - name: Build SDK
@@ -31,6 +30,7 @@ jobs:
     - name: Prepare runtime
       run: |
         set -eu
+        findmnt
         git clone --depth 1 --branch gnome-46-2404 https://github.com/ubuntu/gnome-sdk gnome-runtime
         mkdir gnome-runtime/base-gnome-sdk
         mv ${{ steps.snapcraft.outputs.snap}} gnome-runtime/base-gnome-sdk/
