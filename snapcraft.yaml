@@ -100,8 +100,6 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/fontconfig-delay.patch
-    stage:
-      - usr/bin/fc-cache
 
   libffi:
     after: [ fontconfig ]
@@ -166,7 +164,7 @@ parts:
     build-environment: *buildenv
 
   cairo:
-    after: [ pixman, meson-deps ]
+    after: [ fontconfig, pixman, meson-deps ]
     source: https://gitlab.freedesktop.org/cairo/cairo.git
     source-tag: '1.18.4'
 # ext:updatesnap
@@ -1443,7 +1441,8 @@ parts:
       craftctl default
       PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
     stage:
-      - -usr/bin/fc-cache
+# needed to avoid clashing with fontconfig
+      - -etc/fonts/fonts.conf
       - to riscv64:
         - -usr/lib/tcl8.6/graphviz/libtcldot.so
         - -usr/lib/tcl8.6/graphviz/libtclplan.so
