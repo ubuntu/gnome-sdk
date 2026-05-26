@@ -16,8 +16,8 @@ jobs:
 
     - name: Free disk space
       run: |
+        findmnt
         sudo rm -rf /usr/local/lib/android
-        mount
 
     - name: Build SDK
       uses: snapcore/action-build@v1
