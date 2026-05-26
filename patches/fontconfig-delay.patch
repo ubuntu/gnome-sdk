@@ -1,12 +1,12 @@
 diff --git a/fc-cache/fc-cache.c b/fc-cache/fc-cache.c
-index a99adba9..e9956fe7 100644
+index e225bdc4..29972741 100644
 --- a/fc-cache/fc-cache.c
 +++ b/fc-cache/fc-cache.c
-@@ -442,16 +442,6 @@ main (int argc, char **argv)
+@@ -414,16 +414,6 @@ main (int argc, char **argv)
  
      FcConfigDestroy (config);
-     FcFini ();
--    /* 
+     FcFini();
+-    /*
 -     * Now we need to sleep a second  (or two, to be extra sure), to make
 -     * sure that timestamps for changes after this run of fc-cache are later
 -     * then any timestamps we wrote.  We don't use gettimeofday() because
