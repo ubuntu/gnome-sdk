@@ -4,6 +4,7 @@
 
 import sys
 import os
+import subprocess
 import yaml
 import glob
 
@@ -58,8 +59,8 @@ try:
     with open(f'./{MODIFIED_CONFIG}', "w") as config_file:
         config_file.write(yaml.dump(config, Dumper=yaml.Dumper))
     if PREPARE_ONLY_OPTION not in sys.argv:
-        os.system('snapcraft clean')
-        os.system('snapcraft pack -v')
+        subprocess.call('snapcraft clean', shell=True)
+        subprocess.call('snapcraft pack -v', shell=True)
 finally:
     if PREPARE_ONLY_OPTION not in sys.argv:
         os.remove(f'./{MODIFIED_CONFIG}')
