@@ -27,10 +27,10 @@ compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-    gnome-42-2204:
-      interface: content
-      read:
-        - /
+  gnome-42-2204:
+    interface: content
+    read:
+      - /
 
 package-repositories:
   - type: apt
@@ -39,12 +39,25 @@ package-repositories:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-42-2204-sdk/latest/candidate ]
+    stage-snaps:
+      - gnome-42-2204-sdk/latest/candidate
     override-build: |
       set -eu
       craftctl default
-      sdk_version=$(sed -n  's/^version:\s*\(.*\)/\1/p' \
-        ${CRAFT_PART_INSTALL}/snap.gnome-42-2204-sdk/manifest.yaml)
+      # LOCAL_SDK_SNAP is set by `local-build.py` when using a local snap
+      if [ -z "${LOCAL_SDK_SNAP:-}" ]; then
+        echo Using upstream SDK
+        sdk_version=$(sed -n  's/^version:\s*\(.*\)/\1/p' \
+          ${CRAFT_PART_INSTALL}/snap.gnome-42-2204-sdk/manifest.yaml)
+      else
+        echo Using local $CRAFT_PROJECT_DIR/${LOCAL_SDK_SNAP}
+        snap install --dangerous $CRAFT_PROJECT_DIR/${LOCAL_SDK_SNAP}
+
+        cp -a /snap/gnome-42-2204-sdk/current/usr $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-42-2204-sdk/current/etc $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-42-2204-sdk/current/var $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-42-2204-sdk/current/lib $CRAFT_PART_INSTALL/
+      fi
 
       # Use the same logic of snapcraft
       project_version=$(git -C "${CRAFT_PROJECT_DIR}" describe --dirty 2>/dev/null || true)
@@ -56,7 +69,7 @@ parts:
     stage:
       - lib/*/bindtextdomain.so
       - usr
-      - lib/$CRAFT_ARCH_TRIPLET/*
+      - lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/*
       - etc/gnome/*
       - -etc/emacs
       - -etc/X11/Xreset.d/README
@@ -74,7 +87,7 @@ parts:
       - -usr/share/installed-tests
       - -usr/share/maven-repo
       - -usr/bin/dpkg*
-      - -usr/bin/$CRAFT_ARCH_TRIPLET-*
+      - -usr/bin/$CRAFT_ARCH_TRIPLET_BUILD_FOR-*
       - -usr/bin/g-ir-*
       - -usr/bin/glib-compile-*
       - -usr/bin/glib-gettextize
@@ -142,7 +155,8 @@ parts:
       - -usr/share/devhelp/books
 
   debs:
-    after: [ gnome-sdk ]
+    after:
+      - gnome-sdk
     plugin: nil
     stage-packages:
       - fcitx-frontend-gtk3
@@ -251,7 +265,7 @@ parts:
       - else:
         - libllvm11
     stage:
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libLLVM*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libLLVM*
     override-build: |
       set -eux
       craftctl default
@@ -259,29 +273,80 @@ parts:
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/{}*" \;
       cd $CRAFT_STAGE/usr/lib
-      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{} \;
-      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/{}*" \;
-      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET
+      find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{} \;
+      find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/{}*" \;
+      cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
 
   fonts-config:
-      after: [ debs ]
-      plugin: nil
-      stage-packages: [ fontconfig-config, fonts-arphic-ukai, fonts-arphic-uming, fonts-beng-extra, fonts-dejavu-core, fonts-deva-extra, fonts-droid-fallback, fonts-gubbi, fonts-gujr-extra, fonts-guru-extra, fonts-lohit-beng-assamese, fonts-lohit-beng-bengali, fonts-lohit-deva, fonts-lohit-gujr, fonts-lohit-guru, fonts-lohit-knda, fonts-lohit-mlym, fonts-lohit-orya, fonts-lohit-taml, fonts-lohit-taml-classical, fonts-lohit-telu, fonts-noto-cjk, fonts-noto-mono, fonts-orya-extra, fonts-pagul, fonts-smc-anjalioldlipi, fonts-smc-chilanka, fonts-smc-dyuthi, fonts-smc-karumbi, fonts-smc-keraleeyam, fonts-smc-manjari, fonts-smc-meera, fonts-smc-rachana, fonts-smc-raghumalayalamsans, fonts-smc-suruma, fonts-smc-uroob, fonts-telu-extra, fonts-tlwg-garuda, fonts-tlwg-kinnari, fonts-tlwg-laksaman, fonts-tlwg-loma, fonts-tlwg-mono, fonts-tlwg-norasi, fonts-tlwg-typist, fonts-tlwg-typo, fonts-tlwg-umpush, fonts-tlwg-waree, fonts-urw-base35, language-selector-common ]
-      stage:
+    after:
+      - debs
+    plugin: nil
+    stage:
       - etc/fonts
       - usr/share/fontconfig
+    stage-packages:
+      - fontconfig-config
+      - fonts-arphic-ukai
+      - fonts-arphic-uming
+      - fonts-beng-extra
+      - fonts-dejavu-core
+      - fonts-deva-extra
+      - fonts-droid-fallback
+      - fonts-gubbi
+      - fonts-gujr-extra
+      - fonts-guru-extra
+      - fonts-lohit-beng-assamese
+      - fonts-lohit-beng-bengali
+      - fonts-lohit-deva
+      - fonts-lohit-gujr
+      - fonts-lohit-guru
+      - fonts-lohit-knda
+      - fonts-lohit-mlym
+      - fonts-lohit-orya
+      - fonts-lohit-taml
+      - fonts-lohit-taml-classical
+      - fonts-lohit-telu
+      - fonts-noto-cjk
+      - fonts-noto-mono
+      - fonts-orya-extra
+      - fonts-pagul
+      - fonts-smc-anjalioldlipi
+      - fonts-smc-chilanka
+      - fonts-smc-dyuthi
+      - fonts-smc-karumbi
+      - fonts-smc-keraleeyam
+      - fonts-smc-manjari
+      - fonts-smc-meera
+      - fonts-smc-rachana
+      - fonts-smc-raghumalayalamsans
+      - fonts-smc-suruma
+      - fonts-smc-uroob
+      - fonts-telu-extra
+      - fonts-tlwg-garuda
+      - fonts-tlwg-kinnari
+      - fonts-tlwg-laksaman
+      - fonts-tlwg-loma
+      - fonts-tlwg-mono
+      - fonts-tlwg-norasi
+      - fonts-tlwg-typist
+      - fonts-tlwg-typo
+      - fonts-tlwg-umpush
+      - fonts-tlwg-waree
+      - fonts-urw-base35
+      - language-selector-common
 
   caches:
-    after: [ fonts-config ]
+    after:
+      - fonts-config
     plugin: nil
     build-packages:
       - gtk-update-icon-cache
       - libglib2.0-bin
       - shared-mime-info
     build-environment:
-      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      - LD_LIBRARY_PATH: $CRAFT_STAGE/usr/lib:$CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     override-build: |
       set -eux
       craftctl default
@@ -302,7 +367,8 @@ parts:
       - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
 
   cleanup:
-    after: [ caches ]
+    after:
+      - caches
     plugin: nil
     build-snaps:
       - gtk-common-themes
