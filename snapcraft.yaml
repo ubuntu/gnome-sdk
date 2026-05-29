@@ -110,6 +110,7 @@ parts:
     autotools-configure-parameters:
       - --prefix=/usr
       - --libdir=/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      - --disable-multi-os-directory
     build-environment: *buildenv
     build-packages:
       - texinfo
@@ -1280,7 +1281,6 @@ parts:
       - libevdev-dev
       - libexpat1
       - libexpat1-dev
-      - libffi8
       - libfreetype6
       - libfreetype-dev
       - libgbm-dev
