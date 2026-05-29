@@ -1,0 +1,182 @@
+diff --git a/glycin/src/api_common.rs b/glycin/src/api_common.rs
+index 77285117..4a35f6d6 100644
+--- a/glycin/src/api_common.rs
++++ b/glycin/src/api_common.rs
+@@ -22,6 +22,7 @@ pub enum SandboxMechanism {
+ impl SandboxMechanism {
+     pub async fn detect() -> Self {
+         match RunEnvironment::cached().await {
++            RunEnvironment::Snap => Self::NotSandboxed,
+             RunEnvironment::FlatpakDevel => Self::NotSandboxed,
+             RunEnvironment::Flatpak => Self::FlatpakSpawn,
+             RunEnvironment::Host => Self::Bwrap,
+diff --git a/glycin/src/sandbox.rs b/glycin/src/sandbox.rs
+index 2e6d5a15..592d17e6 100644
+--- a/glycin/src/sandbox.rs
++++ b/glycin/src/sandbox.rs
+@@ -18,13 +18,22 @@ use nix::libc::siginfo_t;
+ use nix::sys::resource;
+ 
+ use crate::config::{ConfigEntry, ImageLoaderConfig};
+-use crate::util::{self, AsyncMutex, new_async_mutex, spawn_blocking};
++use crate::util::{self, AsyncMutex, RunEnvironment, new_async_mutex, spawn_blocking};
+ use crate::{Error, SandboxMechanism};
+ 
+ type SystemSetupStore = Arc<Result<SystemSetup, Arc<io::Error>>>;
+ 
+ static SYSTEM_SETUP: AsyncMutex<Option<SystemSetupStore>> = new_async_mutex(None);
+ 
++struct SendableFilterContext(ScmpFilterContext);
++unsafe impl Send for SendableFilterContext {}
++unsafe impl Sync for SendableFilterContext {}
++impl SendableFilterContext {
++    fn load(&self) -> Result<(), libseccomp::error::SeccompError> {
++        self.0.load()
++    }
++}
++
+ /// List of allowed syscalls
+ ///
+ /// All syscalls are blocked by default via seccomp. Only the following syscalls
+@@ -43,6 +52,7 @@ const ALLOWED_SYSCALLS: &[&str] = &[
+     "clone",
+     "clone3",
+     "close",
++    "close_range",
+     "connect",
+     "creat",
+     "dup",
+@@ -88,6 +98,7 @@ const ALLOWED_SYSCALLS: &[&str] = &[
+     "getuid",
+     "getuid32",
+     "ioctl",
++    "lseek",
+     "madvise",
+     "membarrier",
+     "memfd_create",
+@@ -170,7 +181,7 @@ const ALLOWED_SYSCALLS_FONTCONFIG: &[&str] = &[
+     "unlinkat",
+ ];
+ 
+-const INHERITED_ENVIRONMENT_VARIABLES: &[&str] = &["RUST_BACKTRACE", "RUST_LOG", "XDG_RUNTIME_DIR"];
++const INHERITED_ENVIRONMENT_VARIABLES: &[&str] = &["RUST_BACKTRACE", "RUST_LOG", "XDG_RUNTIME_DIR", "LD_LIBRARY_PATH"];
+ 
+ pub struct Sandbox {
+     sandbox_mechanism: SandboxMechanism,
+@@ -216,6 +227,7 @@ impl Sandbox {
+         let dbus_fd = self.dbus_socket.as_raw_fd();
+ 
+         let mut shared_fds = Vec::new();
++        let run_environment = RunEnvironment::cached().await;
+ 
+         let (mut command, seccomp_fd) = match self.sandbox_mechanism {
+             SandboxMechanism::Bwrap => {
+@@ -232,8 +244,16 @@ impl Sandbox {
+                 (command, None)
+             }
+             SandboxMechanism::NotSandboxed => {
+-                eprintln!("WARNING: Glycin running without sandbox.");
+-                let command = self.no_sandbox_command();
++                let snap_confined = matches!(run_environment, RunEnvironment::Snap);
++                let command = if snap_confined {
++                    eprintln!(
++                        "WARNING: Glycin running without additional sandbox inside snap confinement.",
++                    );
++                    self.snap_command()?
++                } else {
++                    eprintln!("WARNING: Glycin running without sandbox.");
++                    self.no_sandbox_command()
++                };
+ 
+                 (command, None)
+             }
+@@ -560,6 +580,34 @@ impl Sandbox {
+         command
+     }
+ 
++    fn snap_command(&self) -> Result<Command, Error> {
++        let mut command = Command::new(self.exec());
++
++        command.env_clear();
++        for key in INHERITED_ENVIRONMENT_VARIABLES {
++            if let Some(val) = std::env::var_os(key) {
++                command.env(key, val);
++            }
++        }
++
++        let filter = self.seccomp_filter()?;
++        let proc_filter = SendableFilterContext(filter);
++
++        unsafe {
++            command.pre_exec(move || {
++                nix::sys::prctl::set_pdeathsig(nix::sys::signal::SIGKILL).map_err(std::io::Error::from)?;
++                nix::sys::prctl::set_no_new_privs().map_err(std::io::Error::from)?;
++
++                proc_filter.load().or_else(|_| {
++                    libc_eprint("glycin sandbox: Failed to load seccomp filter, continuing without\n");
++                    Ok(())
++                })
++            });
++        }
++
++        Ok(command)
++    }
++
+     /// Memory limit in bytes that should be applied to sandboxes
+     fn memory_limit() -> resource::rlim_t {
+         // Lookup free memory
+diff --git a/glycin/src/util.rs b/glycin/src/util.rs
+index 765a5953..df48aede 100644
+--- a/glycin/src/util.rs
++++ b/glycin/src/util.rs
+@@ -71,6 +71,8 @@ pub enum RunEnvironment {
+     Host,
+ 
+     HostBwrapSyscallsBlocked,
++    /// Inside Snap confinement
++    Snap,
+     /// Inside Flatpak
+     Flatpak,
+     /// Inside Flatpak and development environment
+@@ -86,7 +88,9 @@ impl RunEnvironment {
+         if let Some(result) = *run_environment {
+             result
+         } else {
+-            let run_env = if let Some(devel) = flatpak_devel().await {
++            let run_env = if snap_confined().await {
++                Self::Snap
++            } else if let Some(devel) = flatpak_devel().await {
+                 if devel {
+                     Self::FlatpakDevel
+                 } else {
+@@ -104,6 +108,30 @@ impl RunEnvironment {
+     }
+ }
+ 
++async fn snap_confined() -> bool {
++    if let Ok(apparmor_label) = read("/proc/self/attr/current").await
++        && snap_apparmor_label(&apparmor_label)
++    {
++        return true;
++    }
++
++    std::env::var_os("SNAP").is_some() || std::env::var_os("SNAP_NAME").is_some()
++}
++
++fn snap_apparmor_label(label: &[u8]) -> bool {
++    let label = String::from_utf8_lossy(label);
++    let label = label.trim_matches(char::from(0)).trim();
++
++    if label == "unconfined" {
++        return false;
++    }
++
++    label
++        .split_ascii_whitespace()
++        .next()
++        .is_some_and(|profile| profile.starts_with("snap."))
++}
++
+ /// Returns None if not in Flatpak environment, otherwise true if development
+ async fn flatpak_devel() -> Option<bool> {
+     let data = read("/.flatpak-info").await.ok()?;

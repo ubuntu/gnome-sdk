@@ -322,41 +322,8 @@ parts:
       - libxt-dev
       - cmake
 
-  gdk-pixbuf:
-    after: [ pango, meson-deps, gobject-introspection ]
-    source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
-    source-tag: '2.42.12'
-    source-depth: 1
-    plugin: meson
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-      - -Dinstalled_tests=false
-      - -Dgtk_doc=false
-      - -Ddocs=false
-      - -Dintrospection=enabled
-      - -Dman=false
-      - -Dtests=false
-      - -Dinstalled_tests=false
-    build-environment: *buildenv
-    override-build: |
-      set -eux
-      craftctl default
-      cp $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/bin/
-      LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders
-      $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
-      # workaround for thumbnailer being in a different directory in the snap env
-      sed -i 's#/usr/bin/##' $CRAFT_PART_INSTALL/usr/share/thumbnailers/gdk-pixbuf-thumbnailer.thumbnailer
-    organize:
-      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
-    build-packages:
-      - libpng-dev
-      - libjpeg-dev
-      - libtiff-dev
-
   librsvg:
-    after: [ gdk-pixbuf, vala, meson-deps, gobject-introspection ]
+    after: [ pango, vala, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/librsvg.git
     source-tag: '2.62.2' # they left the odd->unstable even->stable scheme, and now all tags are stable
 # ext:updatesnap
@@ -370,8 +337,8 @@ parts:
       - -Ddebug=true
       - -Dintrospection=enabled
       - -Dvala=enabled
-      - -Dpixbuf=enabled
-      - -Dpixbuf-loader=enabled
+      - -Dpixbuf=disabled
+      - -Dpixbuf-loader=disabled
       - -Ddocs=disabled
       - -Dtests=false
     build-environment: *buildenv
@@ -599,6 +566,68 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/gtk4-detect-sandbox.patch
+
+  glycin:
+    after: [ pango, meson-deps, gobject-introspection, gtk4, fontconfig, cairo, librsvg ]
+    source: https://gitlab.gnome.org/GNOME/glycin.git
+    source-tag: '2.1.1'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dtests=false
+      - -Dglycin-thumbnailer=true
+    build-environment: *buildenv
+    build-packages:
+      - cargo
+      - liblcms2-dev
+      - libseccomp-dev
+      - libheif-dev
+      - libjxl-dev
+    override-pull: |
+      set -eux
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/glycin-snap-no-sandbox.patch
+      mkdir -p $CRAFT_PART_BUILD/.cargo
+      cargo vendor $CRAFT_PART_SRC/vendor > $CRAFT_PART_BUILD/.cargo/config.toml
+    override-build: |
+      set -eux
+      craftctl default
+      # make glycin available for other parts during this build; must be changed again for priming
+      sed -i 's#/usr/#/root/parts/glycin/install/usr/#' $CRAFT_PART_INSTALL/usr/share/glycin-loaders/**/conf.d/*
+      # for thumbnailer we can use relative paths instead, which makes it work at any time through PATH
+      sed -i 's#/usr/bin/##' $CRAFT_PART_INSTALL/usr/share/thumbnailers/glycin-*.thumbnailer
+
+  gdk-pixbuf:
+    after: [ pango, meson-deps, gobject-introspection, glycin ]
+    source: https://gitlab.gnome.org/GNOME/gdk-pixbuf.git
+    source-tag: '2.44.6'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+      - -Doptimization=3
+      - -Ddebug=true
+      - -Dinstalled_tests=false
+      - -Dgtk_doc=false
+      - -Ddocumentation=false
+      - -Dintrospection=enabled
+      - -Dman=false
+      - -Dtests=false
+      - -Dinstalled_tests=false
+      - -Dthumbnailer=disabled
+    build-environment: *buildenv
+    override-build: |
+      set -eux
+      craftctl default
+      cp $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $CRAFT_STAGE/usr/bin/
+      LOADERS_PATH=$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/2.10.0/loaders
+      mkdir -p $LOADERS_PATH
+      $CRAFT_PART_INSTALL/usr/bin/gdk-pixbuf-query-loaders $LOADERS_PATH/*.so > $LOADERS_PATH.cache
+    organize:
+      usr/bin/gdk-pixbuf-query-loaders: usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders
 
   gtk-locales:
     after: [ gtk3, gtk4 ]
@@ -1121,20 +1150,6 @@ parts:
     stage:
       - -usr/bin
 
-  webp-pixbuf-loader:
-    after: [meson-deps, gdk-pixbuf]
-    source: https://github.com/aruiz/webp-pixbuf-loader.git
-    source-tag: '0.2.7'
-    source-depth: 1
-    plugin: meson
-    build-environment: *buildenv
-    meson-parameters:
-      - --prefix=/usr
-      - -Doptimization=3
-      - -Ddebug=true
-    build-packages:
-      - libwebp-dev
-
   libayatana-ido:
     after: [glib, gtk3]
     source: https://github.com/AyatanaIndicators/ayatana-ido.git
@@ -1214,6 +1229,7 @@ parts:
       - at-spi2-core
       - cairomm
       - glibmm
+      - glycin
       - gtk-locales
       - gtkmm
       - gtksourceview
@@ -1227,7 +1243,6 @@ parts:
       - libsoup3
       - mm-common
       - pangomm
-      - webp-pixbuf-loader
     plugin: nil
     stage-packages:
       - appstream
@@ -1237,7 +1252,6 @@ parts:
       - g++
       - gettext
       - gir1.2-poppler-0.18
-      - heif-gdk-pixbuf
       - itstool
       - libappstream-dev
       - libayatana-indicator3-dev
@@ -1299,15 +1313,22 @@ parts:
       - libgstreamer-plugins-extra1.0-dev
       - libgudev-1.0-dev
       - libgvc7
+      - libheif1
       - libheif-dev
+      - libheif-plugin-aomenc
+      - libheif-plugin-aomdec
+      - libheif-plugin-libde265
+      - libheif-plugin-x265
       - libhogweed6t64
       - libidn2-0
       - libidn2-dev
       - libjpeg-dev
+      - libjxl0.11
       - libk5crypto3
       - libkrb5support0
       - libkrb5-3
       - libkrb5-dev
+      - liblcms2-2
       - liblcms2-dev
       - libltdl-dev
       - liblzma5
@@ -1497,10 +1518,14 @@ parts:
       GDK_PIXBUF_PATH=usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-2.0
       LOADERS=$GDK_PIXBUF_PATH/2.10.0/loaders.cache
       rm -f $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so
-      cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
+      if [ "$(ls -A $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders)" ]; then
+        cp -a $CRAFT_STAGE/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/
+      fi
       $GDK_PIXBUF_PATH/gdk-pixbuf-query-loaders $CRAFT_PRIME/$GDK_PIXBUF_PATH/2.10.0/loaders/*.so > $CRAFT_PRIME/$LOADERS
       sed -i 's#/root/parts/gdk-pixbuf/install#/snap/$CRAFT_PROJECT_NAME/current#g' $CRAFT_PRIME/$LOADERS
       sed -i 's#/build/$CRAFT_PROJECT_NAME/parts/gdk-pixbuf/install#/snap/$CRAFT_PROJECT_NAME/current#g' $CRAFT_PRIME/$LOADERS
+
+      sed -i 's#/root/parts/glycin/install#/snap/$CRAFT_PROJECT_NAME/current#' $CRAFT_PRIME/usr/share/glycin-loaders/**/conf.d/*
 
       XML2_CONFIG=usr/bin/xml2-config
       sed -i 's#/root/parts/debs/install#/snap/$CRAFT_PROJECT_NAME/current#g' $XML2_CONFIG
