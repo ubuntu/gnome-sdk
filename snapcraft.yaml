@@ -78,12 +78,10 @@ parts:
     source-tag: '1.8.4'
     source-depth: 1
     override-build: |
-      python3 -m pip install --break-system-packages .
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
       rm -rf $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/meson*
       python3 -m pip install --target=$CRAFT_PART_INSTALL/usr --break-system-packages .
       mv $CRAFT_PART_INSTALL/usr/meson* $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/
-      sed -i "s%^#!/usr/bin/python3$%#!/usr/bin/env python3%g" /usr/local/bin/meson
       sed -i "s%^#!/usr/bin/python3$%#!/usr/bin/env python3%g" $CRAFT_PART_INSTALL/usr/bin/meson
     build-packages:
       - python3-pip
