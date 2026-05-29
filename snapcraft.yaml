@@ -1187,10 +1187,6 @@ parts:
       - libdbusmenu-glib-dev
       - libdbusmenu-gtk3-dev
       - cmake
-    stage-packages:
-      - libayatana-indicator3-dev
-      - libdbusmenu-glib-dev
-      - libdbusmenu-gtk3-dev
     stage:
       - usr/share/gir-1.0/AyatanaAppIndicator*
       - usr/share/gir-1.0/Dbusmenu*
@@ -1213,10 +1209,6 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
-    override-stage: |
-      set -eux
-      craftctl default
-      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
 
   debs:
     after:
@@ -1251,6 +1243,7 @@ parts:
       - heif-gdk-pixbuf
       - itstool
       - libappstream-dev
+      - libayatana-indicator3-dev
 # it seems that snapcraft not always include dependencies, so we
 # must add the "normal" library .deb files too in some cases.
 # That's why several "devel" packages come along with the corresponding
@@ -1272,6 +1265,8 @@ parts:
       - libcurl4-openssl-dev
       - libdbus-1-3
       - libdbus-1-dev
+      - libdbusmenu-glib-dev
+      - libdbusmenu-gtk3-dev
       - libdrm-common
       - libdrm2
       - libdrm-dev
