@@ -1378,9 +1378,9 @@ parts:
       - libpoppler-glib-dev
       - libpulse-dev
       - libpython3-dev
-      - libpython3.12-dev
-      - libpython3.12-minimal
-      - libpython3.12-stdlib
+      - libpython3.14-dev
+      - libpython3.14-minimal
+      - libpython3.14-stdlib
       - libseccomp2
       - libseccomp-dev
       - libselinux1
@@ -1442,8 +1442,8 @@ parts:
       - python3-setuptools
       - python3-venv
       - python3-wheel
-      - python3.12-minimal
-      - python3.12-venv
+      - python3.14-minimal
+      - python3.14-venv
       - shared-mime-info
       - zlib1g
       - zlib1g-dev
