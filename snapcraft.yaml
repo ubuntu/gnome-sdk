@@ -40,6 +40,7 @@ parts:
                           $CRAFT_STAGE/usr/share/pkgconfig\
                           ${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
       - PATH: $CRAFT_STAGE/usr/bin:$PATH
+      - PYTHONPATH: $CRAFT_STAGE/usr/lib/python3:$CRAFT_STAGE/usr/lib/python3/dist-packages
 
   apt-file:
     plugin: nil
