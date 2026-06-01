@@ -303,7 +303,7 @@ parts:
     make-parameters:
       - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
       - WITH_GRAPHICS=false
-      - WITH_PYTHON=3.12
+      - WITH_PYTHON=3.14
 
   cleanup:
     after: [ caches ]
