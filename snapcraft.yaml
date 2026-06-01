@@ -402,24 +402,21 @@ parts:
       - libssl-dev
       - meson
       - curl
-      - cargo-1.82
     override-pull: |
       craftctl default
       meson subprojects download
-      # This avoids crate downloads at the build lifecycle, which comes too late
-      # in RISC-V Launchpad builders, so that it errors with HTTP 407.
-      # No blooming idea why '~/.cargo/bin/cargo update' does not suffice;
-      # launchpad.net/~desktop-snappers/+snap/gnome-46-2404-sdk/+build/2931431
-      # shows it does not.
-      if test "$CRAFT_ARCH_BUILD_FOR" = riscv64; then
-        cargo-1.82 update
-      fi
+
       # cargo version in .deb is too old
       curl https://sh.rustup.rs -sSf > cargo.sh
       sh ./cargo.sh -y
       export PATH=$PATH:$HOME/.cargo/bin
       ~/.cargo/bin/cargo install cargo-c --locked
       cp ~/.cargo/bin/* /usr/local/bin
+
+      # vendor rust crates in the "pull" phase to avoid downloading from the network later.
+      # this would happen automatically if the part used "plugin: rust", but it is a meson project.
+      mkdir -p $CRAFT_PART_BUILD/.cargo
+      cargo vendor $CRAFT_PART_SRC/vendor > $CRAFT_PART_BUILD/.cargo/config.toml
     override-stage: |
       craftctl default
       sed -i 's#prefix=$CRAFT_STAGE${pcfiledir}#prefix=${pcfiledir}#' $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/pkgconfig/librsvg-2.0.pc
