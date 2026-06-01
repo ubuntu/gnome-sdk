@@ -1,9 +1,9 @@
-name: gnome-46-2404
+name: gnome-core26
 adopt-info: gnome-sdk
-summary: Shared GNOME 46 Ubuntu stack
-source-code: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404
+summary: Shared GNOME Ubuntu stack
+source-code: https://github.com/ubuntu/gnome-sdk/tree/gnome-core26
 description: |
-  This snap provides the GNOME 46 stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
+  This snap provides the GNOME stack to other snaps that use it. It shares the base GNOME libraries and desktop integration components through the content interface. This helps reduce the size of snaps and helps developers to easily snap desktop applications.
 
   **For users**
 
@@ -16,18 +16,19 @@ description: |
 
   * The `gnome` extension is the recommended way to use this in your own snap: https://snapcraft.io/docs/gnome-extension
   * You can report issues with this content snap on GitHub: https://github.com/ubuntu/gnome-sdk/issues
-  * The source code of this snap is available on GitHub in the `gnome-46-2404` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-46-2404
+  * The source code of this snap is available on GitHub in the `gnome-core26` branch: https://github.com/ubuntu/gnome-sdk/tree/gnome-core26
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: stable
+grade: devel
 icon: icon.png
-base: core24
+base: core26
+build-base: devel
 compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
 slots:
-  gnome-46-2404:
+  gnome-core26:
     interface: content
     read:
       - /
@@ -35,7 +36,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-46-2404-sdk/latest/candidate ]
+    stage-snaps: [ gnome-core26-sdk/latest/candidate ]
     build-packages:
       - yq
     override-build: |
@@ -44,16 +45,16 @@ parts:
       # LOCAL_SDK_SNAP is set by `local-build.py` when using a local snap
       if [ -z "${LOCAL_SDK_SNAP:-}" ]; then
         echo Using upstream SDK
-        sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-46-2404-sdk/manifest.yaml \
+        sdk_version=$(cat ${CRAFT_PART_INSTALL}/snap.gnome-core26-sdk/manifest.yaml \
           | yq -r '.version')
       else
         echo Using local $CRAFT_PROJECT_DIR/${LOCAL_SDK_SNAP}
         snap install --dangerous $CRAFT_PROJECT_DIR/${LOCAL_SDK_SNAP}
 
-        cp -a /snap/gnome-46-2404-sdk/current/usr $CRAFT_PART_INSTALL/
-        cp -a /snap/gnome-46-2404-sdk/current/etc $CRAFT_PART_INSTALL/
-        cp -a /snap/gnome-46-2404-sdk/current/var $CRAFT_PART_INSTALL/
-        cp -a /snap/gnome-46-2404-sdk/current/lib $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-core26-sdk/current/usr $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-core26-sdk/current/etc $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-core26-sdk/current/var $CRAFT_PART_INSTALL/
+        cp -a /snap/gnome-core26-sdk/current/lib $CRAFT_PART_INSTALL/
       fi
 
       # Use the same logic of snapcraft
