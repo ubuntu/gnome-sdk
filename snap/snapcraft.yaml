@@ -202,7 +202,6 @@ parts:
       - libjbig0
       - libjpeg-turbo8
       - liblcms2-2
-      - libllvm17t64
       - libmozjs-140-0
       - libmpc3
       - libmpfr6
@@ -249,8 +248,6 @@ parts:
       - unity-gtk3-module
       - xdg-user-dirs
       - xkb-data
-    stage:
-      - -usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libLLVM*
     override-build: |
       set -eux
       craftctl default
