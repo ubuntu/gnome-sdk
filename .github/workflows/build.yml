@@ -3,8 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - gnome-42-2204-sdk
-      - gnome-46-2404-sdk
+      - gnome-core26-sdk
 
 jobs:
   snap:
@@ -30,7 +29,7 @@ jobs:
     - name: Prepare runtime
       run: |
         set -eu
-        git clone --depth 1 --branch gnome-46-2404 https://github.com/ubuntu/gnome-sdk gnome-runtime
+        git clone --depth 1 --branch gnome-core26 https://github.com/ubuntu/gnome-sdk gnome-runtime
         mkdir gnome-runtime/base-gnome-sdk
         mv ${{ steps.snapcraft.outputs.snap}} gnome-runtime/base-gnome-sdk/
         cd gnome-runtime
