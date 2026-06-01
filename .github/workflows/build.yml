@@ -52,6 +52,8 @@ jobs:
         path: ${{ steps.snapcraft-runtime.outputs.snap}}
 
   testing:
+    # FIXME: temporarily disable testing until we have snaps with the new runtime
+    if: false
     strategy:
       fail-fast: false
       matrix:
