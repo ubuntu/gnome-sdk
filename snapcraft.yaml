@@ -1457,6 +1457,9 @@ parts:
       - libdrm-common
       - libdrm2
       - libdrm-dev
+# needed because libdrm-dev ships a link to libdrm-intel.so, but doesn't depend on it,
+# so we have a broken link.
+      - libdrm-intel1
       - libegl1-mesa-dev
       - libelf1t64
       - libevdev2
