@@ -57,6 +57,10 @@ parts:
         cp -a /snap/gnome-core26-sdk/current/lib $CRAFT_PART_INSTALL/
       fi
 
+      # Re-mangle paths to glycin-loaders.
+      # Make it point to / where it will be bind-mounted by the snapcraft gnome extension
+      sed -i 's#/snap/gnome-core26-sdk/current##' $CRAFT_PART_INSTALL/usr/share/glycin-loaders/**/conf.d/*
+
       # Use the same logic of snapcraft
       project_version=$(git -C "${CRAFT_PROJECT_DIR}" describe --dirty 2>/dev/null || true)
       if [ -z "${project_version}" ]; then
