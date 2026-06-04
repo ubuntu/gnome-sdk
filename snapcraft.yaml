@@ -1457,9 +1457,6 @@ parts:
       - libdrm-common
       - libdrm2
       - libdrm-dev
-# needed because libdrm-dev ships a link to libdrm-intel.so, but doesn't depend on it,
-# so we have a broken link.
-      - libdrm-intel1
       - libegl1-mesa-dev
       - libelf1t64
       - libevdev2
@@ -1603,6 +1600,13 @@ parts:
       # the package is intel specific
       - on amd64:
         - libigdgmm-dev
+# needed because libdrm-dev ships a link to libdrm-intel.so, but doesn't depend on it,
+# so we have a broken link.
+        - libdrm-intel1
+      - to arm64:
+        - libdrm-intel1
+      - to riscv64:
+        - libdrm-intel1
     override-build: |
       set -eux
       craftctl default
