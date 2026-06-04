@@ -615,8 +615,9 @@ parts:
       cp -r usr/share/locale-langpack $CRAFT_PART_INSTALL/usr/share/
 
   libadwaita:
-    source: https://gitlab.gnome.org/GNOME/libadwaita.git
-    source-tag: '1.7.7'
+    source: https://git.launchpad.net/ubuntu/+source/libadwaita-1
+    source-type: git
+    source-tag: 'applied/1.9.0-0ubuntu1'
     source-depth: 1
     after: [ meson-deps, gtk4, vala, gobject-introspection ]
     plugin: meson
@@ -637,15 +638,6 @@ parts:
       - libsystemd-dev
       - gperf
       - libappstream-dev
-    override-pull: |
-      craftctl default
-      meson subprojects download
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-disabled-opacity-for-disabled-pictu.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/stylesheet-common-Use-opacity-for-all-disabled-gtk-images.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Return-return-orange-as-default-color.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-manager-Support-Yaru-accent-colors.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/accent-color-Always-expose-and-use-yaru-accent-colors-val.patch
-      patch -p1 < $CRAFT_PROJECT_DIR/patches/style-Add-wartybrown-accent-support.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, vala, meson-deps, gobject-introspection ]
