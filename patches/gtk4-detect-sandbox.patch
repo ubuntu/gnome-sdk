@@ -1,0 +1,13 @@
+diff --git a/gdk/gdk.c b/gdk/gdk.c
+index dbf234c758..dc09dcf223 100644
+--- a/gdk/gdk.c
++++ b/gdk/gdk.c
+@@ -407,7 +407,7 @@ gdk_get_startup_notification_id (void)
+ gboolean
+ gdk_running_in_sandbox (void)
+ {
+-  return g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS);
++  return TRUE;
+ }
+ 
+ #define DBUS_BUS_NAME "org.freedesktop.DBus"

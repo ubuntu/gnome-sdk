@@ -599,6 +599,9 @@ parts:
       - -usr/bin/wayland-scanner
       - -usr/lib/*/libwayland-client.so.0.20.0
       - -usr/lib/*/libwayland-server.so.0.20.0
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/gtk4-detect-sandbox.patch
 
   gtk-locales:
     after: [ gtk3, gtk4 ]
