@@ -1454,6 +1454,12 @@ parts:
       craftctl default
       PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
     stage:
+      - -usr/lib/systemd/
+      - -usr/lib/sysusers.d/
+      - -usr/bin/pipewire
+      - -usr/bin/pipewire-pulse
+      - -usr/share/pipewire/pipewire-pulse.conf
+      - -usr/share/pipewire/pipewire-pulse.conf.avail/20-upmix.conf
 # needed to avoid clashing with fontconfig
       - -etc/fonts/fonts.conf
       - to riscv64:
