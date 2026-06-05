@@ -87,6 +87,7 @@ parts:
     stage-packages:
       - libtool
       - libtool-bin
+      - libc6
     override-stage: |
       set -eux
       craftctl default
