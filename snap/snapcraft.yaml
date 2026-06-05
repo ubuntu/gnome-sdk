@@ -266,6 +266,13 @@ parts:
       cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       find . -type f,l -exec rm -f $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so*" -exec bash -c "rm -f $CRAFT_PART_INSTALL/usr/lib/{}*" \;
+    stage:
+      - -usr/lib/systemd/
+      - -usr/lib/sysusers.d/
+      - -usr/bin/pipewire
+      - -usr/bin/pipewire-pulse
+      - -usr/share/pipewire/pipewire-pulse.conf
+      - -usr/share/pipewire/pipewire-pulse.conf.avail/20-upmix.conf
 
   fonts-config:
       after: [ debs ]
