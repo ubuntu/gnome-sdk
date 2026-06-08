@@ -1254,6 +1254,8 @@ parts:
       - gir1.2-poppler-0.18
       - itstool
       - libappstream-dev
+      - libassuan9
+      - libatomic1
       - libayatana-indicator3-dev
 # it seems that snapcraft not always include dependencies, so we
 # must add the "normal" library .deb files too in some cases.
@@ -1341,6 +1343,7 @@ parts:
       - libmtdev1t64
       - libnettle8t64
       - libnghttp2-dev
+      - libnsl2
       - libnsl-dev
       - libnss3-dev
       - libopenjpip7
@@ -1369,6 +1372,7 @@ parts:
       - libsigc++-3.0-dev
       - libsqlite3-0
       - libsqlite3-dev
+      - libssl3t64
       - libstdc++6
       - libsystemd0
       - libsystemd-dev
