@@ -1,0 +1,36 @@
+From 7c72d61db98da55fe7db84b79a51b124d487f9ce Mon Sep 17 00:00:00 2001
+From: Mike Gorse <mgorse@suse.com>
+Date: Wed, 19 Jul 2023 12:08:01 -0500
+Subject: [PATCH] collection: Fix match testing for attributes
+
+The predicates for ATSPI_COLLECTION_MATCH_TYPE_NONE and
+ATSPI_COLLECTION_MATCH_TYPE_ALL were both broken.
+
+Fixes #127
+---
+ atk-adaptor/adaptors/collection-adaptor.c |  4 ++--
+ tests/at-spi2-atk/atk_test_collection.c   | 26 +++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/atk-adaptor/adaptors/collection-adaptor.c b/atk-adaptor/adaptors/collection-adaptor.c
+index df65c0c5..69e25388 100644
+--- a/atk-adaptor/adaptors/collection-adaptor.c
++++ b/atk-adaptor/adaptors/collection-adaptor.c
+@@ -356,7 +356,7 @@ match_attributes_all_p (AtkObject *child, AtkAttributeSet *attributes)
+       AtkAttribute *attr = g_slist_nth_data (attributes, i);
+       for (k = 0; k < oa_length; k++)
+         {
+-          AtkAttribute *oa_attr = g_slist_nth_data (attributes, i);
++          AtkAttribute *oa_attr = g_slist_nth_data (oa, k);
+           if (!g_ascii_strcasecmp (oa_attr->name, attr->name) &&
+               !g_ascii_strcasecmp (oa_attr->value, attr->value))
+             {
+@@ -429,7 +429,7 @@ match_attributes_none_p (AtkObject *child, AtkAttributeSet *attributes)
+       AtkAttribute *attr = g_slist_nth_data (attributes, i);
+       for (k = 0; k < oa_length; k++)
+         {
+-          AtkAttribute *oa_attr = g_slist_nth_data (attributes, i);
++          AtkAttribute *oa_attr = g_slist_nth_data (oa, k);
+           if (!g_ascii_strcasecmp (oa_attr->name, attr->name) &&
+               !g_ascii_strcasecmp (oa_attr->value, attr->value))
+             {
