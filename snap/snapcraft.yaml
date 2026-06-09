@@ -54,7 +54,7 @@ parts:
         cp -a /snap/gnome-core26-sdk/current/usr $CRAFT_PART_INSTALL/
         cp -a /snap/gnome-core26-sdk/current/etc $CRAFT_PART_INSTALL/
         cp -a /snap/gnome-core26-sdk/current/var $CRAFT_PART_INSTALL/
-        cp -a /snap/gnome-core26-sdk/current/lib $CRAFT_PART_INSTALL/
+        [ -e /snap/gnome-core26-sdk/current/lib ] && cp -a /snap/gnome-core26-sdk/current/lib $CRAFT_PART_INSTALL/
       fi
 
       # Re-mangle paths to glycin-loaders.
