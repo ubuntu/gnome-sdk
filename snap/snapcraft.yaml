@@ -140,6 +140,8 @@ parts:
       - -usr/bin/*-linux-gnu-g++*
       - -usr/bin/gcc*
       - -usr/bin/*-linux-gnu-gcc*
+      - -usr/lib/gcc/
+      - -usr/libexec/gcc/
       - -usr/bin/python*
       - -usr/bin/vala*
       - -usr/bin/vapi*
