@@ -169,6 +169,7 @@ parts:
       - gir1.2-gucharmap-2.90
       - gir1.2-vte-2.91
       - gstreamer1.0-gl
+      - gstreamer1.0-gtk4
       - gstreamer1.0-plugins-base
       - gstreamer1.0-plugins-extra
       - gstreamer1.0-plugins-good
