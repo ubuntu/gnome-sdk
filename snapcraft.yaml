@@ -41,7 +41,16 @@ parts:
       - CRAFT_EXT_CORE_LEVEL: core24
       - PATH: $CRAFT_STAGE/usr/bin:$PATH
 
+  apt-file:
+    plugin: nil
+    build-packages:
+      - apt-file
+    override-pull: |
+      set -eux
+      apt-file update
+
   ninja:
+    after: [ apt-file ]
     plugin: nil
     source: https://github.com/ninja-build/ninja.git
     source-tag: 'v1.12.1'
@@ -95,6 +104,7 @@ parts:
       sed -i 's#pkgauxdir="#pkgauxdir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#pkgltdldir="#pkgltdldir="$CRAFT_STAGE#' $LIBTOOLIZE
       sed -i 's#aclocaldir="#aclocaldir="$CRAFT_STAGE#' $LIBTOOLIZE
+      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
 
   fontconfig:
     after: [ libtool ]
@@ -1399,6 +1409,10 @@ parts:
         sed -i 's#libdir=/usr#libdir=${prefix}#' $PC
         sed -i 's#includedir=/usr#includedir=${prefix}#' $PC
       done
+    override-stage: |
+      set -eux
+      craftctl default
+      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
 
   debs:
     after:
@@ -1623,6 +1637,10 @@ parts:
       cd $CRAFT_STAGE/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       find . -type f,l -exec rm -fv $CRAFT_PART_INSTALL/usr/lib/{} \;
       find . -type f,l -name "*.so.*" -exec sh -c "rm -fv $CRAFT_PART_INSTALL/usr/lib/{}*" \;
+    override-stage: |
+      set -eux
+      craftctl default
+      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
     stage:
       - -usr/bin/fc-cache
 
@@ -1700,24 +1718,11 @@ parts:
       ln -s gettext-0.19.8 usr/share/gettext-current
       ln -s gdk-pixbuf-2.0/2.10.0 usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/gdk-pixbuf-current
 
-      # Check dangling libraries symlinks
-      invalid_links=()
-      core_root_prefix=/snap/$CRAFT_EXT_CORE_LEVEL/current
-      for i in $(find "$CRAFT_PRIME"/{usr/,}lib -xtype l -name '*.so'); do
-        echo "$i: dangling symlink!"
-        invalid_links+=($i)
-      done
-      if [ ${#invalid_links[@]} -gt 0 ]; then
-        echo "Invalid symlinks found:"
-        echo "${invalid_links[@]}"
-        echo "Ensure full package set (runtime and dev files) is staged!"
-        exit 1;
-      fi
-
       # Necessary for armhf builds, triggers review warning
       if [ "$CRAFT_ARCH_TRIPLET_BUILD_FOR" = "arm-linux-gnueabihf" ]; then
         execstack --clear-execstack  usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/libde265.so.0*
       fi
+      PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_PRIME
 
   # Used by the gnome snapcraft extensions to load translations from within the content snap
   bindtextdomain:
