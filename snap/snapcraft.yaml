@@ -168,6 +168,7 @@ parts:
       - gir1.2-vte-2.91
       - gstreamer1.0-gl
       - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-extra
       - gstreamer1.0-plugins-good
       - gstreamer1.0-pipewire
       - ibus-gtk3
