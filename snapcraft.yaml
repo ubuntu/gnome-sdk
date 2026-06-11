@@ -549,8 +549,9 @@ parts:
 
   gtk4:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
-    source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '4.22.4'
+    source: https://git.launchpad.net/ubuntu/+source/gtk4
+    source-type: git
+    source-tag: 'applied/4.22.4+ds-1ubuntu1'
 # ext:updatesnap
 #   version-format:
 #     ignore-odd-minor: true
