@@ -96,6 +96,7 @@ parts:
     stage-packages:
       - libtool
       - libtool-bin
+      - libcrypt1
       - libc6
     override-stage: |
       set -eux
@@ -1643,6 +1644,16 @@ parts:
       PYTHONDONTWRITEBYTECODE=1 $CRAFT_PROJECT_DIR/tools/check_broken_links.py $CRAFT_STAGE
     stage:
       - -usr/bin/fc-cache
+      - to riscv64:
+        - -usr/lib/tcl8.6/graphviz/libtcldot.so
+        - -usr/lib/tcl8.6/graphviz/libtclplan.so
+        - -usr/lib/tcl8.6/graphviz/libtcldot_builtin.so
+        - -usr/lib/tcl8.6/graphviz/libgdtclft.so
+      - to armhf:
+        - -usr/lib/tcl8.6/graphviz/libtcldot.so
+        - -usr/lib/tcl8.6/graphviz/libtclplan.so
+        - -usr/lib/tcl8.6/graphviz/libtcldot_builtin.so
+        - -usr/lib/tcl8.6/graphviz/libgdtclft.so
 
   conditioning:
     after:
