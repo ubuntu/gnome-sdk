@@ -1575,7 +1575,6 @@ parts:
       - libwayland-dev
       - libwebkit2gtk-4.1-dev
       - libwebp-dev
-      - libwoff1
       - libwrap0
       - libwrap0-dev
       - libx11-xcb-dev
