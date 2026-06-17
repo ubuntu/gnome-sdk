@@ -20,9 +20,8 @@ description: |
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: devel
+grade: stable
 base: core26
-build-base: devel
 
 parts:
   buildenv:
