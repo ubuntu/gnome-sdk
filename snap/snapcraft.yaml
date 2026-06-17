@@ -20,10 +20,9 @@ description: |
 contact: https://github.com/ubuntu/gnome-sdk/issues
 
 confinement: strict
-grade: devel
+grade: stable
 icon: icon.png
 base: core26
-build-base: devel
 compression: lzo
 
 # the recommended mountpoint for that content is /gnome-platform
