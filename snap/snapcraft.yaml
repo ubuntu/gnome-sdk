@@ -35,7 +35,7 @@ slots:
 parts:
   gnome-sdk:
     plugin: nil
-    stage-snaps: [ gnome-core26-sdk/latest/edge ]
+    stage-snaps: [ gnome-core26-sdk/latest/candidate ]
     build-packages:
       - yq
     override-build: |
