@@ -56,6 +56,10 @@ parts:
         [ -e /snap/gnome-core26-sdk/current/lib ] && cp -a /snap/gnome-core26-sdk/current/lib $CRAFT_PART_INSTALL/
       fi
 
+      # Exclude dev library symlinks
+      find "$CRAFT_PART_INSTALL/usr/lib" "$CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR" \
+        -maxdepth 1 -type l -name \*.so -exec rm -f {} \;
+
       # Re-mangle paths to glycin-loaders.
       # Make it point to / where it will be bind-mounted by the snapcraft gnome extension
       sed -i 's#/snap/gnome-core26-sdk/current##' $CRAFT_PART_INSTALL/usr/share/glycin-loaders/**/conf.d/*
