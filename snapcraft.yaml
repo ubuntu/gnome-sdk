@@ -709,10 +709,11 @@ parts:
       - --prefix=/usr
       - -Doptimization=3
       - -Ddebug=true
-      - -Duse-network=true
-    override-build: |
+      - -Duse-network=false
+    override-pull: |
       set -eux
       craftctl default
+      wget -P doctags/ https://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/libstdc++.tag
     build-environment: *buildenv
     build-packages:
       - wget
