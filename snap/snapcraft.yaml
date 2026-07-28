@@ -166,7 +166,7 @@ parts:
     after: [ gnome-sdk ]
     plugin: nil
     stage-packages:
-      - fcitx-frontend-gtk3
+      - fcitx5-frontend-gtk3
       - fonts-noto-color-emoji
       - gir1.2-ggit-1.0
       - gir1.2-gucharmap-2.90
