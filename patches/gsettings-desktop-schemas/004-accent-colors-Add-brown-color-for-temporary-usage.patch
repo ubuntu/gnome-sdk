@@ -1,0 +1,37 @@
+From: =?utf-8?b?Ik1hcmNvIFRyZXZpc2FuIChUcmV2acOxbyki?= <mail@3v1n0.net>
+Date: Thu, 15 Aug 2024 06:31:24 -0400
+Subject: accent-colors: Add brown color for temporary usage
+
+---
+ headers/gdesktop-enums.h                           | 4 +++-
+ schemas/org.gnome.desktop.interface.gschema.xml.in | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/headers/gdesktop-enums.h b/headers/gdesktop-enums.h
+index fa5cbfa..8421cc2 100644
+--- a/headers/gdesktop-enums.h
++++ b/headers/gdesktop-enums.h
+@@ -283,7 +283,9 @@ typedef enum
+   G_DESKTOP_ACCENT_COLOR_RED,
+   G_DESKTOP_ACCENT_COLOR_PINK,
+   G_DESKTOP_ACCENT_COLOR_PURPLE,
+-  G_DESKTOP_ACCENT_COLOR_SLATE
++  G_DESKTOP_ACCENT_COLOR_SLATE,
++
++  G_DESKTOP_ACCENT_COLOR_BROWN = G_DESKTOP_ACCENT_COLOR_SLATE + 100,
+ } GDesktopAccentColor;
+ 
+ #endif /* __gdesktop_enums_h__ */
+diff --git a/schemas/org.gnome.desktop.interface.gschema.xml.in b/schemas/org.gnome.desktop.interface.gschema.xml.in
+index e2983c1..82ce8c0 100644
+--- a/schemas/org.gnome.desktop.interface.gschema.xml.in
++++ b/schemas/org.gnome.desktop.interface.gschema.xml.in
+@@ -315,7 +315,7 @@
+       <default>'blue'</default>
+       <summary>Accent color</summary>
+       <description>
+-        The preferred accent color for the user interface. Valid values are "blue", "teal", "green", "yellow", "orange", "red", "pink", "purple", "slate".
++        The preferred accent color for the user interface. Valid values are "blue", "teal", "green", "yellow", "orange", "red", "pink", "purple", "slate", "brown".
+       </description>
+     </key>
+   </schema>

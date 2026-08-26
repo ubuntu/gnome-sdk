@@ -1,0 +1,53 @@
+From 8df894aecbf6908c48c3da62434061bfa8dc46ea Mon Sep 17 00:00:00 2001
+From: Jamie Murphy <hello@itsjamie.dev>
+Date: Wed, 19 Jun 2024 08:14:12 -0700
+Subject: [PATCH] schemas: Add accent color key
+
+Add an entry for configuring the accent color for the system
+---
+ headers/gdesktop-enums.h                           | 13 +++++++++++++
+ schemas/org.gnome.desktop.interface.gschema.xml.in |  7 +++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/headers/gdesktop-enums.h b/headers/gdesktop-enums.h
+index fa7ca59..a17e05d 100644
+--- a/headers/gdesktop-enums.h
++++ b/headers/gdesktop-enums.h
+@@ -271,4 +271,17 @@ typedef enum
+   G_DESKTOP_FONT_RENDERING_MANUAL,
+ } GDesktopFontRendering;
+ 
++typedef enum
++{
++  G_DESKTOP_ACCENT_COLOR_BLUE,
++  G_DESKTOP_ACCENT_COLOR_TEAL,
++  G_DESKTOP_ACCENT_COLOR_GREEN,
++  G_DESKTOP_ACCENT_COLOR_YELLOW,
++  G_DESKTOP_ACCENT_COLOR_ORANGE,
++  G_DESKTOP_ACCENT_COLOR_RED,
++  G_DESKTOP_ACCENT_COLOR_PINK,
++  G_DESKTOP_ACCENT_COLOR_PURPLE,
++  G_DESKTOP_ACCENT_COLOR_SLATE
++} GDesktopAccentColor;
++
+ #endif /* __gdesktop_enums_h__ */
+diff --git a/schemas/org.gnome.desktop.interface.gschema.xml.in b/schemas/org.gnome.desktop.interface.gschema.xml.in
+index aef8db6..e2983c1 100644
+--- a/schemas/org.gnome.desktop.interface.gschema.xml.in
++++ b/schemas/org.gnome.desktop.interface.gschema.xml.in
+@@ -311,5 +311,12 @@
+         make its own decisions.
+       </description>
+     </key>
++    <key name="accent-color" enum="org.gnome.desktop.GDesktopAccentColor">
++      <default>'blue'</default>
++      <summary>Accent color</summary>
++      <description>
++        The preferred accent color for the user interface. Valid values are "blue", "teal", "green", "yellow", "orange", "red", "pink", "purple", "slate".
++      </description>
++    </key>
+   </schema>
+ </schemalist>
+-- 
+GitLab
+
