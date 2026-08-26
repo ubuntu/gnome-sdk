@@ -881,7 +881,7 @@ parts:
   gsettings-desktop-schemas:
     after: [ gsound, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas.git
-    source-tag: '46.1'
+    source-tag: '50.1'
 # ext:updatesnap
 #   version-format:
 #     same-major: true
