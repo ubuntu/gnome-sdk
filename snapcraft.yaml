@@ -923,6 +923,12 @@ parts:
       - -Ddebug=true
       - -Dintrospection=true
     build-environment: *buildenv
+    override-pull: |
+      set -eux
+      craftctl default
+      for patch in $CRAFT_PROJECT_DIR/patches/gsettings-desktop-schemas/*.patch; do
+        patch -p1 < "$patch"
+      done
     override-build: |
       set -eux
       craftctl default

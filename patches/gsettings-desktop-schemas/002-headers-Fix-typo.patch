@@ -1,0 +1,26 @@
+From 932bc622504c812565fdee3e558e07540a3d6df8 Mon Sep 17 00:00:00 2001
+From: Jamie Murphy <hello@itsjamie.dev>
+Date: Wed, 19 Jun 2024 07:48:24 -0700
+Subject: [PATCH] headers: Fix typo
+
+typdef instead of typedef
+---
+ headers/gdesktop-enums.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/headers/gdesktop-enums.h b/headers/gdesktop-enums.h
+index d126447..fa7ca59 100644
+--- a/headers/gdesktop-enums.h
++++ b/headers/gdesktop-enums.h
+@@ -265,7 +265,7 @@ typedef enum
+   G_DESKTOP_POINTING_STICK_SCROLL_METHOD_ON_BUTTON_DOWN
+ } GDesktopPointingStickScrollMethod;
+ 
+-typdef enum
++typedef enum
+ {
+   G_DESKTOP_FONT_RENDERING_AUTOMATIC,
+   G_DESKTOP_FONT_RENDERING_MANUAL,
+-- 
+GitLab
+
