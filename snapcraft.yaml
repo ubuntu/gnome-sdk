@@ -650,7 +650,12 @@ parts:
     source: https://gitlab.gnome.org/GNOME/libadwaita.git
     source-tag: '1.7.7'
     source-depth: 1
-    after: [ meson-deps, gtk4, vala, gobject-introspection ]
+    after:
+      - meson-deps
+      - gtk4
+      - vala
+      - gobject-introspection
+      - gsettings-desktop-schemas
     plugin: meson
     meson-parameters:
       - --prefix=/usr
@@ -923,6 +928,12 @@ parts:
       - -Ddebug=true
       - -Dintrospection=true
     build-environment: *buildenv
+    override-pull: |
+      set -eux
+      craftctl default
+      for patch in $CRAFT_PROJECT_DIR/patches/gsettings-desktop-schemas/*.patch; do
+        patch -p1 < "$patch"
+      done
     override-build: |
       set -eux
       craftctl default
