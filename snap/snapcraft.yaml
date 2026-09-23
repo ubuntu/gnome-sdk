@@ -157,6 +157,9 @@ parts:
       - -usr/share/vala*
       - -usr/share/gir*
 
+      - -usr/bin/blueprint-compiler
+      - -usr/lib/python3/dist-packages/blueprintcompiler
+
       - -usr/bin/meson
       - -usr/bin/ninja
       - -usr/lib/python3/dist-packages/meson*
