@@ -971,7 +971,7 @@ parts:
       - libevdev-dev
 
   pycairo:
-    after: [ libinput, meson-deps ]
+    after: [ libinput, meson-deps, gobject-introspection ]
     source: https://github.com/pygobject/pycairo.git
     source-tag: 'v1.29.0'
     source-depth: 1
@@ -984,7 +984,7 @@ parts:
     build-environment: *buildenv
 
   pygobject:
-    after: [ pycairo, meson-deps ]
+    after: [ pycairo, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/pygobject.git
     source-tag: '3.56.3'
     source-depth: 1
@@ -1018,7 +1018,7 @@ parts:
     build-environment: *buildenv
 
   gjs:
-    after: [ libhandy, meson-deps, glib ]
+    after: [ libhandy, meson-deps, glib, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gjs.git
     source-tag: '1.88.0'
 # ext:updatesnap
