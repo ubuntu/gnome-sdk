@@ -999,6 +999,16 @@ parts:
       craftctl default
       meson subprojects download
 
+  blueprint-compiler:
+    after: [ pygobject, meson-deps ]
+    source: https://gitlab.gnome.org/GNOME/blueprint-compiler.git
+    source-tag: 'v0.22.2'
+    source-depth: 1
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+    build-environment: *buildenv
+
   libhandy:
     after: [ pygobject, meson-deps, vala, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/libhandy.git
@@ -1241,6 +1251,7 @@ parts:
     after:
       - atkmm
       - at-spi2-core
+      - blueprint-compiler
       - cairomm
       - glibmm
       - glycin
