@@ -1,4 +1,4 @@
-From c04121ddc66944925863367cb25ceb03b48c13f5 Mon Sep 17 00:00:00 2001
+From 3e3c733eaa6fb5b408dabb513fc632878aed2db1 Mon Sep 17 00:00:00 2001
 From: Alessandro Astone <alessandro.astone@canonical.com>
 Date: Tue, 7 Jul 2026 12:38:49 +0200
 Subject: [PATCH] glycin: Partially disable sandbox for snap environment
@@ -6,27 +6,27 @@ Subject: [PATCH] glycin: Partially disable sandbox for snap environment
 We cannot run bwrap within snap confinement, but we can still set a seccomp
 filter at least.
 ---
- .../missing-sources/glycin/src/api_common.rs  |  1 +
- debian/missing-sources/glycin/src/sandbox.rs  | 59 ++++++++++++++++++-
- debian/missing-sources/glycin/src/util.rs     | 26 +++++++-
- 3 files changed, 82 insertions(+), 4 deletions(-)
+ .../glycin-core/src/api/common.rs             |  1 +
+ .../glycin-core/src/sandbox.rs                | 59 ++++++++++++++++++-
+ .../missing-sources/glycin-core/src/util.rs   | 28 ++++++++-
+ 3 files changed, 84 insertions(+), 4 deletions(-)
 
---- a/glycin/src/api_common.rs
-+++ b/glycin/src/api_common.rs
-@@ -22,6 +22,7 @@ pub enum SandboxMechanism {
+--- a/glycin-core/src/api/common.rs
++++ b/glycin-core/src/api/common.rs
+@@ -29,6 +29,7 @@ pub enum SandboxMechanism {
  impl SandboxMechanism {
      pub async fn detect() -> Self {
          match RunEnvironment::cached().await {
 +            RunEnvironment::Snap => Self::NotSandboxed,
+             RunEnvironment::SandboxForceDisabled => Self::NotSandboxed,
              RunEnvironment::FlatpakDevel => Self::NotSandboxed,
              RunEnvironment::Flatpak => Self::FlatpakSpawn,
-             RunEnvironment::Host => Self::Bwrap,
---- a/glycin/src/sandbox.rs
-+++ b/glycin/src/sandbox.rs
-@@ -18,13 +18,22 @@ use nix::libc::siginfo_t;
- use nix::sys::resource;
+--- a/glycin-core/src/sandbox.rs
++++ b/glycin-core/src/sandbox.rs
+@@ -21,13 +21,22 @@ use nix::unistd;
  
- use crate::config::{ConfigEntry, ImageLoaderConfig};
+ use crate::config::{ConfigEntry, LoaderConfig, Processor};
+ use crate::error::ErrorKind;
 -use crate::util::{self, AsyncMutex, new_async_mutex, spawn_blocking};
 +use crate::util::{self, AsyncMutex, RunEnvironment, new_async_mutex, spawn_blocking};
  use crate::{Error, SandboxMechanism};
@@ -44,26 +44,10 @@ filter at least.
 +    }
 +}
 +
- /// List of allowed syscalls
- ///
- /// All syscalls are blocked by default via seccomp. Only the following syscalls
-@@ -43,6 +52,7 @@ const ALLOWED_SYSCALLS: &[&str] = &[
-     "clone",
-     "clone3",
-     "close",
-+    "close_range",
-     "connect",
-     "creat",
-     "dup",
-@@ -88,6 +98,7 @@ const ALLOWED_SYSCALLS: &[&str] = &[
-     "getuid",
-     "getuid32",
-     "ioctl",
-+    "lseek",
-     "madvise",
-     "membarrier",
-     "memfd_create",
-@@ -171,6 +182,7 @@ const ALLOWED_SYSCALLS_FONTCONFIG: &[&st
+ /**** BEGIN NOTE ON CODE SHARING
+  *
+  * This code is copied from Flatpak:
+@@ -142,6 +151,7 @@ const BLOCKED_SYSCALLS: &[(&str, ScmpAct
  ];
  
  const INHERITED_ENVIRONMENT_VARIABLES: &[&str] = &["RUST_BACKTRACE", "RUST_LOG", "XDG_RUNTIME_DIR"];
@@ -71,26 +55,19 @@ filter at least.
  
  pub struct Sandbox {
      sandbox_mechanism: SandboxMechanism,
-@@ -232,8 +244,16 @@ impl Sandbox {
+@@ -208,7 +218,10 @@ impl Sandbox {
                  (command, None)
              }
              SandboxMechanism::NotSandboxed => {
--                eprintln!("WARNING: Glycin running without sandbox.");
 -                let command = self.no_sandbox_command();
 +                let command = match RunEnvironment::cached().await {
-+                    RunEnvironment::Snap => {
-+                        eprintln!("WARNING: Glycin running without additional sandbox inside snap confinement.");
-+                        self.snap_command()?
-+                    }
-+                    _ => {
-+                        eprintln!("WARNING: Glycin running without sandbox.");
-+                        self.no_sandbox_command()
-+                    }
++                    RunEnvironment::Snap => self.snap_command()?,
++                    _ => self.no_sandbox_command(),
 +                };
  
                  (command, None)
              }
-@@ -560,6 +580,39 @@ impl Sandbox {
+@@ -540,6 +553,39 @@ impl Sandbox {
          command
      }
  
@@ -130,36 +107,38 @@ filter at least.
      /// Memory limit in bytes that should be applied to sandboxes
      fn memory_limit() -> resource::rlim_t {
          // Lookup free memory
---- a/glycin/src/util.rs
-+++ b/glycin/src/util.rs
-@@ -71,6 +71,8 @@ pub enum RunEnvironment {
+--- a/glycin-core/src/util.rs
++++ b/glycin-core/src/util.rs
+@@ -131,6 +131,8 @@ pub enum RunEnvironment {
      Host,
- 
+     /// Not inside Flatpak but bwrap doesn't work
      HostBwrapSyscallsBlocked,
 +    /// Inside Snap confinement
 +    Snap,
      /// Inside Flatpak
      Flatpak,
      /// Inside Flatpak and development environment
-@@ -86,7 +88,9 @@ impl RunEnvironment {
-         if let Some(result) = *run_environment {
-             result
-         } else {
--            let run_env = if let Some(devel) = flatpak_devel().await {
-+            let run_env = if snap_confined() {
+@@ -154,6 +156,11 @@ impl RunEnvironment {
+                     "WARNING: Glycin running without sandbox. Force disabled via environment variable."
+                 );
+                 Self::SandboxForceDisabled
++            } else if snap_confined() {
++                eprintln!(
++                    "WARNING: Glycin running without additional sandbox inside snap confinement."
++                );
 +                Self::Snap
-+            } else if let Some(devel) = flatpak_devel().await {
+             } else if let Some(devel) = flatpak_devel().await {
                  if devel {
-                     Self::FlatpakDevel
-                 } else {
-@@ -104,6 +108,10 @@ impl RunEnvironment {
+                     eprintln!(
+@@ -183,6 +190,11 @@ impl RunEnvironment {
      }
  }
  
++#[cfg(feature = "external")]
 +fn snap_confined() -> bool {
 +    std::env::var_os("SNAP").is_some_and(|val| !val.is_empty())
 +}
 +
  /// Returns None if not in Flatpak environment, otherwise true if development
+ #[cfg(feature = "external")]
  async fn flatpak_devel() -> Option<bool> {
-     let data = read("/.flatpak-info").await.ok()?;
