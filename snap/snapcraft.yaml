@@ -235,7 +235,6 @@ parts:
       - libvorbis0a
       - libvorbisenc2
       - libwacom9
-      - libwebkit2gtk-4.1-0
       - libx11-6
       - libxau6
       - libxcb-render0
