@@ -1457,6 +1457,7 @@ parts:
       - libvorbisfile3
       - libvulkan-dev
       - libwayland-dev
+      - libwebkitgtk-6.0-dev
       - libwebkit2gtk-4.1-dev
       - libwebp-dev
       - libwrap0
