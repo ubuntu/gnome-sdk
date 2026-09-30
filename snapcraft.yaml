@@ -712,6 +712,9 @@ parts:
       - libsystemd-dev
       - gperf
       - libappstream-dev
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/adw-settings-impl-portal-Read-non-standard-settings-from-snaps.patch
 
   libportal:
     after: [gtk3, gtk4, gtk-locales, vala, meson-deps, gobject-introspection ]
