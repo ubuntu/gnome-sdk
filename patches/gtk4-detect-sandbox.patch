@@ -1,13 +1,42 @@
+From 1aab5efbb2f93e90b7da9ee74f24017c6d684c73 Mon Sep 17 00:00:00 2001
+From: Alessandro Astone <alessandro.astone@canonical.com>
+Date: Wed, 30 Sep 2026 14:27:30 +0200
+Subject: [PATCH] gdk: Also consider snap sandbox
+
+Forwarded: https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10427
+---
+ gdk/gdk.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
 diff --git a/gdk/gdk.c b/gdk/gdk.c
-index dbf234c758..dc09dcf223 100644
+index c84edac346..6af7d5039e 100644
 --- a/gdk/gdk.c
 +++ b/gdk/gdk.c
-@@ -407,7 +407,7 @@ gdk_get_startup_notification_id (void)
+@@ -402,10 +402,23 @@ gdk_get_startup_notification_id (void)
+   return startup_notification_id;
+ }
+ 
++static gboolean
++is_running_in_flatpak (void)
++{
++  return g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS);
++}
++
++static gboolean
++is_running_in_snap (void)
++{
++  return g_getenv ("SNAP") != NULL;
++}
++
  gboolean
  gdk_running_in_sandbox (void)
  {
 -  return g_file_test ("/.flatpak-info", G_FILE_TEST_EXISTS);
-+  return TRUE;
++  return is_running_in_flatpak () ||
++         is_running_in_snap (); // TODO: snaps could be unsandboxed
  }
  
  #define DBUS_BUS_NAME "org.freedesktop.DBus"
+-- 
+2.53.0
+
