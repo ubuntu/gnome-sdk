@@ -321,6 +321,7 @@ parts:
       - PLATFORM_PLUG=$SNAPCRAFT_PROJECT_NAME
       - WITH_GRAPHICS=false
       - WITH_PYTHON=3.14
+      - FORCE_WAYLAND=false
 
   cleanup:
     after: [ caches ]
