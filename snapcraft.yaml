@@ -130,6 +130,9 @@ parts:
       - -Ddebug=true
       - -Dintrospection=enabled
     build-environment: *buildenv
+    override-pull: |
+      craftctl default
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/glib-fdo-notifications-activation.patch
     override-build: |
       set -eux
       craftctl default
