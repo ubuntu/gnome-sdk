@@ -1680,11 +1680,19 @@ parts:
         - -usr/lib/tcl8.6/graphviz/libtcldot_builtin.so
         - -usr/lib/tcl8.6/graphviz/libgdtclft.so
 
+  gsettings-overrides:
+    after: [ debs ]
+    plugin: dump
+    source: gsettings-overrides
+    organize:
+      gnome-sdk.gschema.override: /usr/share/glib-2.0/schemas/10_gnome-sdk.gschema.override
+
   conditioning:
     after:
       - debs
       - gobject-introspection
       - libtool
+      - gsettings-overrides
     plugin: nil
     build-environment: *buildenv
     build-packages:
