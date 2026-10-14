@@ -1,0 +1,43 @@
+From a4c0fcdf324221a24a07ed7f3a0dc3b64880fe85 Mon Sep 17 00:00:00 2001
+From: Philip Withnall <pwithnall@gnome.org>
+Date: Tue, 13 Oct 2026 14:21:38 +0100
+Subject: [PATCH] gfdonotificationbackend: Fix leak of a GVariant
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+`g_variant_builder_end()` returns a new floating reference. We don’t
+want to pass a floating reference into the `before_emit()` and
+`after_emit()` vfuncs, in case they sink it, so let’s sink it first and
+then unref later to avoid the leak.
+
+Signed-off-by: Philip Withnall <pwithnall@gnome.org>
+Fixes: #4072
+---
+ gio/gfdonotificationbackend.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gio/gfdonotificationbackend.c b/gio/gfdonotificationbackend.c
+index 089f641fa0..d0ff5f1137 100644
+--- a/gio/gfdonotificationbackend.c
++++ b/gio/gfdonotificationbackend.c
+@@ -158,7 +158,7 @@ activate_action (GFdoNotificationBackend *backend,
+       g_variant_builder_add (&builder, "{sv}", "desktop-startup-id", g_variant_new_string (activation_token));
+       g_variant_builder_add (&builder, "{sv}", "activation-token", g_variant_new_string (activation_token));
+     }
+-  platform_data = g_variant_builder_end (&builder);
++  platform_data = g_variant_ref_sink (g_variant_builder_end (&builder));
+ 
+   if (name != NULL &&
+       g_str_has_prefix (name, "app."))
+@@ -187,6 +187,7 @@ activate_action (GFdoNotificationBackend *backend,
+       retval = TRUE;
+     }
+ 
++  g_variant_unref (platform_data);
+   g_object_unref (application);
+ 
+   return retval;
+-- 
+GitLab
+

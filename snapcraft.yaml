@@ -133,6 +133,7 @@ parts:
     override-pull: |
       craftctl default
       patch -p1 < $CRAFT_PROJECT_DIR/patches/glib-fdo-notifications-activation.patch
+      patch -p1 < $CRAFT_PROJECT_DIR/patches/glib-fdo-notifications-activation-leak.patch
     override-build: |
       set -eux
       craftctl default
