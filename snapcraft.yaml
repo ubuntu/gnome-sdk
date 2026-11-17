@@ -479,11 +479,7 @@ parts:
   gtk3:
     after: [ wayland-protocols, harfbuzz, pango, meson-deps, gobject-introspection ]
     source: https://gitlab.gnome.org/GNOME/gtk.git
-    source-tag: '3.24.52'
-# ext:updatesnap
-#   version-format:
-#     ignore-odd-minor: true
-#     lower-than: 4
+    source-branch: 'gtk-3-24'
     source-depth: 1
     plugin: meson
     meson-parameters:
