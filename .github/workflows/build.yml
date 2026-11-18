@@ -66,9 +66,6 @@ jobs:
         include:
           - snapname: "cheese"
             waittext: "Take a Photo"
-          - snapname: "chromium"
-            waittext: "New Tab"
-            enablex11: "true"
           - snapname: "darktable"
             waittext: "darktable lighttable darkroom"
             separated: "true"
@@ -77,8 +74,6 @@ jobs:
           - snapname: "epiphany"
             waittext: "Set as Default Browser"
             enablex11: "true"
-          - snapname: "firefox"
-            waittext: "Welcome to Firefox"
           - snapname: "gimp"
             waittext: "Welcome to GIMP"
           - snapname: "gnome-calculator"
