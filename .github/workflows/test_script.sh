@@ -44,7 +44,7 @@ echo "Test robot file:"
 cat ${TEST_ROBOT_FILE}
 sudo snap install ${TEST_SNAPNAME} || echo Snap already installed
 # This is needed because the gnome runtime has been installed manually with --dangerous
-sudo snap connect ${TEST_SNAPNAME}:gnome-46-2404 gnome-46-2404:gnome-46-2404
+sudo snap connect ${TEST_SNAPNAME}:gnome-core26 gnome-core26:gnome-core26
 for plug in ${TEST_IFACE_CONNECTIONS}; do
     sudo snap connect ${TEST_SNAPNAME}:${plug}
 done

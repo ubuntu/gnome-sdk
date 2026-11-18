@@ -52,8 +52,6 @@ jobs:
         path: ${{ steps.snapcraft-runtime.outputs.snap}}
 
   testing:
-    # FIXME: temporarily disable testing until we have snaps with the new runtime
-    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -65,46 +63,11 @@ jobs:
         # - enablex11: if true, will enable Xwayland
         # - separated: if true, the words will be split and must be found each anywhere in the screen
         include:
-          - snapname: "cheese"
-            waittext: "Take a Photo"
           - snapname: "chromium"
             waittext: "New Tab"
             enablex11: "true"
-          - snapname: "darktable"
-            waittext: "darktable lighttable darkroom"
-            separated: "true"
-          - snapname: "evince"
-            waittext: "Document Viewer Open"
-          - snapname: "epiphany"
-            waittext: "Set as Default Browser"
-            enablex11: "true"
           - snapname: "firefox"
             waittext: "Welcome to Firefox"
-          - snapname: "gimp"
-            waittext: "Welcome to GIMP"
-          - snapname: "gnome-calculator"
-            waittext: "Basic mod"
-            separated: "true"
-          - snapname: "gnome-system-monitor"
-            waittext: "Network Resources Processes Disk Memory Swap CPU"
-            separated: "true"
-          - snapname: "gnome-text-editor"
-            waittext: "New Document"
-          - snapname: "kicad"
-            waittext: "Configure KiCad"
-            enablex11: "true"
-          - snapname: "mattermost-desktop"
-            waittext: "Mattermost"
-            separated: "true"
-            commandname: "snap run mattermost-desktop"
-            enablex11: "true"
-            connections: "login-session-observe"
-          - snapname: "shotwell"
-            waittext: "Shotwell"
-          - snapname: "telegram-desktop"
-            waittext: "Welcome to the official Telegram Desktop app"
-          - snapname: "thunderbird"
-            waittext: "Thunderbird will automatically search"
     runs-on: ubuntu-latest
     needs: snap
     steps:
