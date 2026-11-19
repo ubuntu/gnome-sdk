@@ -36,6 +36,10 @@ the RUNTIME being tested to each snap, launches the snap itself and waits for so
 text to appear on the screen. When it happens, it waits five seconds and checks that the
 text is still there, to ensure that the application hasn't crashed.
 
+The `build.yml` workflow also runs an `abidiff` job that compares the ABI of every library
+shipped in the new runtime with the previous release from the store. Added symbols and
+new libraries are only reported, while changed symbols or removed libraries are a failure.
+
 When adding new tests, the `local-test.py` script can be useful. It uses multipass to
 create a VM and run the test inside. To use it, first initialize the VM with
 
