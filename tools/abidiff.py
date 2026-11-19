@@ -7,6 +7,11 @@ are paired by filename. Every pair is compared with abidiff: changed
 symbols or data structures are a failure, while added symbols and new
 libraries are only reported. A library that disappears is a failure too.
 
+ABI changes can be allow-listed with libabigail suppression
+specifications, stored in '.github/abicheck/'. A file named after the
+library relative path applies to that library only, while
+'default.abignore' applies to every library.
+
 If any of the snaps ships split debug information (usr/lib/debug), it is
 passed to abidiff so that data structure changes can be detected as well.
 """
@@ -22,7 +27,8 @@ ABIDIFF_ABI_CHANGE = 4
 ABIDIFF_ABI_INCOMPATIBLE_CHANGE = 8
 
 SUMMARY_RE = re.compile(
-    r'changes summary: (?P<removed>\d+) Removed(?:, (?P<changed>\d+) Changed)?')
+    r'changes summary: (?P<removed>\d+) Removed(?: \(\d+ filtered out\))?'
+    r'(?:, (?P<changed>\d+) Changed(?: \(\d+ filtered out\))?)?')
 SONAME_RE = re.compile(
     r'\(SONAME\)\s+(?:Shared library|Library soname): \[(.+?)\]')
 
@@ -90,6 +96,22 @@ def debug_info_dirs(root):
     return [path] if os.path.isdir(path) else []
 
 
+def suppression_files(name, override_dir):
+    """Return the suppression files that allow-list ABI changes of a library.
+
+    A file named after the library relative path applies to that library
+    only, while default.abignore applies to every library.
+    """
+    files = []
+    default = os.path.join(override_dir, 'default.abignore')
+    if os.path.isfile(default):
+        files.append(default)
+    library = os.path.join(override_dir, name)
+    if os.path.isfile(library):
+        files.append(library)
+    return files
+
+
 def only_additions(report):
     """Check whether every summary line reports additions only."""
     for line in report.splitlines():
@@ -103,8 +125,12 @@ def only_additions(report):
     return True
 
 
-def compare_libraries(old_path, new_path, name, debug_dirs):
-    cmd = ['abidiff']
+def compare_libraries(old_path, new_path, name, debug_dirs, suppressions):
+    # --no-default-suppression keeps the result deterministic and makes
+    # the allow-list the only source of suppressions.
+    cmd = ['abidiff', '--no-default-suppression']
+    for file in suppressions:
+        cmd += ['--suppressions', file]
     for dir_opt, dirs in zip(('--debug-info-dir1', '--debug-info-dir2'),
                              debug_dirs):
         for dir in dirs:
@@ -146,6 +172,10 @@ def main():
         return 2
 
     old_root, new_root = sys.argv[1:]
+    # overrides live in '.github/abicheck/' of the repository that owns
+    # this script
+    override_dir = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), '.github', 'abicheck')
     debug_dirs = (debug_info_dirs(old_root), debug_info_dirs(new_root))
     pairs, removed, added = pair_libraries(find_libraries(old_root),
                                            find_libraries(new_root))
@@ -153,7 +183,8 @@ def main():
     failures = []
     counts = {'unchanged': 0, 'added': 0, 'changed': 0, 'error': 0}
     for name, old_path, new_path in pairs:
-        status = compare_libraries(old_path, new_path, name, debug_dirs)
+        status = compare_libraries(old_path, new_path, name, debug_dirs,
+                                   suppression_files(name, override_dir))
         counts[status] += 1
         if status in ('changed', 'error'):
             failures.append(name)
