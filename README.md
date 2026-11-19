@@ -36,6 +36,26 @@ the RUNTIME being tested to each snap, launches the snap itself and waits for so
 text to appear on the screen. When it happens, it waits five seconds and checks that the
 text is still there, to ensure that the application hasn't crashed.
 
+The `build.yml` workflow also runs an `abidiff` job that compares the ABI of every library
+shipped in the new runtime with the previous release from the store. Added symbols and
+new libraries are only reported, while changed symbols or removed libraries are a failure.
+
+Sometimes a library legitimately removes or changes symbols that are private and not
+exposed by its public headers. To allow-list those changes, add a suppression file named
+after the library to `.github/abicheck/`, e.g.
+`.github/abicheck/usr/lib/x86_64-linux-gnu/libfoo.so.1`, containing libabigail
+suppression specifications (https://sourceware.org/libabigail/manual/libabigail-concepts.html#supprspec-label):
+
+```
+[suppress_function]
+  symbol_name = ^_ZL.*
+
+[suppress_type]
+  name = S
+```
+
+A file named `default.abignore` in the same directory applies to every library.
+
 When adding new tests, the `local-test.py` script can be useful. It uses multipass to
 create a VM and run the test inside. To use it, first initialize the VM with
 
