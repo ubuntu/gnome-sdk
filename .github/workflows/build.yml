@@ -56,25 +56,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # define in 'snapname' the name of each snap to test
-        snapname:
-          - cheese
-          - chromium
-          - darktable
-          - evince
-          - epiphany
-          - firefox
-          - gimp
-          - gnome-calculator
-          - gnome-system-monitor
-          - gnome-text-editor
-          - kicad
-          - mattermost-desktop
-          - shotwell
-          - telegram-desktop
-          - thunderbird
-        # here, in waittext, define the text to find for each snap
-        # more variables are:
+        # - snapname: the snap to test
+        # - waittext: the text to find on screen
         # - commandname: the command to run instead of 'snap run $snapname'
         # - timeout: the timeout to wait for the text to appear. Default is 20 seconds.
         # - connections: an space-separated list of plugs that must be connected
