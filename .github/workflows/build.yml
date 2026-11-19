@@ -52,6 +52,39 @@ jobs:
         name: 'snap-runtime'
         path: ${{ steps.snapcraft-runtime.outputs.snap}}
 
+  abidiff:
+    runs-on: ubuntu-latest
+    needs: snap
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Download artifact
+      id: download-snap
+      uses: actions/download-artifact@v8
+      with:
+        artifact-ids: ${{ needs.snap.outputs.runtime }}
+
+    - name: Install tools
+      run: |
+        set -eu
+        sudo apt update
+        sudo apt install -y abigail-tools squashfs-tools binutils
+
+    - name: Download previous runtime from the store
+      run: |
+        set -eu
+        snap download gnome-46-2404
+
+    - name: Extract snaps
+      run: |
+        set -eu
+        unsquashfs -d store-runtime gnome-46-2404_*.snap
+        unsquashfs -d new-runtime ${{ steps.download-snap.outputs.download-path }}/*.snap
+
+    - name: Compare library ABIs
+      run: |
+        ./tools/abidiff.py store-runtime new-runtime
+
   testing:
     strategy:
       fail-fast: false
